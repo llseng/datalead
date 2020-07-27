@@ -27,62 +27,16 @@
   </head>
   <body>
     <div class="page">
-      <!-- Main Navbar-->
-      <header class="header">
-        <nav class="navbar">
-          <!-- Search Box-->
-          <div class="search-box">
-            <button class="dismiss"><i class="icon-close"></i></button>
-            <form id="searchForm" action="#" role="search">
-              <input type="search" placeholder="What are you looking for..." class="form-control">
-            </form>
-          </div>
-          <div class="container-fluid">
-            <div class="navbar-holder d-flex align-items-center justify-content-between">
-              <!-- Navbar Header-->
-              <div class="navbar-header">
-                <!-- Navbar Brand -->
-                <a href="index.html" class="navbar-brand d-none d-sm-inline-block">
-                  <div class="brand-text d-none d-lg-inline-block"><span>{{ config('app.name', 'Laravel') }} </span><strong>LS</strong></div>
-                  <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>BD</strong></div>
-                </a>
-                <!-- Toggle Button--><a id="toggle-btn" href="#" class="menu-btn active"><span></span><span></span><span></span></a>
-              </div>
-              <!-- Navbar Menu -->
-              <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-                <!-- Search-->
-                <li class="nav-item d-flex align-items-center"><a id="search" href="#"><i class="icon-search"></i></a></li>
-                <!-- Logout    -->
-                <li class="nav-item"><a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link logout"> <span class="d-none d-sm-inline">Logout</span><i class="fa fa-sign-out"></i></a></li>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> {{ csrf_field() }} </form>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
-      <div class="page-content d-flex align-items-stretch"> 
-        <!-- Side Navbar -->
-        <nav class="side-navbar">
-            <!-- Sidebar Header-->
-            <div class="sidebar-header d-flex align-items-center">
-            <div class="avatar"><img src="img/avatar.jpg" alt="..." class="img-fluid rounded-circle"></div>
-            <div class="title">
-                <h1 class="h4">{{ Auth::user()->name }}</h1>
-                <p>{{ Auth::user()->name }}</p>
-            </div>
-            </div>
-            <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
-            <ul class="list-unstyled">
-                <li class="active"><a href="{{route('home')}}"> <i class="icon-home"></i>总览</a></li>
-                <li><a href="tables.html"> <i class="fa fa-bar-chart"></i>实时</a></li>
-                <li><a href="charts.html"> <i class="icon-grid"></i>对比</a></li>
-            </ul>
-            <span class="heading">EXTRAS</span>
-            <ul class="list-unstyled">
-                <!-- <li> <a href="#"> <i class="icon-flask"></i>Demo </a></li> -->
-            </ul>
-        </nav>
-          @yield('content');
+        @include('leadinc.top_nav')
+      <div class="page-content d-flex align-items-stretch">
+            @include('leadinc.left_nav')
+        <div class="content-inner">
+            @include('leadinc.content-h')
+
+            @yield('content')
+
+            @include('leadinc.content-f')
+        </div>
       </div>
     </div>
     <!-- JavaScript files-->
