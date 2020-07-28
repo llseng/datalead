@@ -18,3 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/game', 'GameAppController@index')->name('game');
+Route::get('/game/create', 'GameAppController@create')->name('game_create');
+Route::get('/game/update', 'GameAppController@update')->name('game_update');
+Route::post('/game/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
