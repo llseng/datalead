@@ -84,6 +84,7 @@ class GameAppController extends Controller
         static::setSessKey( $GameApp->gid );
         static::setSessVal( $GameApp->name );
 
+        // return redirect()->route('home');
         return back();
     }
 

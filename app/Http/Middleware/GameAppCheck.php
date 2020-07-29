@@ -31,10 +31,10 @@ class GameAppCheck
         if( empty( $list ) ) {
             return redirect()->route('game')->withErrors( Controller::dealError( "无应用数据,请创建." ) );
         }
-
+        
         if( 
             empty( $gameapp['key'] ) 
-            || \in_array( $gameapp['key'], \array_keys( $list ) ) 
+            || !\in_array( $gameapp['key'], \array_keys( $list ) ) 
         ) {
             GameAppController::setSessKey( \key( $list ) );
             GameAppController::setSessVal( \current( $list ) );
