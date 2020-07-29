@@ -14,6 +14,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('gameapp_check');
     }
 
     /**
@@ -23,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home', ['view_title'=>'总览']);
+        $view_data = ['view_title'=>'总览'];
+        $view_data['left_nav_name'] = "home";
+
+        return view('home', $view_data);
     }
 }

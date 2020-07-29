@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\DB;
 use App\GameApp;
 use App\Http\Requests\GameApp as GameAppVali;
 
@@ -20,42 +20,123 @@ class GameAppController extends Controller
         $this->middleware('auth');
     }
 
+    static public $fields = ['id as gid', 'name', 'desc', 'download_url', 'created_at'];
+
+    static public $sessKey = "gameapp";
+
+    static public function setSessList( ) {
+        $list = GameApp::pluck('name', 'id')->toArray();
+        return session()->put( static::$sessKey.'.list', $list );
+    }
+
+    static public function setSessKey( $key ) {
+        return session()->put( static::$sessKey.'.key', $key );
+    }
+
+    static public function setSessVal( $val ) {
+        return session()->put( static::$sessKey.'.val', $val );
+    }
+
+    static public function getSessList( ) {
+        return session()->get( static::$sessKey.'.list' );
+    }
+
+    static public function getSessKey( ) {
+        return session()->get( static::$sessKey.'.key' );
+    }
+
+    static public function getSessVal( ) {
+        return session()->get( static::$sessKey.'.val' );
+    }
+
+    static public function flushSess( $key ) {
+        static::setSessList( );
+        if( static::getSessKey() == $key ) {
+            static::setSessKey( \key( static::getSessList( ) ) );
+            static::setSessVal( \current( static::getSessList( ) ) );
+        }
+    }
+
+    static public function getSess( ) {
+        return session()->get( 'gameapp' );
+    }
+
+    static public function cleanSess( ) {
+        return session()->put( 'gameapp', [] );
+    }
+
     public function index() {
         $view_data = ['view_title'=>'应用'];
+        $view_data['left_nav_name'] = "game";
         
-        $app_list = GameApp::select('id', 'name', 'desc', 'created_at')->get();
+        $app_list = GameApp::select( static::$fields )->get();
         $view_data['app_list'] = $app_list;
-
-        dump( $app_list );
+        
         return view('m_game.list', $view_data);
+    }
+
+    public function select(Request $request, $id ) {
+        $GameApp = GameApp::select( static::$fields )->find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        static::setSessKey( $GameApp->gid );
+        static::setSessVal( $GameApp->name );
+
+        return back();
     }
 
     public function create() {
         $view_data = ['view_title'=>'创建应用'];
+        $view_data['app_data'] = \array_fill_keys( \array_merge( static::$fields, ['gid']), '' );
+        
         return view('m_game.form', $view_data);
     }
 
-    public function update() {
-        return back();
+    public function update( $id ) {
         $view_data = ['view_title'=>'修改应用'];
+        $GameApp = GameApp::select( static::$fields )->find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+        
+        $view_data[ 'app_data' ] = $GameApp;
+
         return view('m_game.form', $view_data);
+    }
+
+    public function delete(Request $request, $id ) {
+        $GameApp = GameApp::find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        $status = $GameApp->delete();
+
+        if( !$status ) {
+            return static::backError( "操作失败,请稍后再试." );
+        }
+
+        static::flushSess( $id );
+
+        return redirect()->route('game');;
     }
 
     public function dealwith(GameAppVali $request) {
-        $MessageBag = new MessageBag;
-        $MessageBag->add('base_deal', "操作失败,稍后再试");
-        return back()->withErrors( $MessageBag );
-        
         $data = $request->all();
         $status = false;
         if( $data['old_id'] ) {
             $GameApp = GameApp::find( $data['old_id'] );
-            $GameApp->id = $data['id'];
-            $GameApp->name = $data['name'];
-            $GameApp->desc = $data['desc'];
-            $GameApp->download_url = $data['download_url'];
-            
-            $status = $GameApp->save();
+            if( empty( $GameApp ) ) {
+                return static::backError( "错误,请刷新后再试." );
+            }
+            $status = GameApp::where( 'id', $data['old_id'] )->update([
+                'id' => $data['id'],
+                'name' => $data['name'],
+                'desc' => $data['desc'],
+                'download_url' => $data['download_url']
+            ]);
         }else{
             $GameApp = new GameApp;
             $GameApp->id = $data['id'];
@@ -67,10 +148,11 @@ class GameAppController extends Controller
         }
 
         if( !$status ) {
-            $MessageBag = new MessageBag;
-            $MessageBag->add('base_deal', "操作失败,稍后再试");
-            return back()->withErrors( $MessageBag );
+            return static::backError( "操作失败,请稍后再试." );
         }
+
+        static::flushSess( $data['old_id'] );
+
         return redirect()->route('game');
     }
 }

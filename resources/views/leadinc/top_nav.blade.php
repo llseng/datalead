@@ -26,13 +26,20 @@
         <li class="nav-item d-flex align-items-center"><a id="search" href="#" class="nav-link" ><i class="icon-search"></i></a></li>
         <!-- applist -->
         <li class="nav-item d-flex align-items-center"><a href="{{ route('game') }}" class="nav-link"><i class="icon-list"></i></a></li>
+
+        @if( session()->has( 'gameapp.key' ) )
         <!-- app dropdown -->
-        <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link language dropdown-toggle"><i class="icon-bill"></i><span class="d-none d-sm-inline-block">应用</span></a>
+        <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link language dropdown-toggle"><i class="icon-bill"></i><span class="d-none d-sm-inline-block">{{ session()->get( 'gameapp.val' ) }}</span></a>
             <ul aria-labelledby="languages" class="dropdown-menu">
-            <li><a rel="nofollow" href="#" class="dropdown-item"> <i class="icon-bill"></i>应用</a></li>
-            <li><a rel="nofollow" href="#" class="dropdown-item"> <i class="icon-bill"></i>应用</a></li>
+                @foreach( session()->get( 'gameapp.list' ) as $app_k => $app_v )
+                <li class="{{ session()->get( 'gameapp.key' ) == $app_k ? 'dropdown-header': '' }}">
+                    <a rel="nofollow" href="{{ session()->get( 'gameapp.key' ) == $app_k ? 'javascript:void(0);': route('game_select', ['id' => $app_k]) }}" class="dropdown-item">{{ $app_v }}</a>
+                </li>
+                @endforeach
             </ul>
         </li>
+        @endif
+
         <!-- Logout    -->
         <li class="nav-item"><a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link logout"> <span class="d-none d-sm-inline">Logout</span><i class="fa fa-sign-out"></i></a></li>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> {{ csrf_field() }} </form>

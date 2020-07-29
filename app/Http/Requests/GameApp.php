@@ -24,7 +24,7 @@ class GameApp extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|alpha_dash|min:5|max:20',
+            'id' => 'required|regex:/^\w+$/|min:5|max:20',
             'name' => 'required|min:2|max:20',
             'desc' => 'required|max:100',
             'download_url' => 'required|max:300',
@@ -34,7 +34,7 @@ class GameApp extends FormRequest
     public function messages() {
         return [
             'id.required' => 'id 必填',
-            'id.alpha_dash' => 'id 只可是英文,数字和下划线',
+            'id.regex' => 'id 只可是英文,数字和下划线',
             'id.min' => 'id 最小长度5,最大长度20',
             'id.max' => 'id 最小长度5,最大长度20',
 

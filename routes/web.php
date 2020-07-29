@@ -21,5 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/game', 'GameAppController@index')->name('game');
 Route::get('/game/create', 'GameAppController@create')->name('game_create');
-Route::get('/game/update', 'GameAppController@update')->name('game_update');
+Route::get('/game/select/{id}', 'GameAppController@select')->name('game_select');
+Route::get('/game/update/{id}', 'GameAppController@update')->name('game_update');
+Route::get('/game/delete/{id}', 'GameAppController@delete')->name('game_delete');
 Route::post('/game/dealwith', 'GameAppController@dealwith')->name('game_dealwith');

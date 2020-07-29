@@ -11,18 +11,20 @@
     </div>
     <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
     <ul class="list-unstyled">
-        <li @if(isset($left_nav_name) && $left_nav_name == 'home') class="active" @endif>
+        <li class="@if(isset($left_nav_name) && $left_nav_name == 'home') active @endif">
             <a href="{{ route('home') }}"> <i class="icon-home"></i>总览</a>
         </li>
-        <li @if(isset($left_nav_name) && $left_nav_name == 'home') class="active" @endif>
+        <li class="@if(isset($left_nav_name) && $left_nav_name == 'tables') active @endif">
             <a href="tables.html"><i class="fa fa-bar-chart"></i>实时</a>
         </li>
-        <li @if(isset($left_nav_name) && $left_nav_name == 'home') class="active" @endif>
+        <li class="@if(isset($left_nav_name) && $left_nav_name == 'charts') active @endif">
             <a href="charts.html"> <i class="icon-grid"></i>对比</a>
         </li>
     </ul>
     <span class="heading">EXTRAS</span>
     <ul class="list-unstyled">
-        <li> <a href="{{ route('game') }}"> <i class="icon-flask"></i>应用管理</a></li>
+        <li class="@if(isset($left_nav_name) && $left_nav_name == 'game') active @endif">
+            <a href="{{ route('game') }}"> <i class="icon-list"></i>应用管理</a>
+        </li>
     </ul>
 </nav>

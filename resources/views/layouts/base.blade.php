@@ -37,6 +37,7 @@
         <div class="content-inner">
             @include('leadinc.content-h')
             @include('leadinc.content-b')
+            @include('leadinc.content-alert')
 
             @yield('content')
 
