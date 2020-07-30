@@ -17,11 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::prefix('home')->group( function () {
+    Route::get('/', 'HomeController@index')->name('home');
+});
 
-Route::get('/game', 'GameAppController@index')->name('game');
-Route::get('/game/create', 'GameAppController@create')->name('game_create');
-Route::get('/game/select/{id}', 'GameAppController@select')->name('game_select');
-Route::get('/game/update/{id}', 'GameAppController@update')->name('game_update');
-Route::get('/game/delete/{id}', 'GameAppController@delete')->name('game_delete');
-Route::post('/game/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
+Route::prefix('game')->group( function () {
+    Route::get('/', 'GameAppController@index')->name('game');
+    Route::get('/create', 'GameAppController@create')->name('game_create');
+    Route::get('/select/{id}', 'GameAppController@select')->where("id", "\w+")->name('game_select');
+    Route::get('/update/{id}', 'GameAppController@update')->where("id", "\w+")->name('game_update');
+    Route::get('/delete/{id}', 'GameAppController@delete')->where("id", "\w+")->name('game_delete');
+    Route::post('/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
+} );

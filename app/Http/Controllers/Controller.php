@@ -26,4 +26,20 @@ class Controller extends BaseController
     static public function dealError( $error ) {
         return [ 'deal_error' => $error ];
     }
+    
+    static public function jsonRes( $code = 0, $message = null, $data = [], $merge = true ) {
+        if( \is_null( $message ) ) $message = $code == 0? "SUCCESS": "FAIL";
+        $base = [ 'code' => $code, 'message' => $message ];
+        $res = [];
+        
+        if( $data ) {
+            $merge? $res = \array_merge( $base, $data ): $res['data'] = $data;
+        }
+
+        return $res;
+    }
+
+    static public function jsonValidate() {
+        
+    }
 }
