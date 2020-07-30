@@ -28,5 +28,10 @@ class ByteClickData extends FormRequest
             "csite" => "required",
         ];
     }
-    
+
+    public function messages() {
+        return [
+        ];
+    }
+
 }

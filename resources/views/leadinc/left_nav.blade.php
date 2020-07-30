@@ -3,11 +3,15 @@
 <nav class="side-navbar">
     <!-- Sidebar Header-->
     <div class="sidebar-header d-flex align-items-center">
-    <div class="avatar"><img src="{{ url('/') }}/img/avatar.jpg" alt="..." class="img-fluid rounded-circle"></div>
-    <div class="title">
-        <h1 class="h4">{{ Auth::user()->name }}</h1>
-        <p>{{ Auth::user()->name }}</p>
-    </div>
+        <div class="avatar">
+            <a href="#">
+                <img src="{{ url('/') }}/img/avatar.jpg" alt="..." class="img-fluid rounded-circle">
+            </a>
+        </div>
+        <div class="title">
+            <h1 class="h4">{{ Auth::user()->name }}</h1>
+            <p>{{ Auth::user()->name }}</p>
+        </div>
     </div>
     <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
     <ul class="list-unstyled">

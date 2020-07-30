@@ -9,6 +9,10 @@ use App\Http\Requests\Api\ByteShowData;
 
 class ReceiverController extends Controller
 {
+    public function __construct() {
+        $this->middleware( 'gameappid_check' );
+    }
+
     /**
      * 字节跳动点击监测
      *
@@ -17,7 +21,13 @@ class ReceiverController extends Controller
      * @return json
      */
     public function byte_click( Request $request, $app_id ) {
-        return \response()->json( static::jsonRes( 0, null ) );
+        $req_data = $request->all();
+        $valiRes = static::jsonValidate( new ByteClickData, $req_data, $valiStatus );
+        if( !$valiStatus ) {
+            return \response()->json( $valiRes );
+        }
+
+        return \response()->json( static::jsonRes( ) );
     }
 
     /**
@@ -28,6 +38,12 @@ class ReceiverController extends Controller
      * @return json
      */
     public function byte_show( Request $request, $app_id ) {
-        return \response()->json( static::jsonRes( 0, null ) );
+        $req_data = $request->all();
+        $valiRes = static::jsonValidate( new ByteShowData, $req_data, $valiStatus );
+        if( !$valiStatus ) {
+            return \response()->json( $valiRes );
+        }
+
+        return \response()->json( static::jsonRes( ) );
     }
 }

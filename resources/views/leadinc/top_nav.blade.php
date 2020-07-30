@@ -16,7 +16,7 @@
         <!-- Navbar Brand -->
         <a href="index.html" class="navbar-brand d-none d-sm-inline-block">
             <div class="brand-text d-none d-lg-inline-block"><span>{{ config('app.name', 'Laravel') }} </span><strong>LS</strong></div>
-            <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>BD</strong></div>
+            <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>DL</strong></div>
         </a>
         <!-- Toggle Button--><a id="toggle-btn" href="#" class="menu-btn active"><span></span><span></span><span></span></a>
         </div>
@@ -31,7 +31,7 @@
         <!-- app dropdown -->
         <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link language dropdown-toggle"><i class="icon-bill"></i><span class="d-none d-sm-inline-block">{{ session()->get( 'gameapp.val' ) }}</span></a>
             <ul aria-labelledby="languages" class="dropdown-menu">
-                @foreach( session()->get( 'gameapp.list' ) as $app_k => $app_v )
+                @foreach( cache( 'gameapp_list' ) as $app_k => $app_v )
                 <li class="{{ session()->get( 'gameapp.key' ) == $app_k ? 'dropdown-header': '' }}">
                     <a rel="nofollow" href="{{ session()->get( 'gameapp.key' ) == $app_k ? 'javascript:void(0);': route('game_select', ['id' => $app_k]) }}" class="dropdown-item">{{ $app_v }}</a>
                 </li>

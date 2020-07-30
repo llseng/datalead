@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 use App\GameApp;
 use App\Http\Requests\GameApp as GameAppVali;
 
@@ -25,8 +25,7 @@ class GameAppController extends Controller
     static public $sessKey = "gameapp";
 
     static public function setSessList( ) {
-        $list = GameApp::pluck('name', 'id')->toArray();
-        return session()->put( static::$sessKey.'.list', $list );
+        return session()->put( static::$sessKey.'.list', static::getCacheList() );
     }
 
     static public function setSessKey( $key ) {
@@ -58,11 +57,22 @@ class GameAppController extends Controller
     }
 
     static public function getSess( ) {
-        return session()->get( 'gameapp' );
+        return session()->get( static::$sessKey );
     }
 
     static public function cleanSess( ) {
-        return session()->put( 'gameapp', [] );
+        return session()->put( static::$sessKey, [] );
+    }
+
+    static public function setCacheList( ) {
+        $list = GameApp::pluck('name', 'id')->toArray();
+        return cache( [static::$sessKey.'_list', $list], 10080 );
+    }
+
+    static public function getCacheList( ) {
+        return cache()->remember( static::$sessKey.'_list', 10080, function () {
+            return GameApp::pluck('name', 'id')->toArray();
+        } );
     }
 
     public function index() {
