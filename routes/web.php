@@ -29,3 +29,7 @@ Route::prefix('game')->group( function () {
     Route::get('/delete/{id}', 'GameAppController@delete')->where("id", "\w+")->name('game_delete');
     Route::post('/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
 } );
+
+Route::prefix('test')->group( function(){
+    Route::get('/', "Test@index");
+} );
