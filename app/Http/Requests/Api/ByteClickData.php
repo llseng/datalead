@@ -24,23 +24,25 @@ class ByteClickData extends FormRequest
     public function rules()
     {
         return [
-            "aid" => "required|integer",
-            "cid" => "required|integer",
-            "campaign_id" => "required|integer",
-            "convert_id" => "integer",
-            "ctype" => "required|integer",
-            "csite" => "required|integer",
-            "request_id" => "regex:/^\w{,40}$/",
+            "aid" => "required|numeric",
+            "cid" => "required|numeric",
+            "campaign_id" => "required|numeric",
+            "advertiser_id" => "required|numeric",
+            "convert_id" => "nullable|numeric",
+            "ctype" => "required|numeric",
+            "csite" => "required|numeric",
 
-            'imei' => "regex:/^\w{32}$/",
-            'idfa' => "max:32",
-            'androidid' => "regex:/^\w{32}$/",
-            'oaid' => "regex:/^\w{32}$/",
+            "request_id" => "nullable|regex:/^\w{1,40}$/",
 
-            "os" => "required|integer",
+            'imei' => "nullable|regex:/^\w{32}$/",
+            'idfa' => "nullable|max:32",
+            'androidid' => "nullable|regex:/^\w{32}$/",
+            'oaid' => "nullable|regex:/^\w{32}$/",
+
+            "os" => "required|numeric",
             "mac" => "required|regex:/^\w{32}$/",
             "ip" => "required|max:40",
-            "ts" => "required|integer",
+            "ts" => "required|numeric",
         ];
     }
 

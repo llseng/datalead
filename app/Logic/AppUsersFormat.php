@@ -21,6 +21,15 @@ class AppUsersFormat
         ]
     ];
 
+    static public $type_list = [
+        'byte' => [
+            2 => '小图模式',
+            3 => '大图模式',
+            4 => '组图模式',
+            5 => '视频',
+        ]
+    ];
+
     static public $os_list = [
         'android' => 0,
         'ios' => 1,

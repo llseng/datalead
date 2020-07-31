@@ -18,6 +18,7 @@ class AppByteClickData extends AppBase
             'aid'=> $data['aid'],
             'cid'=> $data['cid'],
             'campaign_id'=> $data['campaign_id'],
+            'advertiser_id'=> $data['advertiser_id'],
             'ctype'=> $data['ctype'],
             'csite'=> $data['csite'],
             'os'=> $data['os'],
@@ -35,6 +36,10 @@ class AppByteClickData extends AppBase
         !empty( $data['idfa'] ) && $insert_data['idfa'] = $data['idfa'];
         !empty( $data['androidid'] ) && $insert_data['androidid'] = $data['androidid'];
         !empty( $data['oaid'] ) && $insert_data['oaid'] = $data['oaid'];
+
+        !empty( $data['ua'] ) && $insert_data['ua'] = $data['ua'];
+        !empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
+        !empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
 
 
         try {

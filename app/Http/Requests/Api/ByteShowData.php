@@ -24,19 +24,19 @@ class ByteShowData extends FormRequest
     public function rules()
     {
         return [
-            "aid" => "required|integer",
-            "cid" => "required|integer",
-            "csite" => "required|integer",
-            "request_id" => "regex:/^\w{,40}$/",
+            "aid" => "required|numeric",
+            "cid" => "required|numeric",
+            "csite" => "required|numeric",
+            "campaign_id" => "required|numeric",
 
-            'imei' => "regex:/^\w{32}$/",
-            'idfa' => "max:32",
-            'androidid' => "regex:/^\w{32}$/",
+            'imei' => "nullable|regex:/^\w{32}$/",
+            'idfa' => "nullable|max:32",
+            'androidid' => "nullable|regex:/^\w{32}$/",
 
-            "os" => "required|integer",
+            "os" => "required|numeric",
             "mac" => "required|regex:/^\w{32}$/",
             "ip" => "required|max:40",
-            "ts" => "required|integer",
+            "ts" => "required|numeric",
         ];
     }
 }
