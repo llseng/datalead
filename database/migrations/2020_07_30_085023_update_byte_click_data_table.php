@@ -39,10 +39,10 @@ class UpdateByteClickDataTable extends Migration
     public function down()
     {
         Schema::table('byte_click_data', function (Blueprint $table) {
+            $table->dropIndex('unique_id');
+
             $table->dropColumn('idfa');
             $table->dropColumn('unique_id');
-            
-            $table->dropIndex('unique_id');
         });
     }
 }
