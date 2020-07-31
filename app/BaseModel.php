@@ -82,7 +82,7 @@ class BaseModel extends Model
         ) return false;
 
         $copy_sql = "CREATE TABLE $dest LIKE $source";
-        
+
         try {
             $copy_status = DB::statement( $copy_sql );
         } catch (\Throwable $th) {
@@ -94,5 +94,20 @@ class BaseModel extends Model
         }
 
         return $copy_status;
+    }
+
+    static public function dropTableIfExists( string $table ) {
+        $drop_sql = "DROP TABLE IF EXISTS $table";
+        $drop_status = DB::statement( $drop_sql );
+        
+        if( $drop_status ) {
+            static::flushCacheTables();
+        }
+
+        return $drop_status;
+    }
+
+    static public function dropTable( string $table ) {
+        return static::dropTableIfExists( $table );
     }
 }
