@@ -24,8 +24,23 @@ class ByteClickData extends FormRequest
     public function rules()
     {
         return [
-            "androidid" => "required",
-            "csite" => "required",
+            "aid" => "required|integer",
+            "cid" => "required|integer",
+            "campaign_id" => "required|integer",
+            "convert_id" => "integer",
+            "ctype" => "required|integer",
+            "csite" => "required|integer",
+            "request_id" => "regex:/^\w{,40}$/",
+
+            'imei' => "regex:/^\w{32}$/",
+            'idfa' => "max:32",
+            'androidid' => "regex:/^\w{32}$/",
+            'oaid' => "regex:/^\w{32}$/",
+
+            "os" => "required|integer",
+            "mac" => "required|regex:/^\w{32}$/",
+            "ip" => "required|max:40",
+            "ts" => "required|integer",
         ];
     }
 
