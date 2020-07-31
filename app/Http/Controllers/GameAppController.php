@@ -49,6 +49,7 @@ class GameAppController extends Controller
     }
 
     static public function flushSess( $key ) {
+        static::setCacheList( );
         static::setSessList( );
         if( static::getSessKey() == $key ) {
             static::setSessKey( \key( static::getSessList( ) ) );
@@ -66,7 +67,7 @@ class GameAppController extends Controller
 
     static public function setCacheList( ) {
         $list = GameApp::pluck('name', 'id')->toArray();
-        return cache( [static::$sessKey.'_list', $list], 10080 );
+        return cache()->put( static::$sessKey.'_list', $list, 10080 );
     }
 
     static public function getCacheList( ) {
