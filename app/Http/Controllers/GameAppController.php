@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Logic;
 use App\GameApp;
 use App\Http\Requests\GameApp as GameAppVali;
 
@@ -166,5 +167,23 @@ class GameAppController extends Controller
         static::flushSess( $data['old_id'] );
 
         return redirect()->route('game');
+    }
+
+    public function info( $id ) {
+        $GameApp = GameApp::find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        $view_data = ['view_title'=>'应用详情'];
+        $view_data['left_nav_name'] = "game";
+
+        $view_data['app_data'] = $GameApp;
+        //字节点击监测连接
+        $view_data['app_click_link'] = \route( 'byte_click', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
+        //字节展示监测连接
+        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
+        
+        return view('m_game.info', $view_data);
     }
 }

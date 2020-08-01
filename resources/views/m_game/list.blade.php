@@ -30,7 +30,9 @@
             <div class="project-title d-flex align-items-center">
                 <div class="image has-shadow"><img src="img/project.jpg" alt="..." class="img-fluid"></div>
                 <div class="text">
-                <h3 class="h4">{{ $app_li->gid }}-{{ $app_li->name }}</h3><small>{{ $app_li->desc }}</small>
+                <h3 class="h4">
+                    <a href="{{ route('game_info', ['id' => $app_li->gid]) }}">{{ $app_li->gid }}-{{ $app_li->name }}</a>
+                </h3><small>{{ $app_li->desc }}</small>
                 </div>
             </div>
             <div class="project-date"><span class="hidden-sm-down">{{ $app_li->created_at }}</span></div>
