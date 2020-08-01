@@ -11,12 +11,12 @@ class AppUsers extends AppBase
 {
     protected $source_table = "game_app_users";
 
-    public function create( $data ) {
+    public function create( $data, &$user ) {
         //开启事务
         DB::beginTransaction();
 
             try {
-                $user = DB::table( $this->table )->select( 'unique_id' )->where('unique_id', $data['unique_id'])->lockForUpdate()->first(); //写锁
+                $user = DB::table( $this->table )->select( 'unique_id', 'create_date' )->where('unique_id', $data['unique_id'])->lockForUpdate()->first(); //写锁
                 if( $user ) goto COMMIT;
 
                 $insert_data = \array_merge( $data, [
