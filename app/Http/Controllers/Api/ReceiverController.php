@@ -21,7 +21,7 @@ class ReceiverController extends Controller
     public function __construct() {
         $this->middleware( 'gameappid_check' );
         //调试接口日志
-        Log::debug( static::class .': requestUri '. request()->fullUrl() );
+        Log::info( static::class .': requestUri '. request()->fullUrl() );
     }
 
     /**

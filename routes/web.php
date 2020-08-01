@@ -28,6 +28,7 @@ Route::prefix('game')->group( function () {
     Route::get('/update/{id}', 'GameAppController@update')->where("id", "\w+")->name('game_update');
     Route::get('/delete/{id}', 'GameAppController@delete')->where("id", "\w+")->name('game_delete');
     Route::post('/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
+    Route::get('/info/{id}', 'GameAppController@info')->where("id", "\w+")->name('game_info');
 } );
 
 Route::prefix('test')->group( function(){

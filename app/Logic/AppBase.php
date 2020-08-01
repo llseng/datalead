@@ -10,6 +10,8 @@ use App\BaseModel;
  */
 class AppBase
 {
+    static protected $url_query = [];
+
     protected $source_table = "app_base";
     protected $table;
 
@@ -32,7 +34,11 @@ class AppBase
     }
 
     public function getTable() {
-        return $table;
+        return $this->table;
+    }
+
+    static public function getUrlQuery() {
+        return \http_build_query( static::$url_query );
     }
 
 }
