@@ -12,6 +12,7 @@ use Log;
 use App\Logic\AppUsers;
 use App\Logic\AppUsersUid;
 use App\Logic\AppUsersFormat;
+use App\Logic\AppCallback;
 
 use App\Logic\AppByteShowData;
 use App\Logic\AppByteClickData;
@@ -45,12 +46,22 @@ class ReceiverController extends Controller
 
         //应用用户逻辑
         $AppUsers = new AppUsers( $app_id );
-        $AppUsers->create( AppUsersFormat::fromByteClickData( $req_data ) );
-
+        $user_data;
+        $create_user_status = $AppUsers->create( AppUsersFormat::fromByteClickData( $req_data ), $user_data );
         //字节点击数据逻辑
         $AppByteClickData = new AppByteClickData( $app_id );
-        $AppByteClickData->create( $req_data );
-    
+        $create_data_status = $AppByteClickData->create( $req_data );
+        //转化事件回调
+        if( empty( $user_data ) ) {
+            !empty( $req_data['callback_url'] ) && AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 0] ); //激活事件
+        }else{
+            if( 
+                !empty( $req_data['callback_url'] ) 
+                && $user_data->create_date == date( "Y-m-d", time() - 86400 ) 
+            ) {
+                AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 6] ); //次留事件
+            }
+        }
 
         return \response()->json( static::jsonRes( ) );
     }
