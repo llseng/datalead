@@ -37,7 +37,7 @@ class ByteClickData extends FormRequest
             'imei' => "nullable|regex:/^\w{32}$/",
             'idfa' => "nullable|max:32",
             'androidid' => "nullable|regex:/^\w{32}$/",
-            'oaid' => "nullable|regex:/^\w{32}$/",
+            'oaid' => "nullable|max:40",
 
             "os" => "required|numeric",
             "mac" => "required|regex:/^\w{32}$/",

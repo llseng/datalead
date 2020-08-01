@@ -11,14 +11,14 @@ class AppUsersUid
         switch ( (int)$data['os'] ) {
             case 0:
                 //安卓
-                if( $data['androidid'] ) {
-                    $unique_id = $data['androidid'];
+                if( $data['imei'] ) {
+                    $unique_id = $data['imei'];
                 }elseif ( $data['oaid'] ) {
                     $unique_id = $data['oaid'];
-                }elseif ( $data['imei'] ) {
-                    $unique_id = $data['imei'];
+                }elseif ( $data['androidid'] ) {
+                    $unique_id = $data['androidid'];
                 }else{
-                    $unique_id = $data['max'];
+                    $unique_id = $data['mac'];
                 }
                 break;
 
@@ -27,13 +27,13 @@ class AppUsersUid
                 if( $data['idfa'] ) {
                     $unique_id = $data['idfa'];
                 }else{
-                    $unique_id = $data['max'];
+                    $unique_id = $data['mac'];
                 }
                 break;
             
             default:
                 //其他
-                $unique_id = $data['max'];
+                $unique_id = $data['mac'];
                 break;
         }
 
@@ -45,10 +45,10 @@ class AppUsersUid
         switch ( (int)$data['os'] ) {
             case 0:
                 //安卓
-                if( $data['androidid'] ) {
-                    $unique_id = $data['androidid'];
-                }elseif ( $data['imei'] ) {
+                if ( $data['imei'] ) {
                     $unique_id = $data['imei'];
+                }elseif( $data['androidid'] ) {
+                    $unique_id = $data['androidid'];
                 }else{
                     $unique_id = $data['max'];
                 }
