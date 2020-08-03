@@ -13,12 +13,14 @@ use App\Logic\AppUsers;
 use App\Logic\AppUsersUid;
 use App\Logic\AppUsersFormat;
 use App\Logic\AppCallback;
+use App\Logic\AppDataFilter;
 
 use App\Logic\AppByteShowData;
 use App\Logic\AppByteClickData;
 
 class ReceiverController extends Controller
 {
+
     public function __construct() {
         $this->middleware( 'gameappid_check' );
         //调试接口日志
@@ -81,14 +83,17 @@ class ReceiverController extends Controller
             return \response()->json( $valiRes );
         }
 
+        $filter_data = AppDataFilter::filterByteData( $req_data );
+        $replace_data = AppDataFilter::filterByteData( $req_data, "" );
+
         //获取唯一ID
-        $unique_id = AppUsersUid::fromByteClickData( $req_data );
-        $req_data['unique_id'] = $unique_id;
+        $unique_id = AppUsersUid::fromBtyeShowData( $replace_data );
+        $filter_data['unique_id'] = $unique_id;
         Log::debug( static::class .': unique_id '. $unique_id );
 
         //字节展示数据逻辑
         $AppByteShowData = new AppByteShowData( $app_id );
-        $AppByteShowData->create( $req_data );
+        $AppByteShowData->create( $filter_data );
 
         return \response()->json( static::jsonRes( ) );
     }

@@ -29,14 +29,14 @@ class ByteShowData extends FormRequest
             "csite" => "required|numeric",
             "campaign_id" => "required|numeric",
 
-            'imei' => "nullable|regex:/^\w{32}$/",
+            'imei' => "nullable|max:32",
             'idfa' => "nullable|max:32",
             'androidid' => "nullable|regex:/^\w{32}$/",
 
             "os" => "required|numeric",
-            "mac" => "required|regex:/^\w{32}$/",
+            "mac" => "required|max:32",
             "ip" => "required|max:40",
-            "ts" => "required|numeric",
+            "ts" => "required",
         ];
     }
 }

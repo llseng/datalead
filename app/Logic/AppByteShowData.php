@@ -31,7 +31,7 @@ class AppByteShowData extends AppBase
     ];
 
     public function create( $data ) {
-        
+
         $insert_data = [
             'unique_id'=> $data['unique_id'],
             'aid'=> $data['aid'],
@@ -41,19 +41,19 @@ class AppByteShowData extends AppBase
             'os'=> $data['os'],
             'mac'=> $data['mac'],
             'ip'=> $data['ip'],
-            'ts'=> $data['ts'],
+            'ts'=> (int)$data['ts'],
 
             'create_date' => DB::raw('current_date()'),
             'create_time' => DB::raw('current_time()'),
         ];
 
-        !empty( $data['imei'] ) && $insert_data['imei'] = $data['imei'];
-        !empty( $data['idfa'] ) && $insert_data['idfa'] = $data['idfa'];
-        !empty( $data['androidid'] ) && $insert_data['androidid'] = $data['androidid'];
+        !empty( $data['imei'] ) && !AppDataFilter::empty( $data['imei'] ) && $insert_data['imei'] = $data['imei'];
+        !empty( $data['idfa'] ) && !AppDataFilter::empty( $data['idfa'] ) && $insert_data['idfa'] = $data['idfa'];
+        !empty( $data['androidid'] ) && !AppDataFilter::empty( $data['androidid'] ) && $insert_data['androidid'] = $data['androidid'];
 
-        !empty( $data['ua'] ) && $insert_data['ua'] = $data['ua'];
-        !empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
-        !empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
+        !empty( $data['ua'] ) && !AppDataFilter::empty( $data['ua'] ) && $insert_data['ua'] = \substr( $data['ua'], 0, 100 );
+        !empty( $data['callback_url'] ) && !AppDataFilter::empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
+        !empty( $data['callback_param'] ) && !AppDataFilter::empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
 
         try {
             return DB::table( $this->table )->insert( $insert_data );

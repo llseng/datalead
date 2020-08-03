@@ -45,7 +45,7 @@
                 <a href="{{ route('game_update', ['id'=>$app_li->gid ]) }}"><button type="button" class="btn btn-primary">修改</button></a>
                 </div>
                 <div class="comments">
-                <a href="{{ route('game_delete', ['id'=>$app_li->gid ]) }}"><button type="button" class="btn btn-danger">删除</button></a>
+                <a onclick="delete_confirm_url( this.getAttribute('hreff') )" hreff="{{ route('game_delete', ['id'=>$app_li->gid ]) }}"><button type="button" class="btn btn-danger">删除</button></a>
                 </div>
             </div>
         </div>

@@ -12,3 +12,11 @@
         </div>
     </div>
 </footer>
+
+<script>
+    function delete_confirm_url( url ) {
+        if( confirm( "删除后不可恢复,确认删除?" ) ) {
+            window.location.href = url;
+        }
+    }
+</script>
