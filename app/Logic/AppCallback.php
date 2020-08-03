@@ -26,4 +26,17 @@ class AppCallback
         
         return $status;
     }
+
+    static public function update( $id, string $res ) {
+        $M = GACM::find( $id );
+        if( empty( $M ) ) return false;
+        
+        $M->res = $res;
+        $M->status = 1;
+
+        $status = $M->save();
+        
+        return $status;
+    }
+
 }
