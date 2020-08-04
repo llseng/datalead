@@ -182,7 +182,7 @@ class GameAppController extends Controller
         //字节点击监测连接
         $view_data['app_click_link'] = \route( 'byte_click', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
         //字节展示监测连接
-        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
+        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteShowkData::getUrlQuery();
         
         return view('m_game.info', $view_data);
     }

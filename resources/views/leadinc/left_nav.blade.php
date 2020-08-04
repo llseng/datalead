@@ -5,7 +5,7 @@
     <div class="sidebar-header d-flex align-items-center">
         <div class="avatar">
             <a href="#">
-                <img src="{{ url('/') }}/img/avatar.jpg" alt="..." class="img-fluid rounded-circle">
+                <img src="{{ asset('/') }}img/avatar.jpg" alt="..." class="img-fluid rounded-circle">
             </a>
         </div>
         <div class="title">

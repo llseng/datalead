@@ -48,7 +48,7 @@ class AppCallbackHandler extends Command
     public function handle()
     {
         $sleep_s = 1;
-        $sleep_max_s = $sleep_s << 11;
+        $sleep_max_s = $sleep_s << 4;
         do{
             $callback_list = GACM::where( 'status', 0 )->limit(100)->get()->toArray();
             
@@ -81,6 +81,7 @@ class AppCallbackHandler extends Command
             static::$Logger->info( "sleep $sleep_s" );
             sleep( $sleep_s );
             $sleep_s < $sleep_max_s && $sleep_s <<= 1;
+            static::loggerLoad();
         }while( $sleep_s <= $sleep_max_s );
 
     }
