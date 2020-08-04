@@ -50,7 +50,7 @@ class AppUsersUid
                 }elseif( $data['androidid'] ) {
                     $unique_id = $data['androidid'];
                 }else{
-                    $unique_id = $data['max'];
+                    $unique_id = $data['mac'];
                 }
                 break;
 
@@ -59,13 +59,13 @@ class AppUsersUid
                 if( $data['idfa'] ) {
                     $unique_id = $data['idfa'];
                 }else{
-                    $unique_id = $data['max'];
+                    $unique_id = $data['mac'];
                 }
                 break;
             
             default:
                 //其他
-                $unique_id = $data['max'];
+                $unique_id = $data['mac'];
                 break;
         }
 

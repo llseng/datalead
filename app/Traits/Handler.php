@@ -38,12 +38,7 @@ trait Handler
 
         return ;
     }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
+    
     static public function loggerInit()
     {
         if( isset( static::$Logger ) ) return ;
