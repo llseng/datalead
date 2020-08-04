@@ -52,8 +52,8 @@ class AppByteShowData extends AppBase
         !empty( $data['androidid'] ) && !AppDataFilter::empty( $data['androidid'] ) && $insert_data['androidid'] = $data['androidid'];
 
         !empty( $data['ua'] ) && !AppDataFilter::empty( $data['ua'] ) && $insert_data['ua'] = \substr( $data['ua'], 0, 100 );
-        !empty( $data['callback_url'] ) && !AppDataFilter::empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
-        !empty( $data['callback_param'] ) && !AppDataFilter::empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
+        // !empty( $data['callback_url'] ) && !AppDataFilter::empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
+        // !empty( $data['callback_param'] ) && !AppDataFilter::empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
 
         try {
             return DB::table( $this->table )->insert( $insert_data );

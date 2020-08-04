@@ -63,7 +63,7 @@ class AppByteClickData extends AppBase
 
         !empty( $data['ua'] ) && !AppDataFilter::empty( $data['ua'] ) && $insert_data['ua'] = \substr( $data['ua'], 0, 100 );
         !empty( $data['callback_url'] ) && !AppDataFilter::empty( $data['callback_url'] ) && $insert_data['callback_url'] = $data['callback_url'];
-        !empty( $data['callback_param'] ) && !AppDataFilter::empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
+        // !empty( $data['callback_param'] ) && !AppDataFilter::empty( $data['callback_param'] ) && $insert_data['callback_param'] = $data['callback_param'];
 
 
         try {
