@@ -33,10 +33,10 @@ class ByteShowData extends FormRequest
             'idfa' => "nullable|max:32",
             'androidid' => "nullable|regex:/^\w{32}$/",
 
-            "os" => "required|numeric",
-            "mac" => "required|max:32",
-            "ip" => "required|max:40",
-            "ts" => "required",
+            "os" => "nullable|numeric",
+            "mac" => "nullable|max:32",
+            "ip" => "nullable|max:40",
+            "ts" => "nullable",
         ];
     }
 }

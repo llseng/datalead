@@ -32,17 +32,17 @@ class ByteClickData extends FormRequest
             "ctype" => "required|numeric",
             "csite" => "required|numeric",
 
-            "request_id" => "nullable|regex:/^\w{1,40}$/",
+            "request_id" => "nullable|max:100",
 
             'imei' => "nullable|regex:/^\w{32}$/",
             'idfa' => "nullable|max:32",
             'androidid' => "nullable|regex:/^\w{32}$/",
             'oaid' => "nullable|max:40",
 
-            "os" => "required|numeric",
-            "mac" => "required|regex:/^\w{32}$/",
-            "ip" => "required|max:40",
-            "ts" => "required|numeric",
+            "os" => "nullable|numeric",
+            "mac" => "nullable|max:32",
+            "ip" => "nullable|max:40",
+            "ts" => "nullable",
         ];
     }
 
