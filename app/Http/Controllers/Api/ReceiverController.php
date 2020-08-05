@@ -47,23 +47,23 @@ class ReceiverController extends Controller
         Log::debug( static::class .': unique_id '. $unique_id );
 
         //应用用户逻辑
-        $AppUsers = new AppUsers( $app_id );
-        $user_data;
-        $create_user_status = $AppUsers->create( AppUsersFormat::fromByteClickData( $req_data ), $user_data );
+        // $AppUsers = new AppUsers( $app_id );
+        // $user_data;
+        // $create_user_status = $AppUsers->create( AppUsersFormat::fromByteClickData( $req_data ), $user_data );
         //字节点击数据逻辑
         $AppByteClickData = new AppByteClickData( $app_id );
         $create_data_status = $AppByteClickData->create( $req_data );
         //转化事件回调
-        if( empty( $user_data ) ) {
-            !empty( $req_data['callback_url'] ) && AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 0] ); //激活事件
-        }else{
-            if( 
-                !empty( $req_data['callback_url'] ) 
-                && $user_data->create_date == date( "Y-m-d", time() - 86400 ) 
-            ) {
-                AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 6] ); //次留事件
-            }
-        }
+        // if( empty( $user_data ) ) {
+        //     !empty( $req_data['callback_url'] ) && AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 0] ); //激活事件
+        // }else{
+        //     if( 
+        //         !empty( $req_data['callback_url'] ) 
+        //         && $user_data->create_date == date( "Y-m-d", time() - 86400 ) 
+        //     ) {
+        //         AppCallback::create( $app_id, $req_data['callback_url'], ['event_type' => 6] ); //次留事件
+        //     }
+        // }
 
         return \response()->json( static::jsonRes( ) );
     }
@@ -83,11 +83,10 @@ class ReceiverController extends Controller
             return \response()->json( $valiRes );
         }
 
-        $filter_data = AppDataFilter::filterByteData( $req_data );
-        $replace_data = AppDataFilter::filterByteData( $req_data, "" );
+        $filter_data = AppDataFilter::filterByteData( $req_data, null );
 
         //获取唯一ID
-        $unique_id = AppUsersUid::fromBtyeShowData( $replace_data );
+        $unique_id = AppUsersUid::fromBtyeShowData( $filter_data );
         $filter_data['unique_id'] = $unique_id;
         Log::debug( static::class .': unique_id '. $unique_id );
 
@@ -97,4 +96,34 @@ class ReceiverController extends Controller
 
         return \response()->json( static::jsonRes( ) );
     }
+
+    /**
+     * 字节跳动点击监测
+     *
+     * @param ByteClickData $request
+     * @param string $app_id
+     * @return json
+     */
+    public function byte_click_v2( Request $request, $app_id ) {
+        $req_data = $request->all();
+        $valiRes = static::jsonValidate( new ByteClickData, $req_data, $valiStatus );
+        if( !$valiStatus ) {
+            Log::debug( static::class .': valiFail', $valiRes );
+            return \response()->json( $valiRes );
+        }
+
+        $filter_data = AppDataFilter::filterByteData( $req_data, null );
+
+        //获取唯一ID
+        $unique_id = AppUsersUid::fromByteClickData( $filter_data );
+        $filter_data['unique_id'] = $unique_id;
+        Log::debug( static::class .': unique_id '. $unique_id );
+        
+        //字节点击数据逻辑
+        $AppByteClickData = new AppByteClickData( $app_id );
+        $create_data_status = $AppByteClickData->create( $filter_data );
+
+        return \response()->json( static::jsonRes( ) );
+    }
+
 }
