@@ -12,11 +12,16 @@ class AppBase
 {
     static protected $url_query = [];
 
+    static public function getUrlQuery() {
+        return \http_build_query( static::$url_query );
+    }
+
     protected $source_table = "app_base";
     protected $table;
+    protected $model_class;
 
     public function __construct( $app_id ) {
-        $this->table = "ga{$app_id}_{$this->source_table}";
+        $this->table = "ga_{$app_id}_{$this->source_table}";
         if( 
             !\in_array( $this->table, BaseModel::getCacheTables() ) 
             && !$this->create_table() 
@@ -37,8 +42,34 @@ class AppBase
         return $this->table;
     }
 
-    static public function getUrlQuery() {
-        return \http_build_query( static::$url_query );
+    public function setTableModel( string $model_class ) {
+        $this->model_class = $model_class;
+        return true;
+    }
+
+    public function getTableModel( ) {
+        return $this->model_class;
+    }
+
+    public function create( $data ) {
+        $time_data = [
+            'create_date' => DB::raw('current_date()'),
+            'create_time' => DB::raw('current_time()'),
+        ];
+        $insert_data = \array_merge( $time_data, $data );
+
+        try {
+            $TableModelClass = $this->getTableModel();
+            $TableModel = new $TableModelClass;
+            $TableModel->setTable( $this->table );
+            $fill_status = $TableModel->fill( $insert_data )->save();
+            return $fill_status;
+        } catch (\Throwable $th) {
+            Log::error( static::class .': '. $th->getMessage() );
+        }
+        
+        return false;
+
     }
 
 }

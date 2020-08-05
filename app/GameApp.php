@@ -2,7 +2,9 @@
 
 namespace App;
 
-class GameApp extends BaseModel
+use Illuminate\Database\Eloquent\Model;
+
+class GameApp extends Model
 {
     protected $table = 'game_app';
 

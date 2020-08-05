@@ -3,6 +3,7 @@ namespace App\Logic;
 
 use DB;
 use Log;
+use App\GameAppUsers as TableModel;
 
 /**
  * 应用用户表逻辑
@@ -10,20 +11,40 @@ use Log;
 class AppUsers extends AppBase
 {
     protected $source_table = "game_app_users";
+    protected $model_class = TableModel::class;
 
-    public function create( $data, &$user ) {
+    public function create( $data ) {
+        // if( !isset( $data['init_id'] ) ) {
+        if( empty( $data['init_id'] ) ) {
+            Log::error( static::class .': init_id empty' );
+            return false;
+        }
+
+        if( !isset( $data['os'] ) ) {
+            $data['os'] = AppUsersFormat::$os_list['other'];
+        }
+
+        return parent::create( $data );
+    }
+
+    public function getUserByInitId( $init_id, $updateLock = false ) {
+        $db_model = DB::table( $this->table )->select( 'init_id', 'unique_id', 'create_date' )->where('init_id', $init_id);
+        if( $updateLock ) $db_model->lockForUpdate(); //写锁
+
+        return $db_model->first()->toArray();
+    }
+
+    public function only_create( $data, &$user ) {
+        if( empty( $data['init_id'] ) ) {
+            Log::error( static::class .': init_id empty' );
+            return false;
+        }
         //开启事务
         DB::beginTransaction();
 
             try {
-                $user = DB::table( $this->table )->select( 'unique_id', 'create_date' )->where('unique_id', $data['unique_id'])->lockForUpdate()->first(); //写锁
+                $user = $this->getUserByInitId( $data['init_id'], true );
                 if( $user ) goto COMMIT;
-
-                $insert_data = \array_merge( $data, [
-                    'create_date' => DB::raw('current_date()'),
-                    'create_time' => DB::raw('current_time()'),
-                ]);
-                DB::table( $this->table )->insert( $insert_data );
             } catch (\Throwable $th) {
                 Log::error( static::class .': '. $th->getMessage() );
                 goto ROLLBACK;
