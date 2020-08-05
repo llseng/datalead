@@ -18,9 +18,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 /**
- * Api路由组
+ * 接受Api路由组
  */
 Route::namespace('Api')->prefix('receiver')->group( function () {
     Route::get( "/byte_click/{app_id}", "ReceiverController@byte_click" )->where('app_id', "\w+")->name( 'byte_click' );
+    Route::get( "/byte_click_v2/{app_id}", "ReceiverController@byte_click_v2" )->where('app_id', "\w+")->name( 'byte_click_v2' );
     Route::get( "/byte_show/{app_id}", "ReceiverController@byte_show" )->where('app_id', "\w+")->name( 'byte_show' );
+} );
+
+/**
+ * 监听Api路由组
+ */
+Route::namespace('Api')->prefix('listen')->group( function () {
+    Route::get( "/app_init/{app_id}", "ListenController@app_init" )->where('app_id', "\w+")->name( 'app_init' );
 } );
