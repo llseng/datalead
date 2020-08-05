@@ -25,21 +25,21 @@ class ByteClickData extends FormRequest
     {
         return [
             "aid" => "required|numeric",
-            "cid" => "required|numeric",
-            "campaign_id" => "required|numeric",
-            "advertiser_id" => "required|numeric",
-            "convert_id" => "nullable|numeric",
-            "ctype" => "required|numeric",
-            "csite" => "required|numeric",
+            "cid" => "nullable",
+            "campaign_id" => "nullable",
+            "advertiser_id" => "nullable",
+            "convert_id" => "nullable",
+            "ctype" => "nullable",
+            "csite" => "nullable",
 
             "request_id" => "nullable|max:100",
 
-            'imei' => "nullable|regex:/^\w{32}$/",
+            'imei' => "nullable|max:32",
             'idfa' => "nullable|max:32",
-            'androidid' => "nullable|regex:/^\w{32}$/",
+            'androidid' => "nullable|max:32",
             'oaid' => "nullable|max:40",
 
-            "os" => "nullable|numeric",
+            "os" => "nullable",
             "mac" => "nullable|max:32",
             "ip" => "nullable|max:40",
             "ts" => "nullable",
