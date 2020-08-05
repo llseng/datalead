@@ -8,33 +8,48 @@ class AppUsersUid
 {
     static public function fromByteClickData( array $data ) {
         $unique_id;
-        switch ( (int)$data['os'] ) {
+        $os = empty( $data['os'] )? 0: (int)$data['os'];
+
+        switch ( $os ) {
             case 0:
                 //安卓
-                if( $data['imei'] ) {
+                if( !empty( $data['imei'] ) ) {
                     $unique_id = $data['imei'];
-                }elseif ( $data['oaid'] ) {
+                }elseif ( !empty( $data['oaid'] ) ) {
                     $unique_id = $data['oaid'];
-                }elseif ( $data['androidid'] ) {
+                }elseif ( !empty( $data['androidid'] ) ) {
                     $unique_id = $data['androidid'];
-                }else{
+                }elseif ( !empty( $data['mac'] ) ) {
                     $unique_id = $data['mac'];
                 }
+                
                 break;
 
             case 1:
                 //ios
-                if( $data['idfa'] ) {
+                if( !empty( $data['idfa'] ) ) {
                     $unique_id = $data['idfa'];
-                }else{
+                }elseif ( !empty( $data['mac'] ) ) {
                     $unique_id = $data['mac'];
                 }
+                
                 break;
             
             default:
                 //其他
-                $unique_id = $data['mac'];
+                if ( !empty( $data['mac'] ) ) {
+                    $unique_id = $data['mac'];
+                }
+                
                 break;
+        }
+        
+        if( empty( $unique_id ) ) {
+            $uni_str = '';
+            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
+            if( !empty( $data['ip'] ) ) $uni_str .= $data['ip'];
+
+            $unique_id = md5( $uni_str );
         }
 
         return $unique_id;
@@ -45,28 +60,38 @@ class AppUsersUid
         switch ( (int)$data['os'] ) {
             case 0:
                 //安卓
-                if ( $data['imei'] ) {
+                if( !empty( $data['imei'] ) ) {
                     $unique_id = $data['imei'];
-                }elseif( $data['androidid'] ) {
+                }elseif ( !empty( $data['androidid'] ) ) {
                     $unique_id = $data['androidid'];
-                }else{
+                }elseif ( !empty( $data['mac'] ) ) {
                     $unique_id = $data['mac'];
                 }
                 break;
 
             case 1:
                 //ios
-                if( $data['idfa'] ) {
+                if( !empty( $data['idfa'] ) ) {
                     $unique_id = $data['idfa'];
-                }else{
+                }elseif ( !empty( $data['mac'] ) ) {
                     $unique_id = $data['mac'];
                 }
                 break;
             
             default:
                 //其他
-                $unique_id = $data['mac'];
+                if ( !empty( $data['mac'] ) ) {
+                    $unique_id = $data['mac'];
+                }
                 break;
+        }
+        
+        if( empty( $unique_id ) ) {
+            $uni_str = '';
+            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
+            if( !empty( $data['ip'] ) ) $uni_str .= $data['ip'];
+
+            $unique_id = md5( $uni_str );
         }
 
         return $unique_id;

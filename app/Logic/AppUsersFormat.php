@@ -40,12 +40,6 @@ class AppUsersFormat
         $to_data = [];
 
         $to_data['unique_id'] = $data['unique_id'];
-        $to_data['aid'] = $data['aid'];
-        $to_data['cid'] = $data['cid'];
-        $to_data['gid'] = $data['campaign_id'];
-        $to_data['aid'] = $data['aid'];
-        $to_data['site'] = $data['csite'];
-        $to_data['reg_ip'] = $data['ip'];
 
         switch ( (int)$data['os'] ) {
             case 0:
