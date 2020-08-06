@@ -106,6 +106,7 @@ class ReceiverController extends Controller
      */
     public function byte_click_v2( Request $request, $app_id ) {
         $req_data = $request->all();
+        // $validate = static::runValidate( new ByteClickData, $req_data );
         $valiRes = static::jsonValidate( new ByteClickData, $req_data, $valiStatus );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail', $valiRes );

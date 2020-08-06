@@ -14,13 +14,13 @@ class AppDataFilter
         return empty( $data ) || $data == static::EMPTY_REP_STR;
     }
 
-    static public function filter( $data ) {
+    static public function filter( array $data ) {
         return \array_filter( $data, function ( $val ) {
             return !\in_array( $val, static::DLIST );
         } );
     }
 
-    static public function filterByteData( $data, $rep_str = null ) {
+    static public function filterByteData( array $data, $rep_str = null ) {
         
         $reg = "/^__\w+__$/";
         $data = \preg_replace( $reg, $rep_str, $data );
@@ -30,4 +30,7 @@ class AppDataFilter
         return $data;
     }
 
+    static public function filterKeys( array $data, array $keys ) {
+        return \array_except( $data, $keys );
+    }
 }

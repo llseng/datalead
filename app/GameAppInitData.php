@@ -30,5 +30,5 @@ class GameAppInitData extends Model
         'create_time',
     ];
     
-    public $timestemps = false;
+    public $timestamps = false;
 }

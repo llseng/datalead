@@ -40,19 +40,29 @@ class Controller extends BaseController
         return $res;
     }
 
-    static public function jsonValidate( FormRequest $classObj, array $data, &$fails ) {
+    static public function runValidate( FormRequest $classObj, array $data ) {
         if( 
             \method_exists( $classObj, 'authorize' ) 
             && \call_user_func( [$classObj, 'authorize'] ) == false 
             ) {
-            $fails = false;
-            return static::jsonRes( 401, 'Permissions' );
+            throw new \Exception( get_class( $classObj ). ": Not authorized the request", 1);
         }
 
         $validator = Validator::make( $data, $classObj->rules(), $classObj->messages(), $classObj->attributes() );
         
         if( \method_exists( $classObj, 'withValidator' ) ) {
             \call_user_func( [$classObj, 'withValidator'], $validator );
+        }
+
+        return $validator;
+    }
+
+    static public function jsonValidate( FormRequest $classObj, array $data, &$fails ) {
+        try {
+            $validator = static::runValidate( $classObj, $data );
+        } catch (\Throwable $th) {
+            $fails = false;
+            return static::jsonRes( 401, 'Permissions' );
         }
 
         if( $validator->fails() ) {
@@ -63,4 +73,5 @@ class Controller extends BaseController
         $fails = true;
         return static::jsonRes();
     }
+
 }
