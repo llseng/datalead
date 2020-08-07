@@ -28,18 +28,18 @@ class ByteShowData extends FormRequest
     {
         return [
             "aid" => "required|numeric",
-            "cid" => "nullable|numeric|max:20",
-            "campaign_id" => "nullable|numeric|max:20",
-            "csite" => "nullable|numeric|max:10",
+            "cid" => "nullable|numeric",
+            "campaign_id" => "nullable|numeric",
+            "csite" => "nullable|numeric",
 
-            'imei' => "nullable|". static::$alpha_num. "|max:32",
-            'idfa' => "nullable|". static::$alpha_num. "|max:32",
-            'androidid' => "nullable|". static::$alpha_num. "|max:32",
+            'imei' => "nullable|". static::$alpha_num. "|between:16,32",
+            'idfa' => "nullable|". static::$alpha_num. "|between:16,32",
+            'androidid' => "nullable|". static::$alpha_num. "|between:16,32",
 
-            "os" => "nullable|numeric|max:3",
-            "mac" => "nullable|". static::$alpha_num. "|max:32",
-            "ip" => "nullable|max:40",
-            "ts" => "nullable|numeric|max:20",
+            "os" => "nullable|numeric|between:0,3",
+            "mac" => "nullable|". static::$alpha_num. "|between:16,32",
+            "ip" => "nullable|between:7,40",
+            "ts" => "nullable|numeric",
         ];
     }
 }

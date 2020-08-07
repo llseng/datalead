@@ -27,25 +27,25 @@ class ByteClickData extends FormRequest
     public function rules()
     {
         return [
-            "aid" => "required|numeric|max:20",
-            "cid" => "nullable|numeric|max:20",
-            "campaign_id" => "nullable|numeric|max:20",
-            "advertiser_id" => "nullable|numeric|max:20",
-            "convert_id" => "nullable|numeric|max:20",
-            "ctype" => "nullable|numeric|max:10",
-            "csite" => "nullable|numeric|max:10",
+            "aid" => "required|numeric",
+            "cid" => "nullable|numeric",
+            "campaign_id" => "nullable|numeric",
+            "advertiser_id" => "nullable|numeric",
+            "convert_id" => "nullable|numeric",
+            "ctype" => "nullable|numeric",
+            "csite" => "nullable|numeric",
 
-            "request_id" => "nullable|". static::$alpha_num. "|max:100",
+            "request_id" => "nullable|". static::$alpha_num. "|between:20,100",
 
-            'imei' => "nullable|". static::$alpha_num. "|max:32",
-            'idfa' => "nullable|". static::$alpha_num. "|max:32",
-            'androidid' => "nullable|". static::$alpha_num. "|max:32",
-            'oaid' => "nullable|max:40",
+            'imei' => "nullable|". static::$alpha_num. "|between:16,33",
+            'idfa' => "nullable|". static::$alpha_num. "|between:16,33",
+            'androidid' => "nullable|". static::$alpha_num. "|between:16,33",
+            'oaid' => "nullable|between:16,40",
 
-            "os" => "nullable|numeric|max:3",
-            "mac" => "nullable|". static::$alpha_num. "|max:32",
-            "ip" => "nullable|max:40",
-            "ts" => "nullable|numeric|max:20",
+            "os" => "nullable|numeric|between:0,3",
+            "mac" => "nullable|". static::$alpha_num. "|between:16,33",
+            "ip" => "nullable|between:7,40",
+            "ts" => "nullable|numeric",
         ];
     }
 
