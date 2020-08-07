@@ -29,7 +29,16 @@ class Controller extends BaseController
         return [ 'deal_error' => $error ];
     }
     
-    static public function jsonRes( $code = 0, $message = null, $data = [], $merge = true ) {
+    /**
+     * 统一json返回
+     *
+     * @param integer $code
+     * @param string $message
+     * @param array $data
+     * @param boolean $merge
+     * @return array
+     */
+    static public function jsonRes( $code = 0, $message = null, array $data = [], $merge = true ) {
         if( \is_null( $message ) ) $message = $code == 0? "SUCCESS": "FAIL";
         $res = [ 'code' => $code, 'message' => $message ];
         
@@ -40,6 +49,13 @@ class Controller extends BaseController
         return $res;
     }
 
+    /**
+     * 执行表单验证
+     *
+     * @param FormRequest $classObj
+     * @param array $data
+     * @return Illuminate\Validation\Validator
+     */
     static public function runValidate( FormRequest $classObj, array $data ) {
         if( 
             \method_exists( $classObj, 'authorize' ) 
@@ -57,6 +73,14 @@ class Controller extends BaseController
         return $validator;
     }
 
+    /**
+     * 执行表单验证,返回 jsonRes
+     *
+     * @param FormRequest $classObj
+     * @param array $data
+     * @param $fails
+     * @return jsonRes
+     */
     static public function jsonValidate( FormRequest $classObj, array $data, &$fails ) {
         try {
             $validator = static::runValidate( $classObj, $data );
@@ -68,6 +92,38 @@ class Controller extends BaseController
         if( $validator->fails() ) {
             $fails = false;
             return static::jsonRes( 400, 'Validation Fails', $validator->errors()->messages(), false );
+        }
+
+        $fails = true;
+        return static::jsonRes();
+    }
+
+    /**
+     * 执行表单验证并过滤,返回 jsonRes
+     *
+     * @param FormRequest $classObj
+     * @param array &$data
+     * @param $fails
+     * @param array $must_succ_keys 必须正确的键
+     * @return jsonRes
+     */
+    static public function jsonValidateFilter( FormRequest $classObj, array &$data, &$fails, array $must_succ_keys = null ) {
+        try {
+            $validator = static::runValidate( $classObj, $data );
+        } catch (\Throwable $th) {
+            $fails = false;
+            return static::jsonRes( 401, 'Permissions' );
+        }
+
+        if( $validator->fails() ) {
+            $valiErrors = $validator->errors();
+            if( !empty( $must_succ_keys ) && $valiErrors->hasAny( $must_succ_keys ) ) {
+                $fails = false;
+                return static::jsonRes( 400, 'Validation Fails', $valiErrors->messages(), false );
+            }
+            
+            $fail_keys = $valiErrors->keys();
+            $data = \array_except( $data, $fail_keys );
         }
 
         $fails = true;

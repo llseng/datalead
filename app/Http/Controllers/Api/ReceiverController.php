@@ -36,7 +36,7 @@ class ReceiverController extends Controller
      */
     public function byte_click( Request $request, $app_id ) {
         $req_data = $request->all();
-        $valiRes = static::jsonValidate( new ByteClickData, $req_data, $valiStatus );
+        $valiRes = static::jsonValidateFilter( new ByteClickData, $req_data, $valiStatus, ['aid'] );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail', $valiRes );
             return \response()->json( $valiRes );
@@ -77,7 +77,7 @@ class ReceiverController extends Controller
      */
     public function byte_show( Request $request, $app_id ) {
         $req_data = $request->all();
-        $valiRes = static::jsonValidate( new ByteShowData, $req_data, $valiStatus );
+        $valiRes = static::jsonValidateFilter( new ByteShowData, $req_data, $valiStatus, ['aid'] );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail ', $valiRes );
             return \response()->json( $valiRes );
@@ -106,8 +106,7 @@ class ReceiverController extends Controller
      */
     public function byte_click_v2( Request $request, $app_id ) {
         $req_data = $request->all();
-        // $validate = static::runValidate( new ByteClickData, $req_data );
-        $valiRes = static::jsonValidate( new ByteClickData, $req_data, $valiStatus );
+        $valiRes = static::jsonValidateFilter( new ByteClickData, $req_data, $valiStatus, ['aid'] );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail', $valiRes );
             return \response()->json( $valiRes );

@@ -22,15 +22,15 @@ class ListenController extends Controller
 
     public function app_init( Request $request, $app_id ) {
         $req_data = $request->all();
-        $valiRes = static::jsonValidate( new AppInitData, $req_data, $valiStatus );
+        !empty( $req_data['ts'] ) && $ts_len = \mb_strlen( $req_data['ts'] );
+        $valiRes = static::jsonValidateFilter( new AppInitData, $req_data, $valiStatus );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail', $valiRes );
-            // return \response()->json( $valiRes );
-            $req_data = AppDataFilterL::filterKeys( $req_data, \array_keys( $valiRes['data'] ) );
+            return \response()->json( $valiRes );
         }
 
-        $req_data['ua'] = $request->header( 'user-agent' );
-        $req_data['ip'] = $request->getClientIp( );
+        empty( $req_data['ua'] ) && $req_data['ua'] = $request->header( 'user-agent' );
+        empty( $req_data['ip'] ) && $req_data['ip'] = $request->getClientIp( );
         if( empty( $req_data['ts'] ) ) {
             $request_time = $request->server( 'REQUEST_TIME_FLOAT' )?: time();
             $req_data['ts'] = \round( $request_time * 1000 );
