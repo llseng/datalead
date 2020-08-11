@@ -19,10 +19,10 @@ class AppInitData extends AppBase
                 //安卓
                 if( !empty( $init_data['imei'] ) ) {
                     $init_id = $init_data['imei'];
-                }elseif ( !empty( $init_data['oaid'] ) ) {
-                    $init_id = $init_data['oaid'];
                 }elseif ( !empty( $init_data['androidid'] ) ) {
                     $init_id = $init_data['androidid'];
+                }elseif ( !empty( $init_data['oaid'] ) ) {
+                    $init_id = $init_data['oaid'];
                 }elseif ( !empty( $init_data['reid'] ) ) {
                     $init_id = $init_data['reid']; //应用初始化生成的ID
                 }
@@ -31,7 +31,9 @@ class AppInitData extends AppBase
 
             case 1:
                 //ios
-                if( !empty( $init_data['idfa'] ) ) {
+                if( !empty( $init_data['imei'] ) ) {
+                    $init_id = $init_data['imei'];
+                }elseif( !empty( $init_data['idfa'] ) ) {
                     $init_id = $init_data['idfa'];
                 }elseif ( !empty( $init_data['reid'] ) ) {
                     $init_id = $init_data['reid'];
@@ -41,7 +43,9 @@ class AppInitData extends AppBase
             
             default:
                 //其他
-                if ( !empty( $init_data['reid'] ) ) {
+                if( !empty( $init_data['imei'] ) ) {
+                    $init_id = $init_data['imei'];
+                }elseif ( !empty( $init_data['reid'] ) ) {
                     $init_id = $init_data['reid'];
                 }
                 

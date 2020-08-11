@@ -19,27 +19,34 @@ class AppUsersUid
                     $unique_id = $data['oaid'];
                 }elseif ( !empty( $data['androidid'] ) ) {
                     $unique_id = $data['androidid'];
-                }elseif ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 
                 break;
 
             case 1:
                 //ios
-                if( !empty( $data['idfa'] ) ) {
+                if( !empty( $data['imei'] ) ) {
+                    $unique_id = $data['imei'];
+                }elseif( !empty( $data['idfa'] ) ) {
                     $unique_id = $data['idfa'];
-                }elseif ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 
                 break;
             
             default:
                 //其他
-                if ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
+                if( !empty( $data['imei'] ) ) {
+                    $unique_id = $data['imei'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 
                 break;
         }
@@ -64,25 +71,32 @@ class AppUsersUid
                     $unique_id = $data['imei'];
                 }elseif ( !empty( $data['androidid'] ) ) {
                     $unique_id = $data['androidid'];
-                }elseif ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 break;
 
             case 1:
                 //ios
-                if( !empty( $data['idfa'] ) ) {
+                if( !empty( $data['imei'] ) ) {
+                    $unique_id = $data['imei'];
+                }elseif( !empty( $data['idfa'] ) ) {
                     $unique_id = $data['idfa'];
-                }elseif ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 break;
             
             default:
                 //其他
-                if ( !empty( $data['mac'] ) ) {
-                    $unique_id = $data['mac'];
+                if( !empty( $data['imei'] ) ) {
+                    $unique_id = $data['imei'];
                 }
+                // elseif ( !empty( $data['mac'] ) ) {
+                //     $unique_id = $data['mac'];
+                // }
                 break;
         }
         
