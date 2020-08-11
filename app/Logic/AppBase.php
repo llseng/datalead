@@ -51,6 +51,13 @@ class AppBase
         return $this->model_class;
     }
 
+    public function getTableModelObj( ) {
+        $TableModelClass = $this->getTableModel();
+        $TableModel = new $TableModelClass;
+        $TableModel->setTable( $this->table );
+        return $TableModel;
+    }
+
     public function create( $data ) {
         $time_data = [
             'create_date' => DB::raw('current_date()'),
@@ -59,9 +66,7 @@ class AppBase
         $insert_data = \array_merge( $time_data, $data );
 
         try {
-            $TableModelClass = $this->getTableModel();
-            $TableModel = new $TableModelClass;
-            $TableModel->setTable( $this->table );
+            $TableModel = $this->getTableModelObj();
             $fill_status = $TableModel->fill( $insert_data )->save();
             return $fill_status;
         } catch (\Throwable $th) {
