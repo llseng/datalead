@@ -20,8 +20,8 @@ class CreateGameAppInitDataTable extends Migration
             $table->string('imei2', 32)->nullable(); //安卓的设备 ID
             $table->string('meid', 32)->nullable(); //移动终端标识号
             $table->string('deviceId', 32)->nullable(); //手机设备的串号
-            $table->string('idfa', 64)->nullable();
-            $table->string('androidid', 64)->nullable(); //安卓id原值的
+            $table->string('idfa', 64)->nullable(); //iOS独有的广告标识符
+            $table->string('androidid', 64)->nullable(); //安卓id原值
             $table->string('oaid', 64)->nullable(); //Android Q及更高版本的设备号
             $table->unsignedTinyInteger('os')->nullable(); //操作系统平台
             $table->string('mac', 40)->nullable(); //移动设备mac地址
