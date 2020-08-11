@@ -16,7 +16,7 @@ class AppDataFilter
 
     static public function filter( array $data ) {
         return \array_filter( $data, function ( $val ) {
-            return !\in_array( $val, static::DLIST );
+            return !\in_array( $val, static::DLIST, true ); //使用严格模式,检查类型
         } );
     }
 

@@ -8,6 +8,7 @@ class GameAppUsers extends Model
 {
     //字段白名单
     protected $fillable = [
+        'init_id',
         'unique_id',
         'reg_ip',
         'os',

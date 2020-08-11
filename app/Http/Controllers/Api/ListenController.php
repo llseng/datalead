@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 
 use Log;
 
+use App\Logic\AppUsers as AppUsersL;
 use App\Logic\AppInitData as AppInitDataL;
 use App\Logic\AppDataFilter as AppDataFilterL;
+use App\Logic\AppUsersFormat as AppUsersFormatL;
 
 use App\Http\Requests\Api\AppInitData;
 
@@ -29,6 +31,7 @@ class ListenController extends Controller
             return \response()->json( $valiRes );
         }
 
+        !isset( $req_data['os'] ) && $req_data['os'] = 0;
         empty( $req_data['ua'] ) && $req_data['ua'] = $request->header( 'user-agent' );
         empty( $req_data['ip'] ) && $req_data['ip'] = $request->getClientIp( );
         if( empty( $req_data['ts'] ) ) {
@@ -44,6 +47,10 @@ class ListenController extends Controller
 
         $AppInitDataL = new AppInitDataL( $app_id );
         $init_data_create_status = $AppInitDataL->create( $filter_data );
+
+        $user;
+        $AppUsersL = new AppUsersL( $app_id );
+        $create_user_status = $AppUsersL->only_create( AppUsersFormatL::fromInitData( $filter_data ), $user );
 
         return \response()->json( static::jsonRes( ) );
     }
