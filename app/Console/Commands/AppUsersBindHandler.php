@@ -1,0 +1,430 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+
+use DB;
+
+use App\Traits\Handler;
+use App\GameApp as GAM;
+use App\Logic\AppUsers as AppUsersL;
+use App\Logic\AppInitData as AppInitDataL;
+use App\Logic\AppUsersFormat as AppUsersFormatL;
+use App\Logic\AppByteClickData as AppByteClickDataL;
+
+class AppUsersBindHandler extends Command
+{
+    use Handler;
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'rtime_script:app_user_bind_handler {model?}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '应用用户绑定广告点击数据 {model: start restart stop status}';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        static::loggerInit();
+    }
+
+    static public $apid_list;
+
+    static public function isRunning( $pid ) {
+        if( !extension_loaded( 'pcntl' ) || !extension_loaded( 'posix' ) ) {
+            static::$Logger->error('You must install PCNTL POSIX extension!');
+            return false;
+        }
+
+        if( !\posix_kill( \intval( $pid ), 0 ) ) {
+            static::$Logger->error( $pid. " kill 0 error: ". \posix_strerror( \posix_errno() ) );
+            return false;
+        }
+
+        return true;
+    }
+
+    static public function KillProcess( $pid, $sig = null ) {
+        if( !extension_loaded( 'pcntl' ) || !extension_loaded( 'posix' ) ) {
+            static::$Logger->error('You must install PCNTL POSIX extension!');
+            return false;
+        }
+
+        \is_null( $sig ) && $sig = SIGKILL;
+        if( !\posix_kill( \intval( $pid ), $sig ) ) {
+        // if( !\posix_kill( \intval( $pid ), SIGINT ) ) {
+            static::$Logger->error( $pid. " kill error: ". \posix_strerror( \posix_errno() ) );
+            return false;
+        }
+
+        return true;
+    }
+
+    static public function sig_handler( $signo ) {
+        switch ( $signo ) {
+            case SIGCHLD: //子进程退出
+                $s_status;
+                $s_pid = \pcntl_waitpid( -1, $s_status, WNOHANG );
+                if( $s_pid ) {
+                    static::$Logger->info( $s_pid. " child process exit" );
+                    $p_list = \array_flip( static::$apid_list );
+                    if( isset( $p_list[ $s_pid ] ) ) {
+                        static::$Logger->info( $p_list[ $s_pid ]. " unset" );
+                        unset( static::$apid_list[ $p_list[ $s_pid ] ] );
+                    }
+                }
+
+            break;
+
+            case SIGTERM: // kill 默认信号
+            case SIGINT: // CTRL + C 退出信号
+                static::$Logger->info( "process exit sig" );
+                foreach ( static::$apid_list as $key => $val) {
+                    if( !static::KillProcess( $val ) ) {
+                        continue;
+                    }
+
+                    static::$Logger->info( $key. " kill succ" );
+                }
+
+                static::$Logger->info( "handle end" );
+                exit;
+            break;
+            
+            default:
+            
+            break;
+        }
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        if( !extension_loaded( 'pcntl' ) || !extension_loaded( 'posix' ) ) {
+            $this->error('You must install PCNTL POSIX extension!');
+            static::$Logger->error('You must install PCNTL POSIX extension!');
+            exit();
+        }
+
+        $pid_file = "app_users_bind_handler.pid";
+        $pid = (int)@\file_get_contents( $pid_file );
+        $p_status = false;
+        if( $pid ) {
+            $p_run_status = static::isRunning( $pid );
+        }
+
+        $command_model = $this->argument( 'model' );
+        $this->info( "pid $pid , command_model: $command_model" );
+        switch ( $command_model ) {
+            case 'start':
+            case 'restart':
+                if( $pid ) {
+                    if( static::KillProcess( $pid, SIGINT ) ) {
+                        $this->info( "stop success" );
+                    }
+                    \sleep( 1 );
+                }
+                break;
+                
+            case 'stop':
+                if( static::KillProcess( $pid, SIGINT ) ) {
+                    $this->info( "stop success" );
+                    @\file_put_contents( $pid_file, '' );
+                }
+                exit;
+                break;
+            
+            default:
+                exit;
+                break;
+        }
+
+        /* 守护进程模式 */
+        $pid = \pcntl_fork();
+        if (-1 === $pid) {
+            throw new Exception('Fork fail');
+        } elseif ($pid > 0) {
+            exit(0);
+        }
+        if (-1 === \posix_setsid()) {
+            throw new Exception("Setsid fail");
+        }
+        // Fork again avoid SVR4 system regain the control of terminal.
+        $pid = \pcntl_fork();
+        if (-1 === $pid) {
+            throw new Exception("Fork fail");
+        } elseif (0 !== $pid) {
+            exit(0);
+        }
+        /* 守护进程模式 */
+
+        $pid = \posix_getpid( );
+        @\file_put_contents( $pid_file, $pid ); //当前进程id写入到id文件
+
+        static::$apid_list = [];
+        $sleep_s = 1;
+        $sleep_max_s = $sleep_s << 4;
+
+        \pcntl_signal( SIGCHLD, [static::class, "sig_handler"] ); //子进程退出信号
+        \pcntl_signal( SIGTERM, [static::class, "sig_handler"] ); //kill 默认信号
+        \pcntl_signal( SIGINT, [static::class, "sig_handler"] ); //CTRL + C 退出信号
+
+        HANDLE_START: {
+            static::$Logger->info( "handle start ===", static::$apid_list );
+            pcntl_signal_dispatch(); //
+        }
+
+        $GAlist = GAM::pluck( "name", "id" )->toArray();
+
+        static::$Logger->info( "GAlist", $GAlist );
+
+        static::$Logger->info( "apid_list check ---" );
+        $diff_apids = \array_diff_key( static::$apid_list, $GAlist );
+        static::$Logger->info( "diff_apids", $diff_apids );
+        
+        if( $diff_apids ) {
+            $sleep_s = 1;
+
+            foreach ($diff_apids as $key => $val) {
+                static::$Logger->info( $key. "kill" );
+
+                if( !static::KillProcess( static::$apid_list[ $key ] ) ) {
+                    static::$Logger->error( $key. " kill error: ". \posix_strerror( \posix_errno() ) );
+                    continue;
+                }
+
+                static::$Logger->info( $key. "kill succ" );
+                unset( static::$apid_list[ $key ] );
+            }
+        }
+
+        static::$Logger->info( "GAlist check ---" );
+        $diff_GAlist = \array_diff_key( $GAlist, static::$apid_list );
+        static::$Logger->info( "diff_GAlist", $diff_GAlist );
+        if( $diff_GAlist ) {
+            $sleep_s = 1;
+
+            foreach ($diff_GAlist as $key =>  $val) {
+                $spid = \pcntl_fork();
+                switch ( $spid ) {
+                    case -1:
+                        static::$Logger->error( $key. " fork error: ". \pcntl_strerror( \pcntl_errno() ) );
+                        break;
+
+                    case 0:
+                        static::$apid_list = [];
+                        try {
+                            static::app_user_bind( $key );
+                        } catch (\Throwable $th) {
+                            static::$Logger->error( "$key process run error",[$th->getCode(), $th->getFile(), $th->getLine(), $th->getMessage()] );
+                        }
+                        
+                        static::$Logger->info( "---". $key. " user bind end" );
+                        $pid = \posix_getpid();
+                        static::$Logger->info( "---". $key. " pid ". $pid );        
+                        static::KillProcess( $pid );
+                        exit;
+                        break;
+                    
+                    default:
+                        static::$Logger->info( $key. " fork succ" );
+                        static::$apid_list[ $key ] = $spid;
+                        break;
+                }
+            }
+
+        }
+
+        static::$Logger->info( "process check ---" );
+        foreach (static::$apid_list as $key => $val) {
+            if( !static::isRunning( $val ) ) {
+
+                static::$Logger->warn( $key. " process not running" );
+                unset( static::$apid_list[ $key ] );
+            }
+        }
+        
+        static::$Logger->info( "sleep $sleep_s" );
+        sleep( $sleep_s );
+
+        $sleep_s < $sleep_max_s && $sleep_s <<= 1;
+        static::loggerLoad();
+
+        goto HANDLE_START;
+
+        HANDLE_END: {
+            static::$Logger->info( "handle end" );
+        }
+        exit;
+    }
+
+    static public function app_user_bind( $app_id ) {
+        
+        DB::reconnect(); //重新连接数据库 子进程会继承父进程数据库连接 导致报错
+        $AppUsersL = new AppUsersL( $app_id );
+        $AppInitDataL = new AppInitDataL( $app_id );
+        $AppByteClickDataL = new AppByteClickDataL( $app_id );
+        
+        $AppUsersM = $AppUsersL->getTableModelObj();
+        $AppInitDataM = $AppInitDataL->getTableModelObj();
+        $AppByteClickDataM = $AppByteClickDataL->getTableModelObj();
+
+        $sleep_s = 1;
+        $sleep_max_s = $sleep_s << 4;
+        $user_limit = 100; //用户限制
+        $data_limit = $user_limit * 50; //数据限制
+        $time_limit = 20 * 60; //时间限制
+
+        BIND_START: {
+            static::$Logger->info( "---". $app_id. " user bind start" );
+        }
+        
+        $app_users = $AppUsersM->where( "channel", 0 )->limit( 100 )->get()->toArray();
+        if( empty( $app_users ) ) {
+            static::$Logger->warn( "---". $app_id. " app_users empty" );
+            goto BIND_AGAIN;
+        }
+        
+        $first_time = \strtotime( $app_users[0]['create_date']. " ". $app_users[0]['create_time'] ) + $time_limit;
+        $first_date = date( 'Y-m-d', $first_time );
+        $first_datetime = date( 'H:i:s', $first_time );
+
+        $last_app_user = $app_users[ \count( $app_users ) - 1 ];
+
+        $byte_click_data = $AppByteClickDataM->select("id","unique_id","imei","idfa","androidid","oaid","os","ip","ua")->where([
+            [ 'create_date', '<=', $last_app_user['create_date'] ],
+            [ 'create_time', '<=', $last_app_user['create_time'] ],
+            [ 'create_date', '>=', $first_date ],
+            [ 'create_time', '>=', $first_datetime ],
+        ])->orderBy('id', 'desc')->limit()->get()->toArray();
+
+        if( empty( $byte_click_data ) ) {
+            static::$Logger->error( "---". $app_id. " byte_click_data empty" );
+
+            $user_ids = \array_column( $app_users, "id" );
+            $update_status = $AppUsersM->whereIn( "id", $user_ids )->update( [ "channel"=>1 ] );
+            if( empty( $update_status ) ) {
+                static::$Logger->error( "---". $app_id. " app_users update error", $user_ids );
+            }
+        }else{
+            foreach ($app_users as $user) {
+                $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "ip", "ua")->where( 'init_id', $user['init_id'] )->first();
+
+                $match_status = false;
+                $match_unique_id = null;
+                $update_data = ['channel'=>1];
+
+                switch ( (int)$user['os'] ) {
+                    case AppUsersFormatL::$os_list['android']:
+
+                        foreach ($byte_click_data as $click_data) {
+                            if( static::byte_click_match_android( $click_data, $init_data ) ) {
+
+                                $match_status = true;
+                                $match_unique_id = $click_data['unique_id'];
+
+                                break;
+                            }
+                        }
+
+                        break;
+                        
+                    case AppUsersFormatL::$os_list['ios']:
+
+                        foreach ($byte_click_data as $click_data) {
+                            
+                            if( static::byte_click_match_ios( $click_data, $init_data ) ) {
+                                
+                                $match_status = true;
+                                $match_unique_id = $click_data['unique_id'];
+
+                                break;
+                            }
+                        }
+
+                        break;
+                    
+                    default:
+
+                        foreach ($byte_click_data as $click_data) {
+                            
+                            if( static::byte_click_match_other( $click_data, $init_data ) ) {
+                                
+                                $match_status = true;
+                                $match_unique_id = $click_data['unique_id'];
+
+                                break;
+                            }
+                        }
+
+                        break;
+                }
+
+                if( $match_status ) {
+                    $update_data['channel'] = AppUsersFormatL::$channel_list['byte'];
+                    $update_data['unique_id'] = $match_unique_id;
+                }
+
+                $update_status = $AppUsersM->where( "id", $user['id'] )->update( $update_data );
+                if( empty( $update_status ) ) {
+                    static::$Logger->error( "---". $app_id. " app_users ". $user['id']. " update error" );
+                }
+            }
+        }
+
+        BIND_AGAIN: {
+            static::$Logger->info( "---". $app_id. " sleep $sleep_s" );
+            sleep( $sleep_s );
+    
+            $sleep_s < $sleep_max_s && $sleep_s <<= 1;
+            static::loggerLoad();
+
+            static::$Logger->info( "---". $app_id. " user bind again" );
+            goto BIND_START;
+        };
+
+        BIND_END: {
+            static::$Logger->info( "---". $app_id. " user bind end" );
+        };
+
+    }
+
+    static public function byte_click_match_android( $click_data, $init_data ) {
+        if( 
+            $init_data['imei']
+            && $click_data['imei']
+            && \md5( $init_data['imei'] ) == $click_data['imei']
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    static public function byte_click_match_ios( $click_data, $init_data ) {
+        return false;
+    }
+
+    static public function byte_click_match_other( $click_data, $init_data ) {
+        return false;
+    }
+
+}
