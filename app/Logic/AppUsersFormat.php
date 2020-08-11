@@ -7,7 +7,9 @@ namespace App\Logic;
 class AppUsersFormat 
 {
     static public $channel_list = [
-        'byte' => 1
+        'init' => 0, //初始化
+        'natural' => 1,
+        'byte' => 2,
     ];
 
     static public $site_list = [
@@ -41,6 +43,17 @@ class AppUsersFormat
 
         $to_data['unique_id'] = $data['unique_id'];
 
+        $to_data['channel'] = static::$channel_list['byte'];
+
+        return $to_data;
+    }
+
+    static public function fromInitData( array $data ) {
+        $to_data = [];
+
+        $to_data['init_id'] = $data['init_id'];
+        $to_data['reg_ip'] = !empty( $data['ip'] )? $data['ip']: null;
+
         switch ( (int)$data['os'] ) {
             case 0:
                 $to_data['os'] = static::$os_list['android'];
@@ -54,8 +67,9 @@ class AppUsersFormat
                 break;
         }
 
-        $to_data['channel'] = static::$channel_list['byte'];
+        $to_data['channel'] = static::$channel_list['init'];
 
         return $to_data;
     }
+
 }

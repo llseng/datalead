@@ -31,7 +31,7 @@ class AppUsers extends AppBase
         $db_model = DB::table( $this->table )->select( 'init_id', 'unique_id', 'create_date' )->where('init_id', $init_id);
         if( $updateLock ) $db_model->lockForUpdate(); //写锁
 
-        return $db_model->first()->toArray();
+        return $db_model->first();
     }
 
     public function only_create( $data, &$user ) {
@@ -44,7 +44,13 @@ class AppUsers extends AppBase
 
             try {
                 $user = $this->getUserByInitId( $data['init_id'], true );
-                if( $user ) goto COMMIT;
+                if( $user ) {
+                    goto COMMIT;
+                }
+                $create_status = static::create( $data );
+                if( !$create_status ) {
+                    goto ROLLBACK;
+                }
             } catch (\Throwable $th) {
                 Log::error( static::class .': '. $th->getMessage() );
                 goto ROLLBACK;
