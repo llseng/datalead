@@ -55,7 +55,7 @@ class AppCallbackHandler extends Command
         /* 设置执行用户 */
 
         $sleep_s = 1;
-        $sleep_max_s = $sleep_s << 4;
+        $sleep_max_s = $sleep_s << 3;
         do{
             $callback_list = GACM::where( 'status', 0 )->limit(100)->get()->toArray();
             

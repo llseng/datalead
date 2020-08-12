@@ -323,7 +323,7 @@ class AppUsersBindHandler extends Command
         $AppByteClickDataM = $AppByteClickDataL->getTableModelObj();
 
         $sleep_s = 1;
-        $sleep_max_s = $sleep_s << 4;
+        $sleep_max_s = $sleep_s << 3;
         $user_limit = 100; //用户限制
         $data_limit = $user_limit * 50; //数据限制
         $time_limit = 20 * 60; //时间限制
@@ -347,7 +347,7 @@ class AppUsersBindHandler extends Command
         static::$Logger->debug( "---". $app_id. " first_time ". $first_time, [$first_date, $first_datetime] );
         $last_app_user = $app_users[ \count( $app_users ) - 1 ];
 
-        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "ip", "ua", "callback_url")->where([
+        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where([
             [ 'create_date', '<=', $last_app_user['create_date'] ],
             [ 'create_time', '<=', $last_app_user['create_time'] ],
             [ 'create_date', '>=', $first_date ],
@@ -367,7 +367,7 @@ class AppUsersBindHandler extends Command
             static::$Logger->info( "---". $app_id. " byte_click_data", [$byte_click_data[0]['id'], $byte_click_data[ \count( $byte_click_data ) - 1 ]['id']] );
 
             foreach ($app_users as $user) {
-                $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "ip", "ua")->where( 'init_id', $user['init_id'] )->first();
+                $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "mac", "ip", "ua")->where( 'init_id', $user['init_id'] )->first();
 
                 $match_status = false;
                 $match_unique_id = null; //绑定字节点击数据的 unique_id
@@ -487,13 +487,26 @@ class AppUsersBindHandler extends Command
         }
 
         if( 
+            $init_data['mac']
+            && $click_data['mac']
+            && \md5( $init_data['mac'] ) == $click_data['mac']
+        ) {
+            return true;
+        }
+
+        if( 
             $init_data['ip']
             && $click_data['ip']
+            && $init_data['ip'] == $click_data['ip']
             && $init_data['ua']
             && $click_data['ua']
         ) {
-            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
-            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            $reg = "/^([^\(]+\([^\)]+\)).+/";
+            $init_data_ua = \preg_replace( $reg, "$1", $init_data['ua'] );
+            $click_data_ua = \preg_replace( $reg, "$1", $click_data['ua'] );
+
+            $init_tmp_id = $init_data['ip']. \md5( $init_data_ua );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data_ua );
             if( $init_tmp_id == $click_tmp_id ) return true;
         }
 
@@ -518,13 +531,26 @@ class AppUsersBindHandler extends Command
         }
 
         if( 
+            $init_data['mac']
+            && $click_data['mac']
+            && \md5( $init_data['mac'] ) == $click_data['mac']
+        ) {
+            return true;
+        }
+
+        if( 
             $init_data['ip']
             && $click_data['ip']
+            && $init_data['ip'] == $click_data['ip']
             && $init_data['ua']
             && $click_data['ua']
         ) {
-            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
-            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            $reg = "/^([^\(]+\([^\)]+\)).+/";
+            $init_data_ua = \preg_replace( $reg, "$1", $init_data['ua'] );
+            $click_data_ua = \preg_replace( $reg, "$1", $click_data['ua'] );
+
+            $init_tmp_id = $init_data['ip']. \md5( $init_data_ua );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data_ua );
             if( $init_tmp_id == $click_tmp_id ) return true;
         }
 
@@ -541,13 +567,26 @@ class AppUsersBindHandler extends Command
         }
 
         if( 
+            $init_data['mac']
+            && $click_data['mac']
+            && \md5( $init_data['mac'] ) == $click_data['mac']
+        ) {
+            return true;
+        }
+
+        if( 
             $init_data['ip']
             && $click_data['ip']
+            && $init_data['ip'] == $click_data['ip']
             && $init_data['ua']
             && $click_data['ua']
         ) {
-            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
-            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            $reg = "/^([^\(]+\([^\)]+\)).+/";
+            $init_data_ua = \preg_replace( $reg, "$1", $init_data['ua'] );
+            $click_data_ua = \preg_replace( $reg, "$1", $click_data['ua'] );
+
+            $init_tmp_id = $init_data['ip']. \md5( $init_data_ua );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data_ua );
             if( $init_tmp_id == $click_tmp_id ) return true;
         }
 
