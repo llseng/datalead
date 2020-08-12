@@ -9,6 +9,7 @@ use DB;
 use App\Traits\Handler;
 use App\GameApp as GAM;
 use App\Logic\AppUsers as AppUsersL;
+use App\Logic\AppCallback as AppCallbackL;
 use App\Logic\AppInitData as AppInitDataL;
 use App\Logic\AppUsersFormat as AppUsersFormatL;
 use App\Logic\AppByteClickData as AppByteClickDataL;
@@ -42,9 +43,19 @@ class AppUsersBindHandler extends Command
 
         static::loggerInit();
     }
-
+    /**
+     * 子进程列表
+     *
+     * @var array
+     */
     static public $apid_list;
 
+    /**
+     * 检测子进程是否正在运行
+     *
+     * @param int $pid
+     * @return boolean
+     */
     static public function isRunning( $pid ) {
         if( !extension_loaded( 'pcntl' ) || !extension_loaded( 'posix' ) ) {
             static::$Logger->error('You must install PCNTL POSIX extension!');
@@ -59,6 +70,13 @@ class AppUsersBindHandler extends Command
         return true;
     }
 
+    /**
+     * 杀死子进程
+     *
+     * @param int $pid
+     * @param int $sig
+     * @return void
+     */
     static public function KillProcess( $pid, $sig = null ) {
         if( !extension_loaded( 'pcntl' ) || !extension_loaded( 'posix' ) ) {
             static::$Logger->error('You must install PCNTL POSIX extension!');
@@ -75,16 +93,23 @@ class AppUsersBindHandler extends Command
         return true;
     }
 
+    /**
+     * 信号处理函数
+     *
+     * @param int $signo
+     * @return void
+     */
     static public function sig_handler( $signo ) {
         switch ( $signo ) {
             case SIGCHLD: //子进程退出
+                static::$Logger->warn( "child process exit sig" );
                 $s_status;
                 $s_pid = \pcntl_waitpid( -1, $s_status, WNOHANG );
                 if( $s_pid ) {
-                    static::$Logger->info( $s_pid. " child process exit" );
+                    static::$Logger->warn( $s_pid. " child process exit" );
                     $p_list = \array_flip( static::$apid_list );
                     if( isset( $p_list[ $s_pid ] ) ) {
-                        static::$Logger->info( $p_list[ $s_pid ]. " unset" );
+                        static::$Logger->debug( $p_list[ $s_pid ]. " unset" );
                         unset( static::$apid_list[ $p_list[ $s_pid ] ] );
                     }
                 }
@@ -93,13 +118,13 @@ class AppUsersBindHandler extends Command
 
             case SIGTERM: // kill 默认信号
             case SIGINT: // CTRL + C 退出信号
-                static::$Logger->info( "process exit sig" );
+                static::$Logger->warn( "process exit sig" );
                 foreach ( static::$apid_list as $key => $val) {
                     if( !static::KillProcess( $val ) ) {
                         continue;
                     }
 
-                    static::$Logger->info( $key. " kill succ" );
+                    static::$Logger->debug( $key. " kill succ" );
                 }
 
                 static::$Logger->info( "handle end" );
@@ -137,7 +162,7 @@ class AppUsersBindHandler extends Command
         switch ( $command_model ) {
             case 'start':
             case 'restart':
-                if( $pid ) {
+                if( $pid ) { //应用正在运行, 杀死后启动
                     if( static::KillProcess( $pid, SIGINT ) ) {
                         $this->info( "stop success" );
                     }
@@ -163,6 +188,7 @@ class AppUsersBindHandler extends Command
         if (-1 === $pid) {
             throw new Exception('Fork fail');
         } elseif ($pid > 0) {
+            $this->info( "start success" ); //提示
             exit(0);
         }
         if (-1 === \posix_setsid()) {
@@ -195,13 +221,13 @@ class AppUsersBindHandler extends Command
 
         $GAlist = GAM::pluck( "name", "id" )->toArray();
 
-        static::$Logger->info( "GAlist", $GAlist );
+        static::$Logger->debug( "GAlist", $GAlist );
 
-        static::$Logger->info( "apid_list check ---" );
+        static::$Logger->debug( "apid_list check ---" );
         $diff_apids = \array_diff_key( static::$apid_list, $GAlist );
-        static::$Logger->info( "diff_apids", $diff_apids );
+        static::$Logger->debug( "diff_apids", $diff_apids );
         
-        if( $diff_apids ) {
+        if( $diff_apids ) { //杀死多余应用进程
             $sleep_s = 1;
 
             foreach ($diff_apids as $key => $val) {
@@ -217,10 +243,11 @@ class AppUsersBindHandler extends Command
             }
         }
 
-        static::$Logger->info( "GAlist check ---" );
+        static::$Logger->debug( "GAlist check ---" );
         $diff_GAlist = \array_diff_key( $GAlist, static::$apid_list );
-        static::$Logger->info( "diff_GAlist", $diff_GAlist );
-        if( $diff_GAlist ) {
+        static::$Logger->debug( "diff_GAlist", $diff_GAlist );
+
+        if( $diff_GAlist ) { //创建应用进程
             $sleep_s = 1;
 
             foreach ($diff_GAlist as $key =>  $val) {
@@ -254,7 +281,7 @@ class AppUsersBindHandler extends Command
 
         }
 
-        static::$Logger->info( "process check ---" );
+        static::$Logger->debug( "process check ---" );
         foreach (static::$apid_list as $key => $val) {
             if( !static::isRunning( $val ) ) {
 
@@ -263,7 +290,7 @@ class AppUsersBindHandler extends Command
             }
         }
         
-        static::$Logger->info( "sleep $sleep_s" );
+        static::$Logger->debug( "sleep $sleep_s" );
         sleep( $sleep_s );
 
         $sleep_s < $sleep_max_s && $sleep_s <<= 1;
@@ -301,24 +328,28 @@ class AppUsersBindHandler extends Command
         $app_users = $AppUsersM->where( "channel", 0 )->limit( 100 )->get()->toArray();
         if( empty( $app_users ) ) {
             static::$Logger->warn( "---". $app_id. " app_users empty" );
-            goto BIND_AGAIN;
+            goto BIND_AGAIN; //没有数据 进入随眠
         }
+        static::$Logger->info( "---". $app_id. " app_users", [$app_users[0]['id'], $app_users[ \count( $app_users ) - 1 ]['id']] );
+
+        $sleep_s = 1; //有数据 随眠时间重置为1
         
-        $first_time = \strtotime( $app_users[0]['create_date']. " ". $app_users[0]['create_time'] ) + $time_limit;
+        $first_time = \strtotime( $app_users[0]['create_date']. " ". $app_users[0]['create_time'] ) - $time_limit;
         $first_date = date( 'Y-m-d', $first_time );
         $first_datetime = date( 'H:i:s', $first_time );
-
+        static::$Logger->debug( "---". $app_id. " first_time ". $first_time, [$first_date, $first_datetime] );
         $last_app_user = $app_users[ \count( $app_users ) - 1 ];
 
-        $byte_click_data = $AppByteClickDataM->select("id","unique_id","imei","idfa","androidid","oaid","os","ip","ua")->where([
+        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "ip", "ua", "callback_url")->where([
             [ 'create_date', '<=', $last_app_user['create_date'] ],
             [ 'create_time', '<=', $last_app_user['create_time'] ],
             [ 'create_date', '>=', $first_date ],
             [ 'create_time', '>=', $first_datetime ],
-        ])->orderBy('id', 'desc')->limit()->get()->toArray();
+        ])->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
 
         if( empty( $byte_click_data ) ) {
-            static::$Logger->error( "---". $app_id. " byte_click_data empty" );
+            //没有字节点击数据 用户全部设置为自然人
+            static::$Logger->warn( "---". $app_id. " byte_click_data empty" );
 
             $user_ids = \array_column( $app_users, "id" );
             $update_status = $AppUsersM->whereIn( "id", $user_ids )->update( [ "channel"=>1 ] );
@@ -326,18 +357,23 @@ class AppUsersBindHandler extends Command
                 static::$Logger->error( "---". $app_id. " app_users update error", $user_ids );
             }
         }else{
+            static::$Logger->info( "---". $app_id. " byte_click_data", [$byte_click_data[0]['id'], $byte_click_data[ \count( $byte_click_data ) - 1 ]['id']] );
+
             foreach ($app_users as $user) {
                 $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "ip", "ua")->where( 'init_id', $user['init_id'] )->first();
 
                 $match_status = false;
-                $match_unique_id = null;
+                $match_unique_id = null; //绑定字节点击数据的 unique_id
                 $update_data = ['channel'=>1];
-
+                //判断用户系统
                 switch ( (int)$user['os'] ) {
                     case AppUsersFormatL::$os_list['android']:
-
+                        //安卓
                         foreach ($byte_click_data as $click_data) {
+                            if( $click_data['os'] != $user['os'] ) continue;
+
                             if( static::byte_click_match_android( $click_data, $init_data ) ) {
+                                !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
 
                                 $match_status = true;
                                 $match_unique_id = $click_data['unique_id'];
@@ -349,10 +385,12 @@ class AppUsersBindHandler extends Command
                         break;
                         
                     case AppUsersFormatL::$os_list['ios']:
-
+                        //IOS
                         foreach ($byte_click_data as $click_data) {
+                            if( $click_data['os'] != $user['os'] ) continue;
                             
                             if( static::byte_click_match_ios( $click_data, $init_data ) ) {
+                                !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
                                 
                                 $match_status = true;
                                 $match_unique_id = $click_data['unique_id'];
@@ -364,10 +402,12 @@ class AppUsersBindHandler extends Command
                         break;
                     
                     default:
-
+                        //其他
                         foreach ($byte_click_data as $click_data) {
+                            if( $click_data['os'] != $user['os'] ) continue;
                             
                             if( static::byte_click_match_other( $click_data, $init_data ) ) {
+                                !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
                                 
                                 $match_status = true;
                                 $match_unique_id = $click_data['unique_id'];
@@ -380,7 +420,7 @@ class AppUsersBindHandler extends Command
                 }
 
                 if( $match_status ) {
-                    $update_data['channel'] = AppUsersFormatL::$channel_list['byte'];
+                    $update_data['channel'] = AppUsersFormatL::$channel_list['byte']; //字节渠道
                     $update_data['unique_id'] = $match_unique_id;
                 }
 
@@ -391,15 +431,21 @@ class AppUsersBindHandler extends Command
             }
         }
 
+        //清理
+        unset( $app_users );
+        unset( $byte_click_data );
+
+        goto BIND_START; //重新开始
+
         BIND_AGAIN: {
-            static::$Logger->info( "---". $app_id. " sleep $sleep_s" );
+            static::$Logger->debug( "---". $app_id. " sleep $sleep_s" );
             sleep( $sleep_s );
     
             $sleep_s < $sleep_max_s && $sleep_s <<= 1;
             static::loggerLoad();
 
             static::$Logger->info( "---". $app_id. " user bind again" );
-            goto BIND_START;
+            goto BIND_START; //随眠完成 重新开始
         };
 
         BIND_END: {
@@ -416,14 +462,88 @@ class AppUsersBindHandler extends Command
         ) {
             return true;
         }
+
+        if( 
+            $init_data['androidid']
+            && $click_data['androidid']
+            && \md5( $init_data['androidid'] ) == $click_data['androidid']
+        ) {
+            return true;
+        }
+
+        if( 
+            $init_data['oaid']
+            && $click_data['oaid']
+            && $init_data['oaid'] == $click_data['oaid']
+        ) {
+            return true;
+        }
+
+        if( 
+            $init_data['ip']
+            && $click_data['ip']
+            && $init_data['ua']
+            && $click_data['ua']
+        ) {
+            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            if( $init_tmp_id == $click_tmp_id ) return true;
+        }
+
         return false;
     }
 
     static public function byte_click_match_ios( $click_data, $init_data ) {
+        if( 
+            $init_data['imei']
+            && $click_data['imei']
+            && \md5( $init_data['imei'] ) == $click_data['imei']
+        ) {
+            return true;
+        }
+
+        if( 
+            $init_data['idfa']
+            && $click_data['idfa']
+            && $init_data['idfa'] == $click_data['idfa']
+        ) {
+            return true;
+        }
+
+        if( 
+            $init_data['ip']
+            && $click_data['ip']
+            && $init_data['ua']
+            && $click_data['ua']
+        ) {
+            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            if( $init_tmp_id == $click_tmp_id ) return true;
+        }
+
         return false;
     }
 
     static public function byte_click_match_other( $click_data, $init_data ) {
+        if( 
+            $init_data['imei']
+            && $click_data['imei']
+            && \md5( $init_data['imei'] ) == $click_data['imei']
+        ) {
+            return true;
+        }
+
+        if( 
+            $init_data['ip']
+            && $click_data['ip']
+            && $init_data['ua']
+            && $click_data['ua']
+        ) {
+            $init_tmp_id = $init_data['ip']. \md5( $init_data['ua'] );
+            $click_tmp_id = $click_data['ip']. \md5( $click_data['ua'] );
+            if( $init_tmp_id == $click_tmp_id ) return true;
+        }
+
         return false;
     }
 
