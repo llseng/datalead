@@ -53,8 +53,9 @@ class AppUsersUid
         
         if( empty( $unique_id ) ) {
             $uni_str = '';
-            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
+            if( !empty( $data['mac'] ) ) $uni_str .= $data['mac'];
             if( !empty( $data['ip'] ) ) $uni_str .= $data['ip'];
+            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
 
             $unique_id = md5( $uni_str );
         }
@@ -102,8 +103,9 @@ class AppUsersUid
         
         if( empty( $unique_id ) ) {
             $uni_str = '';
-            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
+            if( !empty( $data['mac'] ) ) $uni_str .= $data['mac'];
             if( !empty( $data['ip'] ) ) $uni_str .= $data['ip'];
+            if( !empty( $data['ua'] ) ) $uni_str .= md5( $data['ua'] );
 
             $unique_id = md5( $uni_str );
         }

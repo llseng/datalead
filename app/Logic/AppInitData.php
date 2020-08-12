@@ -54,8 +54,9 @@ class AppInitData extends AppBase
         
         if( empty( $init_id ) ) {
             $uni_str = '';
-            if( !empty( $init_data['ua'] ) ) $uni_str .= md5( $init_data['ua'] );
+            if( !empty( $init_data['mac'] ) ) $uni_str .= $init_data['mac'];
             if( !empty( $init_data['ip'] ) ) $uni_str .= $init_data['ip'];
+            if( !empty( $init_data['ua'] ) ) $uni_str .= md5( $init_data['ua'] );
 
             $init_id = md5( $uni_str );
         }
