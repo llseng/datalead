@@ -49,6 +49,13 @@
             </div>
             <div class="line"></div>
             <div class="form-group row">
+                <label class="col-sm-3 form-control-label">启动监听连接</label>
+                <div class="col-sm-9">
+                <input type="text" class="form-control" value="{{ $app_init_link }}"><small class="help-block-none"></small>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="form-group row">
                 <label class="col-sm-3 form-control-label">点击监测连接</label>
                 <div class="col-sm-9">
                 <input type="text" class="form-control" value="{{ $app_click_link }}"><small class="help-block-none"></small>

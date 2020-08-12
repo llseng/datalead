@@ -180,9 +180,10 @@ class GameAppController extends Controller
 
         $view_data['app_data'] = $GameApp;
         //字节点击监测连接
-        $view_data['app_click_link'] = \route( 'byte_click', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
+        $view_data['app_click_link'] = \route( 'byte_click_v2', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
         //字节展示监测连接
-        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteShowkData::getUrlQuery();
+        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteShowData::getUrlQuery();
+        $view_data['app_init_link'] = \route( 'app_init', ['id' => $id] );
         
         return view('m_game.info', $view_data);
     }
