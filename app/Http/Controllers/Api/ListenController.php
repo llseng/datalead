@@ -24,7 +24,7 @@ class ListenController extends Controller
 
     public function app_init( Request $request, $app_id ) {
         $req_data = $request->all();
-        !empty( $req_data['ts'] ) && $ts_len = \mb_strlen( $req_data['ts'] );
+        
         $valiRes = static::jsonValidateFilter( new AppInitData, $req_data, $valiStatus );
         if( !$valiStatus ) {
             Log::debug( static::class .': valiFail', $valiRes );

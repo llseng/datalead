@@ -46,6 +46,7 @@ class ReceiverController extends Controller
         $req_data['unique_id'] = $unique_id;
         Log::debug( static::class .': unique_id '. $unique_id );
 
+        !empty( $req_data['user_agent'] ) && $req_data['ua'] = $req_data['user_agent'];
         //应用用户逻辑
         // $AppUsers = new AppUsers( $app_id );
         // $user_data;
