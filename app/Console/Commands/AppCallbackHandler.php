@@ -19,14 +19,14 @@ class AppCallbackHandler extends Command
      *
      * @var string
      */
-    protected $signature = 'rtime_script:app_callback_handler';
+    protected $signature = 'rtime_script:app_callback_handler {user?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '应用回调实时脚本';
+    protected $description = '应用回调实时脚本 {user: 设置执行用户}';
 
     /**
      * Create a new command instance.
@@ -47,12 +47,21 @@ class AppCallbackHandler extends Command
      */
     public function handle()
     {
+        $command_user = $this->argument( 'user' );
+        /* 设置执行用户 */
+        if( $command_user ) {
+            static::setUser( $command_user );
+        }
+        /* 设置执行用户 */
+
         $sleep_s = 1;
         $sleep_max_s = $sleep_s << 4;
         do{
             $callback_list = GACM::where( 'status', 0 )->limit(100)->get()->toArray();
             
             if( $callback_list ) {
+                static::$Logger->info("callback_list", [$callback_list[0]['id'], $callback_list[ \count( $callback_list ) - 1 ]['id']] );
+        
                 $sleep_s = 1;
 
                 foreach ($callback_list as $key => $val) {
@@ -78,7 +87,7 @@ class AppCallbackHandler extends Command
                 continue;
             }
 
-            static::$Logger->info( "sleep $sleep_s" );
+            static::$Logger->debug( "sleep $sleep_s" );
             sleep( $sleep_s );
             $sleep_s < $sleep_max_s && $sleep_s <<= 1;
             static::loggerLoad();

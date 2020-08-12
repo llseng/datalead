@@ -23,14 +23,14 @@ class AppUsersBindHandler extends Command
      *
      * @var string
      */
-    protected $signature = 'rtime_script:app_user_bind_handler {model?}';
+    protected $signature = 'rtime_script:app_user_bind_handler {model} {user?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '应用用户绑定广告点击数据 {model: start restart stop status}';
+    protected $description = '应用用户绑定广告点击数据 {model: start restart stop status} {user: 设置执行用户}';
 
     /**
      * Create a new command instance.
@@ -158,6 +158,7 @@ class AppUsersBindHandler extends Command
         }
 
         $command_model = $this->argument( 'model' );
+        $command_user = $this->argument( 'user' );
         $this->info( "pid $pid , command_model: $command_model" );
         switch ( $command_model ) {
             case 'start':
@@ -202,6 +203,12 @@ class AppUsersBindHandler extends Command
             exit(0);
         }
         /* 守护进程模式 */
+
+        /* 设置执行用户 */
+        if( $command_user ) {
+            static::setUser( $command_user ) ;
+        }
+        /* 设置执行用户 */
 
         $pid = \posix_getpid( );
         @\file_put_contents( $pid_file, $pid ); //当前进程id写入到id文件
