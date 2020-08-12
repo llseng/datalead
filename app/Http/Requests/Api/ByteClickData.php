@@ -37,13 +37,13 @@ class ByteClickData extends FormRequest
 
             "request_id" => "nullable|". static::$alpha_num. "|between:20,100",
 
-            'imei' => "nullable|". static::$alpha_num. "|between:16,33",
-            'idfa' => "nullable|". static::$alpha_num. "|between:16,33",
-            'androidid' => "nullable|". static::$alpha_num. "|between:16,33",
+            'imei' => "nullable|". static::$alpha_num. "|between:16,32",
+            'idfa' => "nullable|". static::$alpha_num. "|between:16,32",
+            'androidid' => "nullable|". static::$alpha_num. "|between:16,32",
             'oaid' => "nullable|between:16,40",
 
             "os" => "nullable|numeric|between:0,3",
-            "mac" => "nullable|". static::$alpha_num. "|between:16,33",
+            "mac" => "nullable|". static::$alpha_num. "|between:16,32",
             "ip" => "nullable|between:7,40",
             "ts" => "nullable|numeric",
         ];
