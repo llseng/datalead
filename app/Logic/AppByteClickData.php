@@ -33,6 +33,7 @@ class AppByteClickData extends AppBase
         "convert_id" => "__CONVERT_ID__",
         "request_id" => "__REQUEST_ID__",
         // "ua" => "__UA__", //填写连接时报错
+        "user_agent" => "__UA__", //
         "callback_url" => "__CALLBACK_URL__",
         "callback_param" => "__CALLBACK_PARAM__",
     ];

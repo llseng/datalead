@@ -112,6 +112,7 @@ class ReceiverController extends Controller
             return \response()->json( $valiRes );
         }
 
+        !empty( $req_data['user_agent'] ) && $req_data['ua'] = $req_data['user_agent'];
         $filter_data = AppDataFilter::filterByteData( $req_data, null );
 
         //获取唯一ID
