@@ -14,14 +14,29 @@ trait Handler
     static public $Logger;
     static public $Level;
 
+    /**
+     * 日志目录
+     *
+     * @return string
+     */
     static public function getLogDir() {
         return \storage_path('logs');
     }
 
+    /**
+     * 日志文件
+     * 
+     * @return string
+     */
     static public function loggerFile( ) {
         return static::getLogDir(). DIRECTORY_SEPARATOR. static::$Logger->getName(). '_'. date( "Ymd" ). ".log";
     }
 
+    /**
+     * 日志加载/重载
+     * 
+     * @return void
+     */
     static public function loggerLoad( ) {
         $logger_file = static::loggerFile( static::$Logger );
         $logget_handlers = static::$Logger->getHandlers();
@@ -39,6 +54,11 @@ trait Handler
         return ;
     }
     
+    /**
+     * 日志初始化
+     *
+     * @return void
+     */
     static public function loggerInit()
     {
         if( isset( static::$Logger ) ) return ;
@@ -47,10 +67,22 @@ trait Handler
         $basename = $path_parts['filename'];
         
         static::$Logger = new Logger( $basename );
-        static::$Level = Logger::DEBUG;
+        !isset( static::$Level ) && static::$Level = Logger::DEBUG;
         static::loggerLoad( );
         
         return ;
+    }
+
+    /**
+     * 设置日志等级
+     *
+     * @param int $level 默认 Logger::INFO
+     * @return void
+     */
+    static public function setLoggetLevel( $level = null ) {
+        \is_null( $level ) && $level = Logger::INFO;
+
+        static::$Level = $level;
     }
 
     /**

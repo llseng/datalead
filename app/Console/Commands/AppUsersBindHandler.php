@@ -41,6 +41,7 @@ class AppUsersBindHandler extends Command
     {
         parent::__construct();
 
+        static::setLoggetLevel(); //日志等级 INFO
         static::loggerInit();
     }
     /**
@@ -329,7 +330,7 @@ class AppUsersBindHandler extends Command
         $time_limit = 20 * 60; //时间限制
 
         BIND_START: {
-            static::$Logger->info( "---". $app_id. " user bind start" );
+            static::$Logger->debug( "---". $app_id. " user bind start" );
         }
         
         $app_users = $AppUsersM->where( "channel", 0 )->limit( 100 )->get()->toArray();
@@ -451,7 +452,7 @@ class AppUsersBindHandler extends Command
             $sleep_s < $sleep_max_s && $sleep_s <<= 1;
             static::loggerLoad();
 
-            static::$Logger->info( "---". $app_id. " user bind again" );
+            static::$Logger->debug( "---". $app_id. " user bind again" );
             goto BIND_START; //随眠完成 重新开始
         };
 

@@ -37,6 +37,7 @@ class AppCallbackHandler extends Command
     {
         parent::__construct();
 
+        static::setLoggetLevel(); //日志等级 INFO
         static::loggerInit();
     }
 
