@@ -1,7 +1,8 @@
 @extends('layouts.base')
 
 @section('other_source')
-    @include('leadinc.bootstrap_datepicker')
+    @include('leadinc.chart_js')
+    @include('leadinc.bootstrap_datepicker_js')
     <script src="{{ asset('/') }}js/home/index.js" ></script>
 @endsection
 
@@ -79,7 +80,7 @@
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                <div aria-labelledby="closeCard3" class="dropdown-menu dropdown-menu-right has-shadow"><a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a></div>
+                <div aria-labelledby="closeCard3" class="dropdown-menu dropdown-menu-right has-shadow"><a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a></div>
                 </div>
             </div>
             <div class="card-header d-flex align-items-center">
@@ -91,8 +92,8 @@
                     <div id="home-date-btn" class="form-group">
                         <button type="button" class="btn btn-light mr-3">今天</button>
                         <button type="button" class="btn btn-light mr-3" data-start-date-change="-1" data-end-date-change="-1">昨天</button>
-                        <button type="button" class="btn btn-light mr-3" data-start-date-change="-7">近7天</button>
-                        <button type="button" class="btn btn-light mr-3" data-start-date-change="-30">近30天</button>
+                        <button type="button" class="btn btn-light mr-3" data-start-date-change="-7" data-end-date-change="-1">近7天</button>
+                        <button type="button" class="btn btn-light mr-3" data-start-date-change="-30" data-end-date-change="-1">近30天</button>
                     </div>
                     <div id="home-date-range" class="form-group input-group input-daterange">
                         <input id="date_start" type="text" placeholder="开始日期" class="mr-3 form-control">
@@ -112,15 +113,32 @@
 <section class="charts no-padding-top">
 <div class="container-fluid">
     <div class="row">
-        <!-- 展示 -->
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">数据总览</h3>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- 展示 -->
+        <!-- <div class="col-lg-6">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -131,7 +149,7 @@
                 <canvas id="showLineChart"></canvas>
             </div>
             </div>
-        </div>
+        </div> -->
         <!-- 点击 -->
         <div class="col-lg-6">
             <div class="line-chart-example card">
@@ -139,8 +157,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -159,8 +177,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -179,8 +197,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -189,6 +207,102 @@
             </div>
             <div class="card-body">
                 <canvas id="activationLineChart"></canvas>
+            </div>
+            </div>
+        </div>
+        <!-- 活跃 -->
+        <div class="col-lg-6">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">活跃</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="activeLineChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">留存数据</h3>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- 次留 -->
+        <div class="col-lg-8">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">次留</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="oneRetainedLineChart"></canvas>
+            </div>
+            </div>
+        </div>
+        <!-- 次留渠道 -->
+        <div class="col-lg-4">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">次留渠道</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="oneRetainedChannelBarChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">数据对比</h3>
             </div>
             </div>
         </div>
@@ -201,8 +315,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -210,7 +324,7 @@
                 <h3 class="h4">渠道</h3>
             </div>
             <div class="card-body">
-                <canvas id="clickLineChart"></canvas>
+                <canvas id="channelPieChart"></canvas>
             </div>
             </div>
         </div>
@@ -221,8 +335,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -230,7 +344,7 @@
                 <h3 class="h4">点击投放</h3>
             </div>
             <div class="card-body">
-                <canvas id="initLineChart"></canvas>
+                <canvas id="clickTypePieChart"></canvas>
             </div>
             </div>
         </div>
@@ -241,8 +355,8 @@
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
                 <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void();" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void();" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
                 </div>
                 </div>
             </div>
@@ -250,7 +364,7 @@
                 <h3 class="h4">点击样式</h3>
             </div>
             <div class="card-body">
-                <canvas id="activationLineChart"></canvas>
+                <canvas id="clickSitePieChart"></canvas>
             </div>
             </div>
         </div>
