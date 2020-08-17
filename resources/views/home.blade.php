@@ -1,8 +1,7 @@
 @extends('layouts.base')
 
 @section('other_source')
-    @include('leadinc.chart_js')
-    <!-- @include('leadinc.echarts_js') -->
+    @include('leadinc.echarts_js')
     @include('leadinc.bootstrap_datepicker_js')
     @if( env("APP_DEBUG", false) )
     <script src="{{ asset('/') }}js/home/index.js?{{ time() }}" ></script>
