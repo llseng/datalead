@@ -49,148 +49,312 @@ $(document).ready( function() {
     });
 
     //点击数据折线图
+    var clickLineChartDom = $("#clickLine .card-body").get(0);
+    var clickLineChart = echarts.init( clickLineChartDom, "light", { height: parseInt( (clickLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function clickLineChartRefresh( ) {
-        var clickLineChartCanvasDom = $("#clickLineChart .card-body canvas");
-        var clickLineChart = new Chart( clickLineChartCanvasDom, {
-            type: "line",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["点击"]
+            },
+            yAxis: {},
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            series: [{
+                name: "点击",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            }]
+        };
+        clickLineChart.setOption( option );
     }
-    $("#clickLineChart .card-close .refresh").click( function () {
+    $("#clickLine .card-close .refresh").click( function () {
         clickLineChartRefresh();
     } );
 
     //启动数据折线图
+    var initLineChartDom = $("#initLine .card-body").get(0);
+    var initLineChart = echarts.init( initLineChartDom, "light", { height: parseInt( (initLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function initLineChartRefresh( ) {
-        var initLineChartCanvasDom = $("#initLineChart .card-body canvas");
-        var initLineChart = new Chart( initLineChartCanvasDom, {
-            type: "line",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["启动"]
+            },
+            yAxis: {},
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            series: [{
+                name: "启动",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            }]
+        };
+        initLineChart.setOption( option );
     }
-    $("#initLineChart .card-close .refresh").click( function () {
+    $("#initLine .card-close .refresh").click( function () {
         initLineChartRefresh();
     } );
 
     //激活数据折线图
+    var activationLineChartDom = $("#activationLine .card-body").get(0);
+    var activationLineChart = echarts.init( activationLineChartDom, "light", { height: parseInt( (activationLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function activationLineChartRefresh( ) {
-        var activationLineChartCanvasDom = $("#activationLineChart .card-body canvas");
-        var activationLineChart = new Chart( activationLineChartCanvasDom, {
-            type: "line",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["自然", "字节跳动"]
+            },
+            yAxis: {},
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            series: [{
+                name: "自然",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            },
+            {
+                name: "字节跳动",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            }]
+        };
+        activationLineChart.setOption( option );
     }
-    $("#activationLineChart .card-close .refresh").click( function () {
+    $("#activationLine .card-close .refresh").click( function () {
         activationLineChartRefresh();
     } );
 
     //活跃数据折线图
+    var activeLineChartDom = $("#activeLine .card-body").get(0);
+    var activeLineChart = echarts.init( activeLineChartDom, "light", { height: parseInt( (activeLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function activeLineChartRefresh( ) {
-        var activeLineChartCanvasDom = $("#activeLineChart .card-body canvas");
-        var activeLineChart = new Chart( activeLineChartCanvasDom, {
-            type: "line",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["自然", "字节跳动"]
+            },
+            yAxis: {},
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            series: [{
+                name: "自然",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            },
+            {
+                name: "字节跳动",
+                type: "line",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            }]
+        };
+        activeLineChart.setOption( option );
     }
-    $("#activeLineChart .card-close .refresh").click( function () {
+    $("#activeLine .card-close .refresh").click( function () {
         activeLineChartRefresh();
     } );
 
     //次留数据折线图
+    var oneRetainedLineChartDom = $("#oneRetainedLine .card-body").get(0);
+    var oneRetainedLineChart = echarts.init( oneRetainedLineChartDom, "light", { height: parseInt( (oneRetainedLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function oneRetainedLineChartRefresh( ) {
-        var oneRetainedLineChartCanvasDom = $("#oneRetainedLineChart .card-body canvas");
-        var oneRetainedLineChart = new Chart( oneRetainedLineChartCanvasDom, {
-            type: "line",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["自然", "字节跳动"]
+            },
+            yAxis: {},
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            series: [{
+                name: "自然",
+                type: "bar",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            },
+            {
+                name: "字节跳动",
+                type: "bar",
+                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
+            }]
+        };
+        oneRetainedLineChart.setOption( option );
     }
-    $("#oneRetainedLineChart .card-close .refresh").click( function () {
+    $("#oneRetainedLine .card-close .refresh").click( function () {
         oneRetainedLineChartRefresh();
     } );
-
+    
     //次留渠道数据饼图
+    var oneRetainedChannelBarChartDom = $("#oneRetainedChannelBar .card-body").get(0);
+    var oneRetainedChannelBarChart = echarts.init( oneRetainedChannelBarChartDom, "light", { height: parseInt( (oneRetainedChannelBarChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function oneRetainedChannelBarChartRefresh( ) {
-        var oneRetainedChannelBarChartCanvasDom = $("#oneRetainedChannelBarChart .card-body canvas");
-        var oneRetainedChannelBarChart = new Chart( oneRetainedChannelBarChartCanvasDom, {
-            type: "bar",
-            data: {
-                labels: ["1","2","3","4","5","6"],
-                datasets: [
-                    {
-                        label: "字节跳动",
-                        data: [16,54,84,56,543,5]
-                    },
-                    {
-                        label: "自然",
-                        data: [99,49,84,85,65,498]
-                    }
-                ]
-            }
-        } );
+        var option = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data:['自然', "字节跳动"]
+            },
+            xAxis: {
+                data: [1,2,3,4,5,6]
+            },
+            yAxis: {},
+            series: [{
+                name: '自然',
+                type: 'bar',
+                data: [parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 )]
+            },
+            {
+                name: '字节跳动',
+                type: 'bar',
+                data: [parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 )]
+            }]
+        };
+
+        oneRetainedChannelBarChart.setOption( option );
     }
-    $("#oneRetainedChannelBarChart .card-close .refresh").click( function () {
+    $("#oneRetainedChannelBar .card-close .refresh").click( function () {
         oneRetainedChannelBarChartRefresh();
     } );
+
+    //渠道数据饼图
+    var channelPieChartDom = $("#channelPie .card-body").get(0);
+    var channelPieChart = echarts.init( channelPieChartDom, "light", { height: parseInt( (channelPieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
+    function channelPieChartRefresh( ) {
+        var option = {
+            tooltip: {
+                trigger: "item"
+            },
+            legend: {
+                orient: 'vertical',
+                left: "1px",
+                data: ["自然", "字节跳动"]
+            },
+            series: [{
+                name: "渠道",
+                type: "pie",
+                data: [
+                    {value: parseInt( Math.random() * 100 ), name: "自然"},
+                    {value: parseInt( Math.random() * 100 ), name: "字节跳动"},
+                ]
+            }]
+        };
+        channelPieChart.setOption( option );
+    }
+    $("#channelPie .card-close .refresh").click( function () {
+        channelPieChartRefresh();
+    } );
+
+    //点击投放数据饼图
+    var clickTypePieChartDom = $("#clickTypePie .card-body").get(0);
+    var clickTypePieChart = echarts.init( clickTypePieChartDom, "light", { height: parseInt( (clickTypePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
+    function clickTypePieChartRefresh( ) {
+        var option = {
+            tooltip: {
+                trigger: "item"
+            },
+            legend: {
+                orient: 'vertical',
+                left: "1px",
+                data: ["今日头条","西瓜视频","火山小视频","抖音","穿山甲开屏广告","穿山甲网盟非开屏广告"]
+            },
+            series: [{
+                name: "点击投放",
+                type: "pie",
+                data: [
+                    {value: parseInt( Math.random() * 100 ), name: "今日头条"},
+                    {value: parseInt( Math.random() * 100 ), name: "西瓜视频"},
+                    {value: parseInt( Math.random() * 100 ), name: "火山小视频"},
+                    {value: parseInt( Math.random() * 100 ), name: "抖音"},
+                    {value: parseInt( Math.random() * 100 ), name: "穿山甲开屏广告"},
+                    {value: parseInt( Math.random() * 100 ), name: "穿山甲网盟非开屏广告"},
+                ]
+            }]
+        };
+        clickTypePieChart.setOption( option );
+    }
+    $("#clickTypePie .card-close .refresh").click( function () {
+        clickTypePieChartRefresh();
+    } );
+
+    //点击样式数据饼图
+    var clickSitePieChartDom = $("#clickSitePie .card-body").get(0);
+    var clickSitePieChart = echarts.init( clickSitePieChartDom, "light", { height: parseInt( (clickSitePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
+    function clickSitePieChartRefresh( ) {
+        var option = {
+            tooltip: {
+                trigger: "item"
+            },
+            legend: {
+                orient: 'vertical',
+                left: "1px",
+                data: ["小图模式","大图模式","组图模式","视频"]
+            },
+            series: [{
+                name: "点击样式",
+                type: "pie",
+                data: [
+                    {value: parseInt( Math.random() * 100 ), name: "小图模式"},
+                    {value: parseInt( Math.random() * 100 ), name: "大图模式"},
+                    {value: parseInt( Math.random() * 100 ), name: "组图模式"},
+                    {value: parseInt( Math.random() * 100 ), name: "视频"}
+                ]
+            }]
+        };
+        clickSitePieChart.setOption( option );
+    }
+    $("#clickSitePie .card-close .refresh").click( function () {
+        clickSitePieChartRefresh();
+    } );
+
+    //刷新图表
+    function echartsResize() {
+        //点击数据折线图
+        clickLineChart.resize({ height: parseInt( (clickLineChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //启动数据折线图
+        initLineChart.resize({ height: parseInt( (initLineChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //激活数据折线图
+        activationLineChart.resize({ height: parseInt( (activationLineChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //活跃数据折线图
+        activeLineChart.resize({ height: parseInt( (activeLineChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //次留数据折线图
+        oneRetainedLineChart.resize({ height: parseInt( (oneRetainedLineChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //次留渠道数据饼图
+        oneRetainedChannelBarChart.resize({ height: parseInt( (oneRetainedChannelBarChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //渠道数据饼图
+        channelPieChart.resize({ height: parseInt( (channelPieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //点击投放数据饼图
+        clickTypePieChart.resize({ height: parseInt( (clickTypePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        //点击样式数据饼图
+        clickSitePieChart.resize({ height: parseInt( (clickSitePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+    }
+
+    window.addEventListener('resize', function() {
+        if( this.echarts_resize_tout ) {
+            clearTimeout( this.echarts_resize_tout );
+        }
+        //刷新图表定时器
+        this.echarts_resize_tout = setTimeout( echartsResize, 500 );
+    });
+
+    /**
+     * 以上为定义代码
+     * 以下为过程代码
+     */
 
     //刷新
     $("#home-date-btn .btn").eq(0).trigger('click');

@@ -4,7 +4,11 @@
     @include('leadinc.chart_js')
     <!-- @include('leadinc.echarts_js') -->
     @include('leadinc.bootstrap_datepicker_js')
+    @if( env("APP_DEBUG", false) )
+    <script src="{{ asset('/') }}js/home/index.js?{{ time() }}" ></script>
+    @else
     <script src="{{ asset('/') }}js/home/index.js" ></script>
+    @endif
 @endsection
 
 @section('content')
@@ -147,13 +151,13 @@
                 <h3 class="h4">展示</h3>
             </div>
             <div class="card-body">
-                <canvas id="showLineChart"></canvas>
+                <canvas id="showLine"></canvas>
             </div>
             </div>
         </div> -->
         <!-- 点击 -->
         <div class="col-lg-6">
-            <div id="clickLineChart" class="line-chart-example card">
+            <div id="clickLine" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -173,7 +177,7 @@
         </div>
         <!-- 启动 -->
         <div class="col-lg-6">
-            <div id="initLineChart" class="line-chart-example card">
+            <div id="initLine" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -193,7 +197,7 @@
         </div>
         <!-- 激活 -->
         <div class="col-lg-6">
-            <div id="activationLineChart" class="line-chart-example card">
+            <div id="activationLine" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -213,7 +217,7 @@
         </div>
         <!-- 活跃 -->
         <div class="col-lg-6">
-            <div id="activeLineChart" class="line-chart-example card">
+            <div id="activeLine" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -252,7 +256,7 @@
     <div class="row">
         <!-- 次留 -->
         <div class="col-lg-6">
-            <div id="oneRetainedLineChart" class="line-chart-example card">
+            <div id="oneRetainedLine" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -272,7 +276,7 @@
         </div>
         <!-- 次留渠道 -->
         <div class="col-lg-6">
-            <div id="oneRetainedChannelBarChart" class="line-chart-example card no-margin-bottom">
+            <div id="oneRetainedChannelBar" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -309,29 +313,9 @@
         </div>
     </div>
     <div class="row">
-        <!-- 渠道 -->
-        <div class="col-lg-4">
-            <div class="line-chart-example card">
-            <div class="card-close">
-                <div class="dropdown">
-                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
-                </div>
-                </div>
-            </div>
-            <div class="card-header d-flex align-items-center">
-                <h3 class="h4">渠道</h3>
-            </div>
-            <div class="card-body">
-                <canvas id="channelPieChart"></canvas>
-            </div>
-            </div>
-        </div>
         <!-- 点击投放 -->
         <div class="col-lg-4">
-            <div class="line-chart-example card">
+            <div id="clickTypePie" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -345,13 +329,33 @@
                 <h3 class="h4">点击投放</h3>
             </div>
             <div class="card-body">
-                <canvas id="clickTypePieChart"></canvas>
+                <canvas></canvas>
+            </div>
+            </div>
+        </div>
+        <!-- 渠道 -->
+        <div class="col-lg-4">
+            <div id="channelPie" class="line-chart-example card">
+            <div class="card-close">
+                <div class="dropdown">
+                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
+                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
+                </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">渠道</h3>
+            </div>
+            <div class="card-body">
+                <canvas></canvas>
             </div>
             </div>
         </div>
         <!-- 点击样式 -->
         <div class="col-lg-4">
-            <div class="line-chart-example card">
+            <div id="clickSitePie" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
@@ -365,7 +369,7 @@
                 <h3 class="h4">点击样式</h3>
             </div>
             <div class="card-body">
-                <canvas id="clickSitePieChart"></canvas>
+                <canvas></canvas>
             </div>
             </div>
         </div>
