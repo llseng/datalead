@@ -255,7 +255,7 @@
     <div class="row">
         <!-- 次留 -->
         <div class="col-lg-6">
-            <div id="oneRetainedLine" class="line-chart-example card">
+            <div id="oneRetainedLine" data-api-url="{{ route('home_chart_oneRetained', ['app_id' => $app_id]) }}" class="line-chart-example card">
             <div class="card-close">
                 <div class="dropdown">
                 <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>

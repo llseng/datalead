@@ -397,33 +397,116 @@ $(document).ready( function() {
     //次留数据折线图
     var oneRetainedLineChartDom = $("#oneRetainedLine .card-body").get(0);
     var oneRetainedLineChart = echarts.init( oneRetainedLineChartDom, "light", { height: parseInt( (oneRetainedLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function oneRetainedLineChartRefresh( ) {
+    function oneRetainedLineChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+
+        var legendData = [];
+        var xAxisData = [];
+        var xAxisS = true;
+        var series_list = [];
+        //
+        var channelSeriesData = [];
+
+        for (var x in resData) {
+            legendData.push( x );
+            var series_li_data = [];
+            var numSum = 0;
+            for ( var y in resData[x] ) {
+                if( xAxisS ) xAxisData.push( resData[x][y].date );
+                series_li_data.push( resData[x][y].num );
+                //
+                numSum += parseInt( resData[x][y].num );
+            }
+            if( xAxisS ) xAxisS = false;
+            var series_li = {type: "bar"};
+            series_li.name = x;
+            series_li.data = [].concat( series_li_data ); //拷贝
+            series_list.push( series_li );
+
+            var channelSeriesDataLi = {};
+            channelSeriesDataLi.name = x;
+            channelSeriesDataLi.value = numSum;
+            channelSeriesData.push( channelSeriesDataLi );
+        }
+
         var option = {
             tooltip: {
                 trigger: "axis"
             },
             legend: {
-                data: ["自然", "字节跳动"]
+                data: legendData
             },
             yAxis: {},
             xAxis: {
-                data: [1,2,3,4,5,6]
+                data: xAxisData
             },
-            series: [{
-                name: "自然",
-                type: "bar",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            },
-            {
-                name: "字节跳动",
-                type: "bar",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            }]
+            series: series_list
         };
         oneRetainedLineChart.setOption( option );
+        /**
+         * 次留渠道数据(可根据次留数据分析)
+         */
+        var channelOption = {
+            tooltip: {
+                trigger: "item"
+            },
+            legend: {
+                orient: 'vertical',
+                left: "1px",
+                data: legendData
+            },
+            series: [{
+                name: "渠道",
+                type: "pie",
+                data: channelSeriesData
+            }]
+        };
+
+        oneRetainedChannelBarChart.setOption( channelOption );
     }
+    var oneRetainedLineChartApiUrl = $("#oneRetainedLine").attr("data-api-url");
+    var oneRetainedLineChartStatus = false;
     $("#oneRetainedLine .card-close .refresh").click( function () {
-        oneRetainedLineChartRefresh();
+        var alert_title = "<b>-次留数据-</b>";
+        if( !oneRetainedLineChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( oneRetainedLineChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        oneRetainedLineChartStatus = true;
+
+        var reqUrl = oneRetainedLineChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                oneRetainedLineChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                oneRetainedLineChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                oneRetainedLineChartRefresh( resData );
+            }
+        });
     } );
     
     //次留渠道数据饼图
@@ -456,7 +539,7 @@ $(document).ready( function() {
         oneRetainedChannelBarChart.setOption( option );
     }
     $("#oneRetainedChannelBar .card-close .refresh").click( function () {
-        oneRetainedChannelBarChartRefresh();
+        // oneRetainedChannelBarChartRefresh();
     } );
 
     //渠道数据饼图
