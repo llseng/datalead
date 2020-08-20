@@ -31,7 +31,9 @@ class HomeController extends Controller
     {
         $view_data = ['view_title'=>'总览'];
         $view_data['left_nav_name'] = "home";
+
         $app_id = GameAppController::getSessKey();
+        $view_data['app_id'] = $app_id;
 
         $AppUsersL = new AppUsersL( $app_id );
         $AppInitDataL = new AppInitDataL( $app_id );
