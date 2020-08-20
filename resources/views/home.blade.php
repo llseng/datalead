@@ -25,7 +25,7 @@
             <span>总<br>展示</span>
         </div>
         <div class="number">
-            <strong>25</strong>
+            <strong>{{ $count['total_show'] }}</strong>
         </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
             <span>总<br>点击</span>
         </div>
         <div class="number">
-            <strong>70</strong>
+            <strong>{{ $count['total_click'] }}</strong>
         </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
             <span>总<br>启动</span>
         </div>
         <div class="number">
-            <strong>40</strong>
+            <strong>{{ $count['total_init'] }}</strong>
         </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
             <span>总<br>激活</span>
         </div>
         <div class="number">
-            <strong>50</strong>
+            <strong>{{ $count['total_users'] }}</strong>
         </div>
         </div>
     </div>
