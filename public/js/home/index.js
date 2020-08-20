@@ -48,122 +48,350 @@ $(document).ready( function() {
         $(".card-close .refresh").trigger("click");
     });
 
+    var homeDateFormDom = $("#home-date-form").get(0);
+    //获取时间范围formData
+    function getHomeDateFormData() {
+        return new FormData( homeDateFormDom );
+    }
+
     //点击数据折线图
     var clickLineChartDom = $("#clickLine .card-body").get(0);
     var clickLineChart = echarts.init( clickLineChartDom, "light", { height: parseInt( (clickLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function clickLineChartRefresh( ) {
+    function clickLineChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+
+        var legendData = [];
+        var xAxisData = [];
+        var xAxisS = true;
+        var series_list = [];
+
+        for (var x in resData) {
+            legendData.push( x );
+            var series_li_data = [];
+            for ( var y in resData[x] ) {
+                if( xAxisS ) xAxisData.push( resData[x][y].date );
+                series_li_data.push( resData[x][y].num );
+            }
+            if( xAxisS ) xAxisS = false;
+            var series_li = {type: "line"};
+            series_li.name = x;
+            series_li.data = [].concat( series_li_data ); //拷贝
+            series_list.push( series_li );
+        }
+
         var option = {
             tooltip: {
                 trigger: "axis"
             },
             legend: {
-                data: ["点击"]
+                data: legendData
             },
             yAxis: {},
             xAxis: {
-                data: [1,2,3,4,5,6]
+                data: xAxisData
             },
-            series: [{
-                name: "点击",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            }]
+            series: series_list
         };
         clickLineChart.setOption( option );
     }
+    var clickLineChartApiUrl = $("#clickLine").attr("data-api-url");
+    var clickLineChartStatus = false;
     $("#clickLine .card-close .refresh").click( function () {
-        clickLineChartRefresh();
+        var alert_title = "<b>-点击数据-</b>";
+        if( !clickLineChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( clickLineChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        clickLineChartStatus = true;
+
+        var reqUrl = clickLineChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                clickLineChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                clickLineChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                clickLineChartRefresh( resData );
+            }
+        });
     } );
 
     //启动数据折线图
     var initLineChartDom = $("#initLine .card-body").get(0);
     var initLineChart = echarts.init( initLineChartDom, "light", { height: parseInt( (initLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function initLineChartRefresh( ) {
+    function initLineChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+
+        var legendData = [];
+        var xAxisData = [];
+        var xAxisS = true;
+        var series_list = [];
+
+        for (var x in resData) {
+            legendData.push( x );
+            var series_li_data = [];
+            for ( var y in resData[x] ) {
+                if( xAxisS ) xAxisData.push( resData[x][y].date );
+                series_li_data.push( resData[x][y].num );
+            }
+            if( xAxisS ) xAxisS = false;
+            var series_li = {type: "line"};
+            series_li.name = x;
+            series_li.data = [].concat( series_li_data ); //拷贝
+            series_list.push( series_li );
+        }
+
         var option = {
             tooltip: {
                 trigger: "axis"
             },
             legend: {
-                data: ["启动"]
+                data: legendData
             },
             yAxis: {},
             xAxis: {
-                data: [1,2,3,4,5,6]
+                data: xAxisData
             },
-            series: [{
-                name: "启动",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            }]
+            series: series_list
         };
         initLineChart.setOption( option );
     }
+    var initLineChartApiUrl = $("#initLine").attr("data-api-url");
+    var initLineChartStatus = false;
     $("#initLine .card-close .refresh").click( function () {
-        initLineChartRefresh();
+        var alert_title = "<b>-启动数据-</b>";
+        if( !initLineChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( initLineChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        initLineChartStatus = true;
+
+        var reqUrl = initLineChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                initLineChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                initLineChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                initLineChartRefresh( resData );
+            }
+        });
     } );
 
     //激活数据折线图
     var activationLineChartDom = $("#activationLine .card-body").get(0);
     var activationLineChart = echarts.init( activationLineChartDom, "light", { height: parseInt( (activationLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function activationLineChartRefresh( ) {
+    function activationLineChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+
+        var legendData = [];
+        var xAxisData = [];
+        var xAxisS = true;
+        var series_list = [];
+
+        for (var x in resData) {
+            legendData.push( x );
+            var series_li_data = [];
+            for ( var y in resData[x] ) {
+                if( xAxisS ) xAxisData.push( resData[x][y].date );
+                series_li_data.push( resData[x][y].num );
+            }
+            if( xAxisS ) xAxisS = false;
+            var series_li = {type: "line"};
+            series_li.name = x;
+            series_li.data = [].concat( series_li_data ); //拷贝
+            series_list.push( series_li );
+        }
+
         var option = {
             tooltip: {
                 trigger: "axis"
             },
             legend: {
-                data: ["自然", "字节跳动"]
+                data: legendData
             },
             yAxis: {},
             xAxis: {
-                data: [1,2,3,4,5,6]
+                data: xAxisData
             },
-            series: [{
-                name: "自然",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            },
-            {
-                name: "字节跳动",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            }]
+            series: series_list
         };
         activationLineChart.setOption( option );
     }
+    var activationLineChartApiUrl = $("#activationLine").attr("data-api-url");
+    var activationLineChartStatus = false;
     $("#activationLine .card-close .refresh").click( function () {
-        activationLineChartRefresh();
+        var alert_title = "<b>-激活数据-</b>";
+        if( !activationLineChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( activationLineChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        activationLineChartStatus = true;
+
+        var reqUrl = activationLineChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                activationLineChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                activationLineChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                activationLineChartRefresh( resData );
+            }
+        });
     } );
 
     //活跃数据折线图
     var activeLineChartDom = $("#activeLine .card-body").get(0);
     var activeLineChart = echarts.init( activeLineChartDom, "light", { height: parseInt( (activeLineChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function activeLineChartRefresh( ) {
+    function activeLineChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+
+        var legendData = [];
+        var xAxisData = [];
+        var xAxisS = true;
+        var series_list = [];
+
+        for (var x in resData) {
+            legendData.push( x );
+            var series_li_data = [];
+            for ( var y in resData[x] ) {
+                if( xAxisS ) xAxisData.push( resData[x][y].date );
+                series_li_data.push( resData[x][y].num );
+            }
+            if( xAxisS ) xAxisS = false;
+            var series_li = {type: "line"};
+            series_li.name = x;
+            series_li.data = [].concat( series_li_data ); //拷贝
+            series_list.push( series_li );
+        }
+
         var option = {
             tooltip: {
                 trigger: "axis"
             },
             legend: {
-                data: ["自然", "字节跳动"]
+                data: legendData
             },
             yAxis: {},
             xAxis: {
-                data: [1,2,3,4,5,6]
+                data: xAxisData
             },
-            series: [{
-                name: "自然",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            },
-            {
-                name: "字节跳动",
-                type: "line",
-                data: [ parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ) ]
-            }]
+            series: series_list
         };
         activeLineChart.setOption( option );
     }
+    var activeLineChartApiUrl = $("#activeLine").attr("data-api-url");
+    var activeLineChartStatus = false;
     $("#activeLine .card-close .refresh").click( function () {
-        activeLineChartRefresh();
+        var alert_title = "<b>-活跃数据-</b>";
+        if( !activeLineChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( activeLineChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        activeLineChartStatus = true;
+
+        var reqUrl = activeLineChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                activeLineChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                activeLineChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                activeLineChartRefresh( resData );
+            }
+        });
     } );
 
     //次留数据折线图
