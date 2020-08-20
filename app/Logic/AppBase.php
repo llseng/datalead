@@ -19,6 +19,7 @@ class AppBase
     protected $source_table = "app_base";
     protected $table;
     protected $model_class;
+    protected $model_object;
 
     public function __construct( $app_id ) {
         $this->table = "ga_{$app_id}_{$this->source_table}";
@@ -52,10 +53,12 @@ class AppBase
     }
 
     public function getTableModelObj( ) {
-        $TableModelClass = $this->getTableModel();
-        $TableModel = new $TableModelClass;
-        $TableModel->setTable( $this->table );
-        return $TableModel;
+        if( !isset( $this->model_object ) ) {
+            $TableModelClass = $this->getTableModel();
+            $this->model_object = new $TableModelClass;
+            $this->model_object->setTable( $this->table );
+        }
+        return $this->model_object;
     }
 
     public function create( $data ) {
@@ -75,6 +78,16 @@ class AppBase
         
         return false;
 
+    }
+
+    public function count( ) {
+        try {
+            return $this->getTableModelObj()->count();
+        } catch (\Throwable $th) {
+            Log::error( static::class .': '. $th->getMessage() );
+        }
+
+        return 0;
     }
 
 }
