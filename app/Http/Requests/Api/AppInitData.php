@@ -41,6 +41,8 @@ class AppInitData extends FormRequest
             "model" => "nullable|between:1,32",
             "brand" => "nullable|between:1,32",
             "device" => "nullable|between:1,32",
+            
+            "ip" => "nullable|between:7,40",
 
             "os" => "nullable|numeric|between:0,3",
             "ts" => "nullable|numeric",

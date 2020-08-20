@@ -34,6 +34,10 @@ class ListenController extends Controller
         !isset( $req_data['os'] ) && $req_data['os'] = 0;
         empty( $req_data['ua'] ) && $req_data['ua'] = $request->header( 'user-agent' );
         empty( $req_data['ip'] ) && $req_data['ip'] = $request->getClientIp( );
+        if( \strlen( $req_data['ip'] ) > 20 ) {
+            $req_data['ipv6'] = $req_data['ip'];
+            $req_data['ip'] = null;
+        }
         if( empty( $req_data['ts'] ) ) {
             $request_time = $request->server( 'REQUEST_TIME_FLOAT' )?: time();
             $req_data['ts'] = \round( $request_time * 1000 );

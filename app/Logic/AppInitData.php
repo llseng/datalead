@@ -70,6 +70,10 @@ class AppInitData extends AppBase
             return false;
         }
 
+        if( empty( $data['ip'] ) && !empty( $data['ipv6'] ) ) {
+            $data['ip'] = $data['ipv6'];
+        }
+
         return parent::create( $data );
     }
 
