@@ -37,12 +37,12 @@ Route::namespace('Api')->prefix('listen')->group( function () {
  * 总览页图表数据api路由组
  */
 Route::namespace('Api')->prefix('homeChart')->group( function () {
-    Route::post( "/byte_click/{app_id}", "HomeChartController@byte_click" )->where('app_id', "\w+")->name( 'home_chart_byte_click' );
-    Route::post( "/app_init/{app_id}", "HomeChartController@app_init" )->where('app_id', "\w+")->name( 'home_chart_app_init' );
-    Route::post( "/activation/{app_id}", "HomeChartController@activation" )->where('app_id', "\w+")->name( 'home_chart_activation' );
-    Route::post( "/active/{app_id}", "HomeChartController@active" )->where('app_id', "\w+")->name( 'home_chart_active' );
-    Route::post( "/oneRetained/{app_id}", "HomeChartController@oneRetained" )->where('app_id', "\w+")->name( 'home_chart_oneRetained' );
-    Route::post( "/channel/{app_id}", "HomeChartController@channel" )->where('app_id', "\w+")->name( 'home_chart_channel' );
-    Route::post( "/click_type/{app_id}", "HomeChartController@click_type" )->where('app_id', "\w+")->name( 'home_chart_click_type' );
-    Route::post( "/click_site/{app_id}", "HomeChartController@click_site" )->where('app_id', "\w+")->name( 'home_chart_click_site' );
+    Route::post( "/{app_id}/byte_click", "HomeChartController@byte_click" )->where('app_id', "\w+")->name( 'home_chart_byte_click' );
+    Route::post( "/{app_id}/app_init", "HomeChartController@app_init" )->where('app_id', "\w+")->name( 'home_chart_app_init' );
+    Route::post( "/{app_id}/activation", "HomeChartController@activation" )->where('app_id', "\w+")->name( 'home_chart_activation' );
+    Route::post( "/{app_id}/active", "HomeChartController@active" )->where('app_id', "\w+")->name( 'home_chart_active' );
+    Route::post( "/{app_id}/oneRetained", "HomeChartController@oneRetained" )->where('app_id', "\w+")->name( 'home_chart_oneRetained' );
+    Route::post( "/{app_id}/channel", "HomeChartController@channel" )->where('app_id', "\w+")->name( 'home_chart_channel' );
+    Route::post( "/{app_id}/click_type", "HomeChartController@click_type" )->where('app_id', "\w+")->name( 'home_chart_click_type' );
+    Route::post( "/{app_id}/click_site", "HomeChartController@click_site" )->where('app_id', "\w+")->name( 'home_chart_click_site' );
 } );
