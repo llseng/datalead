@@ -12,6 +12,9 @@ $(document).ready( function() {
         startDate:new Date(new Date()-1000 * 60 * 60 * 24 * 365),  //只显示一年的日期365天
         endDate : new Date()
     }); //时间范围
+    $("#home-date-range").datepicker().on("changeDate", function(e){
+        $("#home-date-btn .btn").removeClass( "active" );
+    } );
 
     //时间范围快捷按钮
     $("#home-date-btn .btn").click( function() {
@@ -513,30 +516,6 @@ $(document).ready( function() {
     var oneRetainedChannelBarChartDom = $("#oneRetainedChannelBar .card-body").get(0);
     var oneRetainedChannelBarChart = echarts.init( oneRetainedChannelBarChartDom, "light", { height: parseInt( (oneRetainedChannelBarChartDom.getBoundingClientRect().width - 40) / 2 ) } );
     function oneRetainedChannelBarChartRefresh( ) {
-        var option = {
-            tooltip: {
-                trigger: "axis"
-            },
-            legend: {
-                data:['自然', "字节跳动"]
-            },
-            xAxis: {
-                data: [1,2,3,4,5,6]
-            },
-            yAxis: {},
-            series: [{
-                name: '自然',
-                type: 'bar',
-                data: [parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 )]
-            },
-            {
-                name: '字节跳动',
-                type: 'bar',
-                data: [parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 ), parseInt( Math.random() * 100 )]
-            }]
-        };
-
-        oneRetainedChannelBarChart.setOption( option );
     }
     $("#oneRetainedChannelBar .card-close .refresh").click( function () {
         // oneRetainedChannelBarChartRefresh();
@@ -545,7 +524,26 @@ $(document).ready( function() {
     //渠道数据饼图
     var channelPieChartDom = $("#channelPie .card-body").get(0);
     var channelPieChart = echarts.init( channelPieChartDom, "light", { height: parseInt( (channelPieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function channelPieChartRefresh( ) {
+    function channelPieChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+        
+        var legendData = [];
+        var series_list = [];
+
+        for( var x in resData ) {
+            var series_li = { type: "pie" };
+            series_li.name = x;
+            series_li.data = resData[x];
+            series_list.push( series_li );
+
+            for( var y in resData[x]) {
+                legendData.push( resData[x][y].name );
+            }
+        }
+
         var option = {
             tooltip: {
                 trigger: "item"
@@ -553,59 +551,77 @@ $(document).ready( function() {
             legend: {
                 orient: 'vertical',
                 left: "1px",
-                data: ["自然", "字节跳动"]
+                data: legendData
             },
-            series: [{
-                name: "渠道",
-                type: "pie",
-                data: [
-                    {value: parseInt( Math.random() * 100 ), name: "自然"},
-                    {value: parseInt( Math.random() * 100 ), name: "字节跳动"},
-                ]
-            }]
+            series: series_list
         };
         channelPieChart.setOption( option );
     }
+    var channelPieChartApiUrl = $("#channelPie").attr("data-api-url");
+    var channelPieChartStatus = false;
     $("#channelPie .card-close .refresh").click( function () {
-        channelPieChartRefresh();
-    } );
+        var alert_title = "<b>-渠道数据-</b>";
+        if( !channelPieChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
 
-    //点击投放数据饼图
-    var clickTypePieChartDom = $("#clickTypePie .card-body").get(0);
-    var clickTypePieChart = echarts.init( clickTypePieChartDom, "light", { height: parseInt( (clickTypePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function clickTypePieChartRefresh( ) {
-        var option = {
-            tooltip: {
-                trigger: "item"
+        if( channelPieChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        channelPieChartStatus = true;
+
+        var reqUrl = channelPieChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                channelPieChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
             },
-            legend: {
-                orient: 'vertical',
-                left: "1px",
-                data: ["今日头条","西瓜视频","火山小视频","抖音","穿山甲开屏广告","穿山甲网盟非开屏广告"]
-            },
-            series: [{
-                name: "点击投放",
-                type: "pie",
-                data: [
-                    {value: parseInt( Math.random() * 100 ), name: "今日头条"},
-                    {value: parseInt( Math.random() * 100 ), name: "西瓜视频"},
-                    {value: parseInt( Math.random() * 100 ), name: "火山小视频"},
-                    {value: parseInt( Math.random() * 100 ), name: "抖音"},
-                    {value: parseInt( Math.random() * 100 ), name: "穿山甲开屏广告"},
-                    {value: parseInt( Math.random() * 100 ), name: "穿山甲网盟非开屏广告"},
-                ]
-            }]
-        };
-        clickTypePieChart.setOption( option );
-    }
-    $("#clickTypePie .card-close .refresh").click( function () {
-        clickTypePieChartRefresh();
+            success: function (result, status) {
+                channelPieChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                channelPieChartRefresh( resData );
+            }
+        });
     } );
 
     //点击样式数据饼图
-    var clickSitePieChartDom = $("#clickSitePie .card-body").get(0);
-    var clickSitePieChart = echarts.init( clickSitePieChartDom, "light", { height: parseInt( (clickSitePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
-    function clickSitePieChartRefresh( ) {
+    var clickTypePieChartDom = $("#clickTypePie .card-body").get(0);
+    var clickTypePieChart = echarts.init( clickTypePieChartDom, "light", { height: parseInt( (clickTypePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
+    function clickTypePieChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+        
+        var legendData = [];
+        var series_list = [];
+
+        for( var x in resData ) {
+            var series_li = { type: "pie" };
+            series_li.name = x;
+            series_li.data = resData[x];
+            series_list.push( series_li );
+
+            for( var y in resData[x]) {
+                legendData.push( resData[x][y].name );
+            }
+        }
+
         var option = {
             tooltip: {
                 trigger: "item"
@@ -613,23 +629,130 @@ $(document).ready( function() {
             legend: {
                 orient: 'vertical',
                 left: "1px",
-                data: ["小图模式","大图模式","组图模式","视频"]
+                data: legendData
             },
-            series: [{
-                name: "点击样式",
-                type: "pie",
-                data: [
-                    {value: parseInt( Math.random() * 100 ), name: "小图模式"},
-                    {value: parseInt( Math.random() * 100 ), name: "大图模式"},
-                    {value: parseInt( Math.random() * 100 ), name: "组图模式"},
-                    {value: parseInt( Math.random() * 100 ), name: "视频"}
-                ]
-            }]
+            series: series_list
+        };
+        clickTypePieChart.setOption( option );
+    }
+    var clickTypePieChartApiUrl = $("#clickTypePie").attr("data-api-url");
+    var clickTypePieChartStatus = false;
+    $("#clickTypePie .card-close .refresh").click( function () {
+        var alert_title = "<b>-点击样式数据-</b>";
+        if( !clickTypePieChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( clickTypePieChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        clickTypePieChartStatus = true;
+
+        var reqUrl = clickTypePieChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                clickTypePieChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                clickTypePieChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                clickTypePieChartRefresh( resData );
+            }
+        });
+    } );
+
+    //点击投放数据饼图
+    var clickSitePieChartDom = $("#clickSitePie .card-body").get(0);
+    var clickSitePieChart = echarts.init( clickSitePieChartDom, "light", { height: parseInt( (clickSitePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
+    function clickSitePieChartRefresh( resData ) {
+        if( typeof resData != "object" ) {
+            console.log( resData );
+            return;
+        }
+        
+        var legendData = [];
+        var series_list = [];
+
+        for( var x in resData ) {
+            var series_li = { type: "pie" };
+            series_li.name = x;
+            series_li.data = resData[x];
+            series_list.push( series_li );
+
+            for( var y in resData[x]) {
+                legendData.push( resData[x][y].name );
+            }
+        }
+
+        var option = {
+            tooltip: {
+                trigger: "item"
+            },
+            legend: {
+                orient: 'vertical',
+                left: "1px",
+                data: legendData
+            },
+            series: series_list
         };
         clickSitePieChart.setOption( option );
     }
+    var clickSitePieChartApiUrl = $("#clickSitePie").attr("data-api-url");
+    var clickSitePieChartStatus = false;
     $("#clickSitePie .card-close .refresh").click( function () {
-        clickSitePieChartRefresh();
+        var alert_title = "<b>-点击投放数据-</b>";
+        if( !clickSitePieChartApiUrl ) {
+            content_alert( "error", alert_title + "api异常" );
+            return;
+        }
+
+        if( clickSitePieChartStatus ) {
+            content_alert( "warn", alert_title + "刷新频繁" );
+            return;
+        }
+        clickSitePieChartStatus = true;
+
+        var reqUrl = clickSitePieChartApiUrl;
+        var reqData = getHomeDateFormData();
+        $.ajax({
+            url: reqUrl,
+            type: "POST",
+            data: reqData,
+            dataType: "JSON",
+            timeout: 10000, //超时时间
+            processData: false, // jQuery不要去处理发送的数据
+            contentType: false, // jQuery不要去设置Content-Type请求头
+            error: function(xhr, status) {
+                clickSitePieChartStatus = false;
+                content_alert( "error", alert_title + "获取失败,请重试" );
+            },
+            success: function (result, status) {
+                clickSitePieChartStatus = false;
+                if( result.code != 0 ) {
+                    content_alert( "error", alert_title + result.message );
+                    return ;
+                }
+
+                var resData = result.data;
+                clickSitePieChartRefresh( resData );
+            }
+        });
     } );
 
     //刷新图表
