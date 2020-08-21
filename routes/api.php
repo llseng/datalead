@@ -42,4 +42,7 @@ Route::namespace('Api')->prefix('homeChart')->group( function () {
     Route::post( "/activation/{app_id}", "HomeChartController@activation" )->where('app_id', "\w+")->name( 'home_chart_activation' );
     Route::post( "/active/{app_id}", "HomeChartController@active" )->where('app_id', "\w+")->name( 'home_chart_active' );
     Route::post( "/oneRetained/{app_id}", "HomeChartController@oneRetained" )->where('app_id', "\w+")->name( 'home_chart_oneRetained' );
+    Route::post( "/channel/{app_id}", "HomeChartController@channel" )->where('app_id', "\w+")->name( 'home_chart_channel' );
+    Route::post( "/click_type/{app_id}", "HomeChartController@click_type" )->where('app_id', "\w+")->name( 'home_chart_click_type' );
+    Route::post( "/click_site/{app_id}", "HomeChartController@click_site" )->where('app_id', "\w+")->name( 'home_chart_click_site' );
 } );
