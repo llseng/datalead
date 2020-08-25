@@ -15,7 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+// Auth::routes();
+// Authentication Routes...
+$this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+$this->post('login', 'Auth\LoginController@login');
+$this->post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::prefix('home')->group( function () {
     Route::get('/', 'HomeController@index')->name('home');
