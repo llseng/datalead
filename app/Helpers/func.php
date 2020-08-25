@@ -3,7 +3,7 @@
  * @Author: llseng 
  * @Date: 2020-08-03 14:41:46 
  * @Last Modified by: llseng
- * @Last Modified time: 2020-08-03 17:39:00
+ * @Last Modified time: 2020-08-25 10:35:55
  */
 
 /**
@@ -28,4 +28,19 @@ function file_http_request( string $url, array $http_context = null ) {
     $result = @file_get_contents( $url, null, $context );
 
     return $result;
+}
+
+/**
+ * 标签属性转字符串
+ *
+ * @param array $attr
+ * @return void
+ */
+function tagAttrToStr( array $attr ) {
+    $str = "";
+    foreach ($attr as $key => $val) {
+        $str .= $key. '="'. $val. '" ';
+    }
+
+    return $str;
 }
