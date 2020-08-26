@@ -4,7 +4,7 @@
     <!-- Sidebar Header-->
     <div class="sidebar-header d-flex align-items-center">
         <div class="avatar">
-            <a href="#">
+            <a href="{{ route('user') }}">
                 <img src="{{ asset('/') }}img/avatar.jpg" alt="..." class="img-fluid rounded-circle">
             </a>
         </div>

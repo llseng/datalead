@@ -14,7 +14,7 @@
         <!-- Navbar Header-->
         <div class="navbar-header">
         <!-- Navbar Brand -->
-        <a href="index.html" class="navbar-brand d-none d-sm-inline-block">
+        <a href="{{ route('home') }}" class="navbar-brand d-none d-sm-inline-block">
             <div class="brand-text d-none d-lg-inline-block"><span>{{ config('app.name', 'Laravel') }} </span><strong>LS</strong></div>
             <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>DL</strong></div>
         </a>
