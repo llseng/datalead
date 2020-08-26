@@ -35,6 +35,12 @@ Route::prefix('game')->group( function () {
     Route::get('/info/{id}', 'GameAppController@info')->where("id", "\w+")->name('game_info');
 } );
 
+Route::prefix('user')->group( function () {
+    Route::get('/', 'UserController@index')->name('user');
+    Route::post('/reset_pwd', 'UserController@reset_pwd')->name('user_reset_pwd');
+    Route::post('/dealwith', 'UserController@dealwith')->name('user_dealwith');
+} );
+
 Route::prefix('test')->group( function(){
     Route::get('/', "Test@index");
 } );
