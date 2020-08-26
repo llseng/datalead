@@ -2,15 +2,25 @@
 
 @section('other_source')
 <!-- other_source -->
+    @include('leadinc.bootstrap_datepicker_js')
+
+    @php
+        $source_suffix = "";
+        if( env("APP_DEBUG", false) ) {
+            $source_suffix = time();
+        }
+    @endphp
+
     @foreach( $LCform->getSources() as $source )
                                 
     @switch( $source["type"] )
+
         @case( "js" )
-            <script src="{{ $source['path'] }}"></script>
+            <script src="{{ $source['path'] }}?{{ $source_suffix }}"></script>
             @break
 
         @case( "css" )
-            <link rel="stylesheet" href="{{ $source['path'] }}">
+            <link rel="stylesheet" href="{{ $source['path'] }}?{{ $source_suffix }}">
             @break
 
         @default
@@ -18,6 +28,7 @@
     @endswitch
 
     @endforeach
+
 @endsection
 
 @section('content')
