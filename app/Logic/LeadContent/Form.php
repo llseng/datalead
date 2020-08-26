@@ -38,6 +38,13 @@ class Form
     protected $submitBtnName = "Save Changes";
 
     /**
+     * 隐藏数据
+     *
+     * @var array
+     */
+    protected $hideData = [];
+
+    /**
      * 构造函数
      */
     public function __construct( string $title = "表单", string $method = null, string $action = null ) {
@@ -168,6 +175,31 @@ class Form
 
     public function getSubmitBtnName( ) {
         return $this->submitBtnName;
+    }
+
+    /**
+     * 设置隐藏数据
+     *
+     * @param array $data
+     * @return int
+     */
+    public function setHideData( array $data ) {
+        $push_num = 0;
+        foreach ($data as $key => $val) {
+            if( !\is_string( $key ) ) continue;
+            $this->pushHideData( $key, $val );
+            $push_num++;
+        }
+
+        return $push_num;
+    }
+
+    public function pushHideData( string $key, $val ) {
+        $this->hideData[ $key ] = $val;
+    }
+
+    public function getHideData( ) {
+        return $this->hideData;
     }
 
     /**

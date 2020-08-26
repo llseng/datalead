@@ -17,6 +17,15 @@
                     </div>
                     <div class="card-body">
                         <form method="{{ $LCform->getMethod() }}" action="{{ $LCform->getAction() }}" class="form-horizontal">
+                            
+                            {{ csrf_field() }}
+
+                            @foreach( $LCform->getHideData() as $hide_k => $hide_v )
+                            
+                            <input name="{{ $hide_k }}" type="hidden" value="{{ $hide_v }}">
+
+                            @endforeach
+
                             @foreach( $LCform->getRows() as $LCform_row )
 
                             <div class="form-group row">
@@ -26,15 +35,21 @@
                                 <div class="col-sm-9">
                                     @php
                                         $LCform_row_attr = $LCform_row->getDefAttr();
+                                        $old_data = old( $LCform_row->getName() );
+                                        if( $old_data ) {
+                                            if( is_array( $old_data ) ) $old_data = join( ',', $old_data );
+                                            $LCform_row->setValue( $old_data );
+                                        }
+                                        
                                     @endphp
 
                                     @switch( $LCform_row->getRowType() )
                                         @case( "input" )
-                                            <input name="{{ $LCform_row->getName() }}" value="{{ $LCform_row->getValue() }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has('id') ? 'is-invalid' : '' }}">
+                                            <input name="{{ $LCform_row->getName() }}" value="{{ $LCform_row->getValue() }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has( $LCform_row->getName() ) ? 'is-invalid' : '' }}">
                                             @break
 
                                         @case( "textarea" )
-                                            <textarea name="{{ $LCform_row->getName() }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has('id') ? 'is-invalid' : '' }}">{{ $LCform_row->getValue() }}</textarea>
+                                            <textarea name="{{ $LCform_row->getName() }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has( $LCform_row->getName() ) ? 'is-invalid' : '' }}">{{ $LCform_row->getValue() }}</textarea>
                                             @break
                                             
                                         @case( "checkbox" )
@@ -83,7 +98,7 @@
                                                 $LCform_row_opt = $LCform_row->getOptions();
                                             @endphp
 
-                                            <select name="{{ $LCform_row->getName() }}{{ $LCform_row->isMultiple()? '[]': '' }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has('id') ? 'is-invalid' : '' }}">
+                                            <select name="{{ $LCform_row->getName() }}{{ $LCform_row->isMultiple()? '[]': '' }}" {!! tagAttrToStr( $LCform_row_attr ) !!} class="form-control {{ $errors->has( $LCform_row->getName() ) ? 'is-invalid' : '' }}">
                                                 
                                                 @foreach( $LCform_row_opt as $LCform_row_optk => $LCform_row_optv )
 
