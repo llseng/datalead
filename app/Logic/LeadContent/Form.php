@@ -4,10 +4,8 @@ namespace App\Logic\LeadContent;
 /**
  * 内容页-表单类
  */
-class Form
+class Form extends Content
 {
-    protected $title;
-
     /**
      * 提交模式
      *
@@ -51,14 +49,6 @@ class Form
         $this->setTitle( $title );
         !\is_null( $method ) && $this->setMethod( $method );
         !\is_null( $action ) && $this->setAction( $action );
-    }
-
-    public function setTitle( string $title ) {
-        $this->title = $title;
-    }
-
-    public function getTitle() {
-        return $this->title;
     }
 
     /**

@@ -2,11 +2,26 @@
 
 @section('other_source')
 <!-- other_source -->
+    @foreach( $LCform->getSources() as $source )
+                                
+    @switch( $source["type"] )
+        @case( "js" )
+            <script src="{{ $source['path'] }}"></script>
+            @break
+
+        @case( "css" )
+            <link rel="stylesheet" href="{{ $source['path'] }}">
+            @break
+
+        @default
+
+    @endswitch
+
+    @endforeach
 @endsection
 
 @section('content')
 <!-- content -->
-<!-- Forms Section-->
 <section class="forms">
     <div class="container-fluid">
         <div class="row">
