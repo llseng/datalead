@@ -25,8 +25,22 @@ class Controller extends BaseController
         return back()->withErrors( static::dealError($error) );
     }
 
+    /**
+     * 返回操作成功
+     *
+     * @param string $error
+     * @return void
+     */
+    static public function backSuccess( $success ) {
+        return back()->withErrors( static::dealSuccess($success) );
+    }
+
     static public function dealError( $error ) {
         return [ 'deal_error' => $error ];
+    }
+
+    static public function dealSuccess( $success ) {
+        return [ 'deal_success' => $success ];
     }
     
     /**

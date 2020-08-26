@@ -133,7 +133,7 @@ class GameAppController extends Controller
 
         static::flushSess( $id );
 
-        return redirect()->route('game');;
+        return redirect()->route('game');
     }
 
     public function dealwith(GameAppVali $request) {
