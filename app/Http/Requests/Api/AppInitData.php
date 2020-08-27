@@ -27,6 +27,7 @@ class AppInitData extends FormRequest
     public function rules()
     {
         return [
+            "reid" => "nullable|between:7,40",
             "imei" => "nullable|". static::$alpha_num. "|between:14,32",
             "imei2" => "nullable|". static::$alpha_num. "|between:14,32",
             "meid" => "nullable|". static::$alpha_num. "|between:14,32",

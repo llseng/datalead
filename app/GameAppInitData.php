@@ -8,6 +8,7 @@ class GameAppInitData extends Model
 {
     protected $fillable = [
         'init_id',
+        'reid',
         'imei',
         'imei2',
         'meid',
