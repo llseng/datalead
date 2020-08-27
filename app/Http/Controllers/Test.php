@@ -15,6 +15,8 @@ class Test extends Controller
 {
     public function index() {
 
+        return view( "leadcontent.list" );
+
         $data = [];
         return \response()->json( static::jsonRes(404, null, $data) );
     }
