@@ -17,36 +17,36 @@ class AppInitData extends AppBase
         switch ( $os ) {
             case 0:
                 //安卓
-                if( !empty( $init_data['imei'] ) ) {
+                if ( !empty( $init_data['reid'] ) ) {
+                    $init_id = $init_data['reid']; //应用初始化生成的ID
+                }elseif( !empty( $init_data['imei'] ) ) {
                     $init_id = $init_data['imei'];
                 }elseif ( !empty( $init_data['androidid'] ) ) {
                     $init_id = $init_data['androidid'];
                 }elseif ( !empty( $init_data['oaid'] ) ) {
                     $init_id = $init_data['oaid'];
-                }elseif ( !empty( $init_data['reid'] ) ) {
-                    $init_id = $init_data['reid']; //应用初始化生成的ID
                 }
                 
                 break;
 
             case 1:
                 //ios
-                if( !empty( $init_data['imei'] ) ) {
+                if ( !empty( $init_data['reid'] ) ) {
+                    $init_id = $init_data['reid'];
+                }elseif( !empty( $init_data['imei'] ) ) {
                     $init_id = $init_data['imei'];
                 }elseif( !empty( $init_data['idfa'] ) ) {
                     $init_id = $init_data['idfa'];
-                }elseif ( !empty( $init_data['reid'] ) ) {
-                    $init_id = $init_data['reid'];
                 }
                 
                 break;
             
             default:
                 //其他
-                if( !empty( $init_data['imei'] ) ) {
-                    $init_id = $init_data['imei'];
-                }elseif ( !empty( $init_data['reid'] ) ) {
+                if ( !empty( $init_data['reid'] ) ) {
                     $init_id = $init_data['reid'];
+                }elseif( !empty( $init_data['imei'] ) ) {
+                    $init_id = $init_data['imei'];
                 }
                 
                 break;
