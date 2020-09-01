@@ -15,6 +15,8 @@ use App\Logic\AppByteClickData as AppByteClickDataL;
 
 use App\Logic\AppUsersFormat as AppUsersFormatL;
 
+use App\Http\Requests\Api\HomeChart as HomeChartVali;
+
 class HomeChartController extends Controller
 {
 
@@ -33,11 +35,11 @@ class HomeChartController extends Controller
     /**
      * 字节广告点击数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function byte_click( Request $request, $app_id ) {
+    public function byte_click( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -88,11 +90,11 @@ class HomeChartController extends Controller
     /**
      * 应用启动数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function app_init( Request $request, $app_id ) {
+    public function app_init( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -143,11 +145,11 @@ class HomeChartController extends Controller
     /**
      * 激活数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function activation( Request $request, $app_id ) {
+    public function activation( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -204,11 +206,11 @@ class HomeChartController extends Controller
     /**
      * 活跃数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function active( Request $request, $app_id ) {
+    public function active( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -266,11 +268,11 @@ class HomeChartController extends Controller
     /**
      * 次留数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function oneRetained( Request $request, $app_id ) {
+    public function oneRetained( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -332,11 +334,11 @@ class HomeChartController extends Controller
     /**
      * 渠道数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function channel( Request $request, $app_id ) {
+    public function channel( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -385,11 +387,11 @@ class HomeChartController extends Controller
     /**
      * 字节跳动点击样式数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function click_type( Request $request, $app_id ) {
+    public function click_type( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
@@ -437,11 +439,11 @@ class HomeChartController extends Controller
     /**
      * 字节跳动点击投放数据
      *
-     * @param Request $request
+     * @param HomeChartVali $request
      * @param string $app_id
      * @return jsonRes
      */
-    public function click_site( Request $request, $app_id ) {
+    public function click_site( HomeChartVali $request, $app_id ) {
         $today = date("Y-m-d");
         $date_start = $request->input('date_start', $today);
         $date_end = $request->input('date_end', $today);
