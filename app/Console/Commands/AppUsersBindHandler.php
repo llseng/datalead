@@ -348,12 +348,22 @@ class AppUsersBindHandler extends Command
         static::$Logger->debug( "---". $app_id. " first_time ". $first_time, [$first_date, $first_datetime] );
         $last_app_user = $app_users[ \count( $app_users ) - 1 ];
 
-        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where([
-            [ 'create_date', '<=', $last_app_user['create_date'] ],
-            [ 'create_time', '<=', $last_app_user['create_time'] ],
-            [ 'create_date', '>=', $first_date ],
-            [ 'create_time', '>=', $first_datetime ],
-        ])->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
+        $byte_click_data_where = [];
+        if( $last_app_user['create_date'] == $first_date ) {
+            $byte_click_data_where = [
+                [ 'create_date', '=', $last_app_user['create_date'] ],
+                [ 'create_time', '>=', $last_app_user['create_time'] ],
+                [ 'create_time', '<=', $first_datetime ],
+            ];
+        }else{
+            $byte_click_data_where = [
+                [ 'create_date', '>=', $last_app_user['create_date'] ],
+                [ 'create_date', '<=', $first_date ],
+                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), ">=", $last_app_user['create_date']. " ". $last_app_user['create_time'] ],
+                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), "<=", $first_date. " ". $first_datetime ],
+            ];
+        }
+        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
 
         if( empty( $byte_click_data ) ) {
             //没有字节点击数据 用户全部设置为自然人
