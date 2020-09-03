@@ -327,7 +327,7 @@ class AppUsersBindHandler extends Command
         $sleep_max_s = $sleep_s << 3;
         $user_limit = 100; //用户限制
         $data_limit = $user_limit * 50; //数据限制
-        $time_limit = 360 * 60; //时间限制 6小时 不考虑隔天情况
+        $time_limit = 360 * 60; //时间限制 6小时
 
         BIND_START: {
             static::$Logger->debug( "---". $app_id. " user bind start" );
@@ -352,15 +352,15 @@ class AppUsersBindHandler extends Command
         if( $last_app_user['create_date'] == $first_date ) {
             $byte_click_data_where = [
                 [ 'create_date', '=', $last_app_user['create_date'] ],
-                [ 'create_time', '>=', $last_app_user['create_time'] ],
-                [ 'create_time', '<=', $first_datetime ],
+                [ 'create_time', '<=', $last_app_user['create_time'] ],
+                [ 'create_time', '>=', $first_datetime ],
             ];
         }else{
             $byte_click_data_where = [
-                [ 'create_date', '>=', $last_app_user['create_date'] ],
-                [ 'create_date', '<=', $first_date ],
-                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), ">=", $last_app_user['create_date']. " ". $last_app_user['create_time'] ],
-                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), "<=", $first_date. " ". $first_datetime ],
+                [ 'create_date', '<=', $last_app_user['create_date'] ],
+                [ 'create_date', '>=', $first_date ],
+                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), "<=", $last_app_user['create_date']. " ". $last_app_user['create_time'] ],
+                [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), ">=", $first_date. " ". $first_datetime ],
             ];
         }
         $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
