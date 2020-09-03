@@ -52,11 +52,11 @@ class Controller extends BaseController
      * @param boolean $merge
      * @return array
      */
-    static public function jsonRes( $code = 0, $message = null, array $data = [], $merge = true ) {
+    static public function jsonRes( $code = 0, $message = null, array $data = null, $merge = true ) {
         if( \is_null( $message ) ) $message = $code == 0? "SUCCESS": "FAIL";
         $res = [ 'code' => $code, 'message' => $message ];
         
-        if( $data ) {
+        if( !is_null( $data ) ) {
             $merge? $res = \array_merge( $res, $data ): $res['data'] = $data;
         }
 
