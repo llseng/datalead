@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         // 'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'gameapp_check' => \App\Http\Middleware\GameAppCheck::class,
         'gameappid_check' => \App\Http\Middleware\Api\GameAppIdCheck::class,
+        'api_appLog' => \App\Http\Middleware\Api\AppLog::class,
     ];
 }
