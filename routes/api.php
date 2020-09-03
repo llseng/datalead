@@ -46,3 +46,10 @@ Route::namespace('Api')->prefix('homeChart')->group( function () {
     Route::post( "/{app_id}/click_type", "HomeChartController@click_type" )->where('app_id', "\w+")->name( 'home_chart_click_type' );
     Route::post( "/{app_id}/click_site", "HomeChartController@click_site" )->where('app_id', "\w+")->name( 'home_chart_click_site' );
 } );
+
+/**
+ * 应用日志Api路由组
+ */
+Route::namespace("Api")->prefix('appLog')->group( function () {
+    Route::get( "/{app_id}/adinfo", "AppLogController@adinfo" )->where('app_id', "\w+")->name( 'applog_adinfo' );
+} );
