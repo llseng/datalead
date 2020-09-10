@@ -29,6 +29,20 @@ class Table extends Content
     protected $data = [];
 
     /**
+     * 分页样式
+     *
+     * @var mixed
+     */
+    protected $pages;
+
+    /**
+     * 分页实例
+     *
+     * @var Illuminate\Pagination\AbstractPaginator
+     */
+    protected $paginator;
+
+    /**
      * 主键
      *
      * @var string
@@ -184,6 +198,36 @@ class Table extends Content
         return $this->data;
     }
 
+    /**
+     * 设置分页样式
+     *
+     * @param mixed $pages
+     * @return mixed
+     */
+    public function setPages( $pages ) {
+        $this->pages = $pages;
+    }
+
+    public function getPages( ) {
+        return isset( $this->pages )? $this->pages: "";
+    }
+
+    /**
+     * 设置分页实例
+     *
+     * @param Illuminate\Pagination\AbstractPaginator $paginator
+     * @return void
+     */
+    public function setPaginator( \Illuminate\Pagination\AbstractPaginator $paginator ) {
+        $this->paginator = $paginator;
+        $this->setData( $this->paginator->toArray()['data'] );
+        $this->setPages( $this->paginator->links() );
+    }
+
+    public function getPaginator( ) {
+        return isset( $this->paginator )? $this->paginator: null;
+    }
+
     protected $formBlock = true;
 
     /**
@@ -215,6 +259,7 @@ class Table extends Content
         $view_data = \is_null( $data )? []: $data;
         $view_data['LCtable'] = $this;
         $view_data['LCdata'] = $this->getData();
+        $view_data['LCpages'] = $this->getPages();
 
         return \view( "leadcontent.table", $view_data );
     }

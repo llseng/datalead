@@ -72,7 +72,7 @@
 
                                 <select name="{{ $LCtable_row->getName() }}{{ $LCtable_row->isMultiple()? '[]': '' }}" {!! tagAttrToStr( $LCtable_row_attr ) !!} class="form-control {{ $errors->has( $LCtable_row->getName() ) ? 'is-invalid' : '' }}">
                                     
-                                    <option>{{ $LCtable_row->getTitle() }}</option>
+                                    <option value="">{{ $LCtable_row->getTitle() }}</option>
 
                                     @foreach( $LCtable_row_opt as $LCtable_row_optk => $LCtable_row_optv )
 
@@ -93,7 +93,7 @@
                     @endforeach
                     
                     <div class="form-group mr-3 ">
-                        <button type="submit" class="btn btn-success">刷新</button>
+                        <button type="submit" class="btn btn-success">搜索</button>
                     </div>
                 </form>
             </div>
@@ -167,7 +167,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                    {{ $pages }}
+                    {{ $LCpages }}
                     </div>
                 </div>
             </div>
