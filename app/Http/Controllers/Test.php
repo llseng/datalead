@@ -11,39 +11,59 @@ use App\BaseModel;
 
 use App\Logic\LeadContent as LC;
 use App\Logic\AppByteClickData as AppByteClickDataL;
+use App\Logic\AppInitData as AppInitDataL;
+use App\Http\Requests\Test as TestVali;
 
 class Test extends Controller
 {
-    public function index() {
-        DB::connection()->enableQueryLog();//开启执行日志
+    public function index(TestVali $request) {
+        $Table = new LC\Table();
 
-        $AppByteClickDataL = new AppByteClickDataL( "tests" );
-        $AppByteClickDataM = $AppByteClickDataL->getTableModelObj();
+        $pid_form = new LC\TableFormInput( '玩家ID', 'pid', \request()->get('pid') );
+        // $pid_form->inputType( "number" );
+        $age_form = new LC\TableFormInput( '玩家年龄', 'age', \request()->get('age') );
+        // $age_form->inputType( "number" );
+        $date_form = new LC\TableFormInput( '注册时间', 'date', \request()->get('date') );
+        $date_form->inputType( "date" );
+        $level_form = new LC\TableFormSelect( '玩家等级', 'level', \request()->get('level') );
+        $level_form->setOptions( [1,2,3,4,5,6,7,8,9] );
 
-        $start_date = "2020-08-31";
-        $start_datetime = "22:30:06";
-        $first_time = \time() - 360 * 60;
-        $first_date = date( 'Y-m-d', $first_time );
-        $first_datetime = date( 'H:i:s', $first_time );
+        $Table->setRows( [$pid_form, $age_form, $date_form, $level_form] );
 
-        $byte_click_data_where = [];
-        if( $start_date == $first_date ) {
-            $byte_click_data_where = [
-                [ 'create_date', '=', $start_date ],
-                [ 'create_time', '>=', $start_datetime ],
-                [ 'create_time', '<=', $first_datetime ],
-            ];
-        }else{
-            $byte_click_data_where = [
-                [ 'create_date', '>=', $start_date ],
-                [ 'create_date', '<=', $first_date ],
-                [ DB::raw( "CONCAT( create_date, ' ', create_time )"), ">=", $start_date. " ". $start_datetime ],
-                [ DB::raw( "CONCAT( create_date, ' ', create_time )"), "<=", $first_date. " ". $first_datetime ],
-            ];
-        }
-        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( 1000 )->get()->toArray();
+        // $Table->noFormBlock();
 
-        dump( DB::getQueryLog() );
+        $id_line = new LC\TableInfo( "#", "idd" );
+        $name_line = new LC\TableInfo( "名称", "name" );
+        $age_line = new LC\TableInfo( "年龄", "age" );
+        $age_line->setHandler( function( $list, $obj ) {
+            $str = "";
+            $str .= ( isset( $list[ $obj->getName() ] )? $list[ $obj->getName() ]: '未知' );
+            $str .= "岁";
+            return $str;
+        } );
+        $level_line = new LC\TableInfo( "等级", "level" );
+        $btns_line = new LC\TableBtns( "操作", "" );
+        $btns_line->pushBtn( "修改", "s", "success" );
+
+        $Table->setLines( [$id_line, $name_line, $age_line, $level_line, $btns_line] );
+
+        $id = 0;
+        $data = [
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ],
+            ['idd' => $id++, "name" => "name_". rand( 1000, 9999 ), "age" => rand( 10, 99 ), "level" => rand( 1, 10 ) ]
+        ];
+
+        $Table->setData( $data );
+
+        $AppInitDataL = new AppInitDataL( "tests" );
+        $init_list = $AppInitDataL->getTableModelObj()->paginate( 15 );
+        $init_list->withPath( \url()->full() );
+        return $Table->view( ["pages" => $init_list->links()] );
 
         $data = [];
         return \response()->json( static::jsonRes(404, null, $data) );
