@@ -47,7 +47,7 @@ class TableBtns extends TableLine
     public function __construct( string $title, string $name ) {
         parent::__construct( $title, $name );
         $this->setLineType( "btns" );
-        $this->pushDefAttr( 'class', "btns" );
+        $this->pushDefAttr( 'class', $this->getName(). "-btns" );
     }
 
     public function pushBtn( string $info, string $name, string $type = null ) {

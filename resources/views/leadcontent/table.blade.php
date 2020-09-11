@@ -114,7 +114,10 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            @php
+                                $LCtable_attr = $LCtable->getDefAttr();
+                            @endphp
+                            <table id="table" {!! tagAttrToStr( $LCtable_attr ) !!} class="table table-striped table-hover">
                                 @php
                                     $LCtable_lines = $LCtable->getLines();
                                     $LCtable_pkey = $LCtable->getPkey();
@@ -132,7 +135,7 @@
 
                                     @foreach( $LCdata as $LCdata_li )
 
-                                    <tr date-pkey="{{ $LCtable_pkey }}" date-pval="{{ isset( $LCdata_li[ $LCtable_pkey ] )? $LCdata_li[ $LCtable_pkey ]: '' }}">
+                                    <tr data-pkey="{{ $LCtable_pkey }}" data-pval="{{ isset( $LCdata_li[ $LCtable_pkey ] )? $LCdata_li[ $LCtable_pkey ]: '' }}">
                                         @foreach( $LCtable_lines as $LCtable_line )
 
                                             @php

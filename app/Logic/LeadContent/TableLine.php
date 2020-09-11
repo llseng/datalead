@@ -31,6 +31,7 @@ abstract class TableLine
     public function __construct( string $title, string $name ) {
         $this->setTitle( $title );
         $this->setName( $name );
+        $this->pushDefAttr( "data-key", $this->getName() );
     }
 
     public function setName( string $name ) {
