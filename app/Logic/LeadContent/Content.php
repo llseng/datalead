@@ -9,6 +9,8 @@ abstract class Content
 
     const SOURCE_TYPES = ["js", "css"];
 
+    const NOT_USE_ATTR = ["id", "class"];
+
     /**
      * 标题
      *
@@ -64,7 +66,7 @@ abstract class Content
         if( !\in_array( $type, static::SOURCE_TYPES ) ) {
             return false;
         }
-        $paths = \array_column( $this->getSource(), "path" );
+        $paths = \array_column( $this->getSources(), "path" );
         //存在则无需添加
         if( \in_array( $path, $paths ) ) {
             return false;
@@ -75,6 +77,20 @@ abstract class Content
 
     public function getSources( ) {
         return $this->sources;
+    }
+    
+    //默认属性
+    protected $def_attr = [];
+
+    public function getDefAttr( ) {
+        return $this->def_attr;
+    }
+    
+    public function pushDefAttr( string $key, string $val = null ) {
+        if( \in_array( $key, static::NOT_USE_ATTR ) ) {
+            return ;
+        }
+        $this->def_attr[ $key ] = $val;
     }
 
 }
