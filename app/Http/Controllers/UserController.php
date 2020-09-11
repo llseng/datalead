@@ -52,8 +52,8 @@ class UserController extends Controller
     }
 
     public function reset_pwd( UserPwdResetVali $request ) {
-        $curr_pwd = $request->get("curr_pwd");
-        $password = $request->get("password");
+        $curr_pwd = $request->input("curr_pwd");
+        $password = $request->input("password");
 
         $user = Auth::user();
 
