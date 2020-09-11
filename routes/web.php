@@ -41,6 +41,13 @@ Route::prefix('user')->group( function () {
     Route::post('/dealwith', 'UserController@dealwith')->name('user_dealwith');
 } );
 
+Route::prefix('callback')->group( function () {
+    Route::get('/', 'CallbackController@index')->name('callback');
+    Route::get('/info', 'CallbackController@info')->name('callback_info');
+    Route::get('/handle', 'CallbackController@handle')->name('callback_handle');
+    Route::get('/delete', 'CallbackController@delete')->name('callback_delete');
+} );
+
 Route::prefix('test')->group( function(){
     Route::get('/', "Test@index");
 } );
