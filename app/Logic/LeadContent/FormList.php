@@ -13,7 +13,8 @@ abstract class FormList extends FormRow
 
     protected function in_value( $val ) {
         $value = $this->getValue();
-        $val_array = empty( $value )? []: \explode( ",", $value );
+        
+        $val_array = static::empty( $value )? []: \explode( ",", $value );
 
         return \in_array( $val, $val_array );
     }

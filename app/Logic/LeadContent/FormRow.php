@@ -8,6 +8,17 @@ abstract class FormRow
 {
     const EMPTY = "";
 
+    /**
+     * 是否为空
+     *
+     * @param string $value
+     * @return bool
+     */
+    static public function empty( $value ) {
+        $empty_list = [ static::EMPTY, null ];
+        return \in_array( $value, $empty_list, true );
+    }
+
     const ROW_TYPES = ["input", "textarea", "checkbox", "radio", "select"];
 
     const NOT_USE_ATTR = [ "name", "value", "class" ];
