@@ -9,6 +9,8 @@ class TableInfo extends TableLine
 
     protected $handler;
 
+    protected $filter;
+
     /**
      * 构造函数
      */
@@ -41,9 +43,24 @@ class TableInfo extends TableLine
         return $this->handler;
     }
 
+    public function setFilter( callable $filter ) {
+        $this->filter = $filter;
+    }
+
+    public function getFilter( ) {
+        if( !isset( $this->filter ) ) {
+            $this->setFilter( function( $value ) {
+                return $value;
+            } );
+        }
+
+        return $this->filter;
+    }
+
     public function handle( array $list ) {
         $handler = $this->getHandler();
-        return $handler( $list, $this );
+        $filter = $this->getFilter();
+        return $filter( $handler( $list, $this ) );
     }
 
 }
