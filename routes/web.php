@@ -48,6 +48,13 @@ Route::prefix('callback')->group( function () {
     Route::get('/delete', 'CallbackController@delete')->name('callback_delete');
 } );
 
+Route::prefix('log_stream')->group( function () {
+    Route::get('/byteshow', 'LogStreamController@byteshow')->name('log_stream_byteshow');
+    Route::get('/byteclick', 'LogStreamController@byteclick')->name('log_stream_byteclick');
+    Route::get('/inits', 'LogStreamController@inits')->name('log_stream_inits');
+    Route::get('/users', 'LogStreamController@users')->name('log_stream_users');
+} );
+
 Route::prefix('test')->group( function(){
     Route::get('/', "Test@index");
 } );
