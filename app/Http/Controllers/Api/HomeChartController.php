@@ -21,6 +21,7 @@ class HomeChartController extends Controller
 {
 
     static public $channel_list = [
+        "未知" => 0,
         "自然量" => 1,
         "字节跳动" => 2,
     ];
