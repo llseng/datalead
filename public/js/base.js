@@ -23,6 +23,18 @@ Date.prototype.format = function(fmt){
     return fmt;
 }
 
+function arrayNumberSum ( Arr ) {
+    if( typeof Arr != "object" ) return 0;
+    var sum = 0;
+    for( var x in Arr ) {
+        if( typeof Arr[x] == "number" ) {
+            sum += Arr[x];
+        }
+    }
+
+    return sum;
+}
+
 function delete_confirm_url( url ) {
     if( confirm( "删除后不可恢复,确认删除?" ) ) {
         window.location.href = url;

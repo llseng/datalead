@@ -72,15 +72,16 @@ $(document).ready( function() {
         var series_list = [];
 
         for (var x in resData) {
-            legendData.push( x );
             var series_li_data = [];
             for ( var y in resData[x] ) {
                 if( xAxisS ) xAxisData.push( resData[x][y].date );
                 series_li_data.push( resData[x][y].num );
             }
+            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "line"};
-            series_li.name = x;
+            series_li.name = name;
             series_li.data = [].concat( series_li_data ); //拷贝
             series_list.push( series_li );
         }
@@ -157,15 +158,16 @@ $(document).ready( function() {
         var series_list = [];
 
         for (var x in resData) {
-            legendData.push( x );
             var series_li_data = [];
             for ( var y in resData[x] ) {
                 if( xAxisS ) xAxisData.push( resData[x][y].date );
                 series_li_data.push( resData[x][y].num );
             }
+            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "line"};
-            series_li.name = x;
+            series_li.name = name;
             series_li.data = [].concat( series_li_data ); //拷贝
             series_list.push( series_li );
         }
@@ -242,15 +244,16 @@ $(document).ready( function() {
         var series_list = [];
 
         for (var x in resData) {
-            legendData.push( x );
             var series_li_data = [];
             for ( var y in resData[x] ) {
                 if( xAxisS ) xAxisData.push( resData[x][y].date );
                 series_li_data.push( resData[x][y].num );
             }
+            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "line"};
-            series_li.name = x;
+            series_li.name = name;
             series_li.data = [].concat( series_li_data ); //拷贝
             series_list.push( series_li );
         }
@@ -327,15 +330,16 @@ $(document).ready( function() {
         var series_list = [];
 
         for (var x in resData) {
-            legendData.push( x );
             var series_li_data = [];
             for ( var y in resData[x] ) {
                 if( xAxisS ) xAxisData.push( resData[x][y].date );
                 series_li_data.push( resData[x][y].num );
             }
+            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "line"};
-            series_li.name = x;
+            series_li.name = name;
             series_li.data = [].concat( series_li_data ); //拷贝
             series_list.push( series_li );
         }
@@ -414,7 +418,6 @@ $(document).ready( function() {
         var channelSeriesData = [];
 
         for (var x in resData) {
-            legendData.push( x );
             var series_li_data = [];
             var numSum = 0;
             for ( var y in resData[x] ) {
@@ -423,14 +426,16 @@ $(document).ready( function() {
                 //
                 numSum += parseInt( resData[x][y].num );
             }
+            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "bar"};
-            series_li.name = x;
+            series_li.name = name;
             series_li.data = [].concat( series_li_data ); //拷贝
             series_list.push( series_li );
 
             var channelSeriesDataLi = {};
-            channelSeriesDataLi.name = x;
+            channelSeriesDataLi.name = name;
             channelSeriesDataLi.value = numSum;
             channelSeriesData.push( channelSeriesDataLi );
         }
@@ -535,13 +540,15 @@ $(document).ready( function() {
 
         for( var x in resData ) {
             var series_li = { type: "pie" };
+
+            for( var y in resData[x]) {
+                resData[x][y].name += "( " + resData[x][y].value + " )";
+                legendData.push( resData[x][y].name );
+            }
+
             series_li.name = x;
             series_li.data = resData[x];
             series_list.push( series_li );
-
-            for( var y in resData[x]) {
-                legendData.push( resData[x][y].name );
-            }
         }
 
         var option = {
@@ -613,13 +620,15 @@ $(document).ready( function() {
 
         for( var x in resData ) {
             var series_li = { type: "pie" };
+
+            for( var y in resData[x]) {
+                resData[x][y].name += "( " + resData[x][y].value + " )";
+                legendData.push( resData[x][y].name );
+            }
+
             series_li.name = x;
             series_li.data = resData[x];
             series_list.push( series_li );
-
-            for( var y in resData[x]) {
-                legendData.push( resData[x][y].name );
-            }
         }
 
         var option = {
@@ -691,13 +700,15 @@ $(document).ready( function() {
 
         for( var x in resData ) {
             var series_li = { type: "pie" };
+
+            for( var y in resData[x]) {
+                resData[x][y].name += "( " + resData[x][y].value + " )";
+                legendData.push( resData[x][y].name );
+            }
+
             series_li.name = x;
             series_li.data = resData[x];
             series_list.push( series_li );
-
-            for( var y in resData[x]) {
-                legendData.push( resData[x][y].name );
-            }
         }
 
         var option = {
