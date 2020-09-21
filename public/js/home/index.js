@@ -426,7 +426,8 @@ $(document).ready( function() {
                 //
                 numSum += parseInt( resData[x][y].num );
             }
-            var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            // var name = x + "( "+ arrayNumberSum( series_li_data ) +" )";
+            var name = x + "( "+ numSum +" )";
             legendData.push( name );
             if( xAxisS ) xAxisS = false;
             var series_li = {type: "bar"};
