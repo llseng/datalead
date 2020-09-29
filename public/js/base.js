@@ -40,3 +40,18 @@ function delete_confirm_url( url ) {
         window.location.href = url;
     }
 }
+
+function copy( text ) {
+    let transfer = document.createElement('input');
+    document.body.appendChild(transfer);
+    transfer.value = text;  // 这里表示想要复制的内容
+    transfer.focus();
+    transfer.select();
+    if (document.execCommand('copy')) {
+        document.execCommand('copy');
+    }
+    transfer.blur();
+    console.log('复制成功');
+    document.body.removeChild(transfer);
+
+}
