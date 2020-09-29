@@ -63,6 +63,7 @@ class LogStreamController extends Controller
         $id_line = new LC\TableInfo( "#", "id" );
         $content_line = new LC\TableInfo( "内容", "content" );
         $content_line->setHandler( function( $list, $obj ) {
+            return \json_encode( $list );
             return \var_export( $list, true );
         } );
         $create_date_line = new LC\TableInfo( "日期", "create_date" );
@@ -70,9 +71,9 @@ class LogStreamController extends Controller
         //设置数据列
         $LCTable->setLines( [
             $id_line,
-            $content_line,
             $create_date_line,
             $create_time_line,
+            $content_line,
         ] );
 
         return $LCTable->view( $view_data );
@@ -91,6 +92,7 @@ class LogStreamController extends Controller
             "androidid" => "ANDROIDID",
             "oaid" => "OAID",
             "mac" => "MAC",
+            "ip" => "IP",
         ];
         //设备附加信息
         $app_info_other_list = [
@@ -139,6 +141,8 @@ class LogStreamController extends Controller
         $list->withPath( \url()->full() );
 
         $LCTable = new LC\Table( );
+        $LCTable->pushSource( "js", asset('/'). "js/log_stream/byteclick.js" ); //额外js资源
+
         //设置分页数据
         $LCTable->setPaginator( $list );
         
@@ -175,6 +179,7 @@ class LogStreamController extends Controller
                 if( !\in_array( $key, $app_info_all_keys ) ) unset( $list[ $key ] );
             }
 
+            return \json_encode( $list );
             return \var_export( $list, true );
         } );
         $ip_line = new LC\TableInfo( "IP", "ip" );
@@ -187,6 +192,8 @@ class LogStreamController extends Controller
         } );
         $create_date_line = new LC\TableInfo( "日期", "create_date" );
         $create_time_line = new LC\TableInfo( "时间", "create_time" );
+        $btns_line = new LC\TableBtns( "操作", "update" );
+        $btns_line->pushBtn( "生成回调地址", "create_callback", "info" );
         //设置数据列
         $LCTable->setLines( [
             $id_line,
@@ -197,11 +204,12 @@ class LogStreamController extends Controller
             // $advertiser_id_line,
             // $ctype_line,
             // $csite_line,
-            $content_line,
             $ip_line,
             $os_line,
             $create_date_line,
             $create_time_line,
+            $btns_line,
+            $content_line,
         ] );
 
         return $LCTable->view( $view_data );
@@ -221,6 +229,7 @@ class LogStreamController extends Controller
             "androidid" => "ANDROIDID",
             "oaid" => "OAID",
             "mac" => "MAC",
+            "ip" => "IP",
         ];
         //设备附加信息
         $app_info_other_list = [
@@ -291,6 +300,7 @@ class LogStreamController extends Controller
                 if( !\in_array( $key, $app_info_all_keys ) ) unset( $list[ $key ] );
             }
 
+            return \json_encode( $list );
             return \var_export( $list, true );
         } );
         $ip_line = new LC\TableInfo( "IP", "ip" );
@@ -314,11 +324,11 @@ class LogStreamController extends Controller
         $LCTable->setLines( [
             $id_line,
             $init_id_line,
-            $content_line,
             $ip_line,
             $os_line,
             $create_date_line,
             $create_time_line,
+            $content_line,
         ] );
 
         return $LCTable->view( $view_data );
