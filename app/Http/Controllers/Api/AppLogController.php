@@ -21,8 +21,8 @@ class AppLogController extends Controller
 
     public function adinfo( Request $request, $app_id ) {
         $today = date("Y-m-d");
-        $today_stime = "00:00:00";
-        $today_etime = "23:59:59";
+        $today_stime = \date("H:i:s", time() - 600 );
+        $today_etime = \date("H:i:s");
 
         $start_datetime = $request->input('start_datetime', $today. " ". $today_stime);
         $end_datetime = $request->input('end_datetime', $today. " ". $today_etime);
