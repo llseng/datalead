@@ -328,6 +328,8 @@ class AppInitBindHandler extends Command
         $AppByteClickDataM = $AppByteClickDataL->getTableModelObj();
 
         $init_last_id = 0;
+        $aid_click_count = $AppByteClickDataM->select( DB::raw("count( 1 ) count"), "aid" )->groupBy("aid")->pluck("count", "aid")->toArray();
+
         $sleep_s = 1;
         $sleep_max_s = $sleep_s << 4;
         $init_limit = 100; //记录限制
@@ -337,6 +339,7 @@ class AppInitBindHandler extends Command
         BIND_START: {
             static::$Logger->debug( "---". $app_id. " init bind start" );
             static::$Logger->debug( "---". $app_id. " init_last_id ". $init_last_id );
+            static::$Logger->debug( "---". $app_id. " aid_click_count", $aid_click_count );
         }
         
         $app_inits_m = $AppInitDataM->select("id", "imei", "idfa", "androidid", "oaid", "mac", "ip", "ua", "os", "create_date", "create_time");
@@ -377,7 +380,7 @@ class AppInitBindHandler extends Command
                 [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), ">=", $first_date. " ". $first_datetime ],
             ];
         }
-        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
+        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "aid", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
 
         if( empty( $byte_click_data ) ) {
             //没有字节点击数据
@@ -436,6 +439,18 @@ class AppInitBindHandler extends Command
                 }
                 // 匹配成功
                 if( $match_status ) {
+                    if( !isset( $aid_click_count[ $match_click_data['aid'] ] ) ) {
+                        static::$Logger->debug( "---". $app_id. " aid_click_count aid ". $match_click_data['aid']. " empty" );
+                        $aid_click_count = $AppByteClickDataM->select( DB::raw("count( 1 ) count"), "aid" )->groupBy("aid")->pluck("count", "aid")->toArray();
+                    }
+
+                    if( $aid_click_count[ $match_click_data['aid'] ] > 10 ) {
+                        static::$Logger->debug( "---". $app_id. " aid num > 10" );
+                        continue;
+                    }
+
+                    $aid_click_count[ $match_click_data['aid'] ]++;
+
                     static::$Logger->info( "---". $app_id. " init_id ". $init_data['id']. " -> click_id ". $match_click_data['id'] );
                     !empty( $match_click_data['callback_url'] ) && AppCallbackL::create( $app_id, $match_click_data['callback_url'], ['event_type' => 0] ); //激活事件
                 }
