@@ -2,8 +2,6 @@
 namespace App\Traits;
 
 use Monolog\Logger;
-use Workerman\Worker;
-use Workerman\Lib\Timer;
 use Monolog\Handler\StreamHandler;
 
 /**
@@ -38,7 +36,7 @@ trait Handler
      * @return void
      */
     static public function loggerLoad( ) {
-        $logger_file = static::loggerFile( static::$Logger );
+        $logger_file = static::loggerFile( );
         $logget_handlers = static::$Logger->getHandlers();
         if( $logget_handlers ) {
             if( static::$Logger->getHandlers()[0]->getUrl() !== $logger_file ) {
@@ -63,8 +61,7 @@ trait Handler
     {
         if( isset( static::$Logger ) ) return ;
 
-        $path_parts = pathinfo( static::class );
-        $basename = $path_parts['filename'];
+        $basename = basename( static::class );
         
         static::$Logger = new Logger( $basename );
         !isset( static::$Level ) && static::$Level = Logger::DEBUG;
