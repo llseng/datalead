@@ -35,7 +35,7 @@ class ByteClickData extends FormRequest
             "ctype" => "nullable|numeric",
             "csite" => "nullable|numeric",
 
-            "request_id" => "nullable|". static::$alpha_num. "|between:20,100",
+            "request_id" => "nullable|regex:/^[\w\-]+$/|between:20,100",
 
             'imei' => "nullable|". static::$alpha_num. "|between:16,32",
             'idfa' => "nullable|". static::$alpha_num. "|between:16,32",
