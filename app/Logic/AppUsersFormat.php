@@ -1,15 +1,19 @@
 <?php
 namespace App\Logic;
 
+use App\Logic\AppData\Click as ClickData;
+
 /**
  * 应用用户数据格式逻辑
  */
 class AppUsersFormat 
 {
     static public $channel_list = [
-        'init' => 0, //初始化
-        'natural' => 1,
-        'byte' => 2,
+        'Init' => ClickData\Data::PLATFORM_ID, //初始化
+        "Byte" => ClickData\ByteData::PLATFORM_ID ,
+        "KuaiShou" => ClickData\KuaiShouData::PLATFORM_ID,
+        "Txad" => ClickData\TxadData::PLATFORM_ID,
+        'Natural' => 100, //游客
     ];
 
     static public $site_list = [
