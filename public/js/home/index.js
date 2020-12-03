@@ -606,7 +606,7 @@ $(document).ready( function() {
             }
         });
     } );
-
+/*
     //点击样式数据饼图
     var clickTypePieChartDom = $("#clickTypePie .card-body").get(0);
     var clickTypePieChart = echarts.init( clickTypePieChartDom, "light", { height: parseInt( (clickTypePieChartDom.getBoundingClientRect().width - 40) / 2 ) } );
@@ -766,7 +766,7 @@ $(document).ready( function() {
             }
         });
     } );
-
+*/
     //刷新图表
     function echartsResize() {
         //点击数据折线图
@@ -784,9 +784,9 @@ $(document).ready( function() {
         //渠道数据饼图
         channelPieChart.resize({ height: parseInt( (channelPieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
         //点击投放数据饼图
-        clickTypePieChart.resize({ height: parseInt( (clickTypePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        // clickTypePieChart.resize({ height: parseInt( (clickTypePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
         //点击样式数据饼图
-        clickSitePieChart.resize({ height: parseInt( (clickSitePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
+        // clickSitePieChart.resize({ height: parseInt( (clickSitePieChart.getDom().getBoundingClientRect().width - 40) / 2 ) });
     }
 
     window.addEventListener('resize', function() {

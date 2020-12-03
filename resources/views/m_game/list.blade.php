@@ -31,7 +31,7 @@
                 <div class="image has-shadow"><img src="{{ asset('/') }}img/project.jpg" alt="..." class="img-fluid"></div>
                 <div class="text">
                 <h3 class="h4">
-                    <a href="{{ route('game_info', ['id' => $app_li->gid]) }}">{{ $app_li->gid }}-{{ $app_li->name }}</a>
+                    <a href="{{ route('game_info_v2', ['id' => $app_li->gid]) }}">{{ $app_li->gid }}-{{ $app_li->name }}</a>
                 </h3><small>{{ $app_li->desc }}</small>
                 </div>
             </div>

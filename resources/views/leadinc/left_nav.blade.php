@@ -26,11 +26,14 @@
                 <i class="icon-grid"></i>日志流
             </a>
             <ul id="log-stream" class="collapse list-unstyled @if(isset($left_nav_name) && $left_nav_name == 'log_stream') show @endif">
-                <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_byteshow') active @endif">
+                <!-- <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_byteshow') active @endif">
                     <a href="{{ route('log_stream_byteshow') }}">字节广告展示</a>
                 </li>
                 <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_byteclick') active @endif">
                     <a href="{{ route('log_stream_byteclick') }}">字节广告点击</a>
+                </li> -->
+                <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_click') active @endif">
+                    <a href="{{ route('log_stream_click') }}">广告点击</a>
                 </li>
                 <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_inits') active @endif">
                     <a href="{{ route('log_stream_inits') }}">应用启动</a>
