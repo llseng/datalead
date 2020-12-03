@@ -8,6 +8,9 @@ use App\Logic;
 use App\GameApp;
 use App\Http\Requests\GameApp as GameAppVali;
 
+use App\Logic\LeadContent as LC;
+use App\Logic\AppData\Click\UrlQuery as UQ;
+
 class GameAppController extends Controller
 {
     
@@ -81,7 +84,7 @@ class GameAppController extends Controller
         $view_data = ['view_title'=>'应用'];
         $view_data['left_nav_name'] = "game";
         
-        $app_list = GameApp::select( static::$fields )->get();
+        $app_list = GameApp::select( static::$fields )->orderBy("created_at")->get();
         $view_data['app_list'] = $app_list;
         
         return view('m_game.list', $view_data);
@@ -186,5 +189,45 @@ class GameAppController extends Controller
         $view_data['app_init_link'] = \route( 'app_init', ['id' => $id] );
         
         return view('m_game.info', $view_data);
+    }
+
+    public function info_v2( $id ) {
+        $GameApp = GameApp::find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        $view_data['left_nav_name'] = "game";
+
+        $LCForm = new LC\Form( "应用详情" );
+        $LCForm->noSubmitBtn();
+
+        $id_form = new LC\FormInput( "ID", "id", $GameApp->id );
+        $id_form->disabled();
+        $name_form = new LC\FormInput( "名称", "name", $GameApp->name );
+        $name_form->disabled();
+        $desc_form = new LC\FormInput( "简介", "desc", $GameApp->desc );
+        $desc_form->disabled();
+        $download_url_form = new LC\FormInput( "下载地址", "download_url", $GameApp->download_url );
+        $download_url_form->disabled();
+
+        $init_link_form = new LC\FormTextarea( "启动监听连接", "", \route( 'app_init_v2', ['id' => $id] ) );
+        $byte_click_link_form = new LC\FormTextarea( "字节广告点击监听连接", "", \route( 'app_click_byte', ['id' => $id] ). "?". UQ\ByteUrlQuery::toString() );
+        $kuaishou_click_link_form = new LC\FormTextarea( "快手广告点击监听连接", "", \route( 'app_click_kuaishou', ['id' => $id] ). "?". UQ\KuaiShouUrlQuery::toString() );
+        $txad_click_link_form = new LC\FormTextarea( "腾讯广告点击监听连接", "", \route( 'app_click_txad', ['id' => $id] ) );
+
+        $LCForm->setRows( [
+            $id_form,
+            $name_form,
+            $desc_form,
+            $download_url_form,
+
+            $init_link_form,
+            $byte_click_link_form,
+            $kuaishou_click_link_form,
+            $txad_click_link_form,
+        ] );
+        
+        return $LCForm->view( $view_data );
     }
 }
