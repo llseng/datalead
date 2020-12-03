@@ -88,7 +88,7 @@ trait Middleware
 
         foreach ($handles as $key => $handle) {
             $app = function ( $params )use( $app, $handle) {
-                return $handle( $app );
+                return $handle( $params, $app );
             };
         }
 
