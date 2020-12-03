@@ -16,11 +16,13 @@ class AppCallback
      * @param array $query
      * @return bool
      */
-    static public function create( string $appid, string $url, array $query ) {
+    static public function create( string $appid, string $url, array $query, $type = null, array $head = null ) {
         $M = new GACM;
         $M->appid = $appid;
         $M->url = $url;
         if( !empty( $query ) ) $M->query = \http_build_query( $query );
+        if( !empty( $type ) ) $M->type = (int)$type;
+        if( !empty( $head ) ) $M->head = \json_encode( $head );
 
         $status = $M->save();
         
