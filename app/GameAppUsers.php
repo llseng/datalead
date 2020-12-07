@@ -13,6 +13,9 @@ class GameAppUsers extends Model
         'reg_ip',
         'os',
         'channel',
+        'gid',
+        'aid',
+        'cid',
         'create_date',
         'create_time'
     ];
