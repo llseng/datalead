@@ -326,8 +326,8 @@ class AppUsersBindHandler extends Command
         $sleep_s = 1;
         $sleep_max_s = $sleep_s << 3;
         $user_limit = 100; //用户限制
-        $data_limit = $user_limit * 50; //数据限制
-        $time_limit = 360 * 60; //时间限制 6小时
+        $data_limit = $user_limit * 100; //数据限制
+        $time_limit = 60 * 60 * 10; //时间限制 10小时
 
         BIND_START: {
             static::$Logger->debug( "---". $app_id. " user bind start" );
