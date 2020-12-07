@@ -327,7 +327,7 @@ class AppUserActiveHandler extends Command
 
         $sleep_s = 1;
         $sleep_max_s = $sleep_s << 4;
-        $init_limit = 1000; //记录限制
+        $init_limit = 100; //记录限制
         $data_limit = $init_limit * 50; //数据限制
         $time_limit = 10 * 60; //时间限制 十分钟
 
