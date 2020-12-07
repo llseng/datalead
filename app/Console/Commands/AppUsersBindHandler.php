@@ -333,7 +333,7 @@ class AppUsersBindHandler extends Command
             static::$Logger->debug( "---". $app_id. " user bind start" );
         }
         
-        $app_users = $AppUsersM->where( "channel", 0 )->limit( 100 )->get()->toArray();
+        $app_users = $AppUsersM->where( "channel", 0 )->limit( $user_limit )->get()->toArray();
         if( empty( $app_users ) ) {
             static::$Logger->warn( "---". $app_id. " app_users empty" );
             goto BIND_AGAIN; //没有数据 进入随眠
@@ -363,7 +363,7 @@ class AppUsersBindHandler extends Command
                 [ DB::raw( "CONCAT( create_date, ' ', create_time )" ), ">=", $first_date. " ". $first_datetime ],
             ];
         }
-        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
+        $byte_click_data = $AppByteClickDataM->select("id", "unique_id", "aid", "cid", "campaign_id", "imei", "idfa", "androidid", "oaid", "os", "mac", "ip", "ua", "callback_url")->where( $byte_click_data_where )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
 
         if( empty( $byte_click_data ) ) {
             //没有字节点击数据 用户全部设置为自然人
@@ -394,7 +394,10 @@ class AppUsersBindHandler extends Command
                                 !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
 
                                 $match_status = true;
-                                $match_unique_id = $click_data['unique_id'];
+                                $update_data['unique_id'] = $click_data['unique_id'];
+                                $update_data['gid'] = $click_data['campaign_id'];
+                                $update_data['aid'] = $click_data['aid'];
+                                $update_data['cid'] = $click_data['cid'];
 
                                 break;
                             }
@@ -411,7 +414,10 @@ class AppUsersBindHandler extends Command
                                 !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
                                 
                                 $match_status = true;
-                                $match_unique_id = $click_data['unique_id'];
+                                $update_data['unique_id'] = $click_data['unique_id'];
+                                $update_data['gid'] = $click_data['campaign_id'];
+                                $update_data['aid'] = $click_data['aid'];
+                                $update_data['cid'] = $click_data['cid'];
 
                                 break;
                             }
@@ -428,7 +434,10 @@ class AppUsersBindHandler extends Command
                                 !empty( $click_data['callback_url'] ) && AppCallbackL::create( $app_id, $click_data['callback_url'], ['event_type' => 0] ); //激活事件
                                 
                                 $match_status = true;
-                                $match_unique_id = $click_data['unique_id'];
+                                $update_data['unique_id'] = $click_data['unique_id'];
+                                $update_data['gid'] = $click_data['campaign_id'];
+                                $update_data['aid'] = $click_data['aid'];
+                                $update_data['cid'] = $click_data['cid'];
 
                                 break;
                             }
@@ -439,7 +448,6 @@ class AppUsersBindHandler extends Command
 
                 if( $match_status ) {
                     $update_data['channel'] = AppUsersFormatL::$channel_list['byte']; //字节渠道
-                    $update_data['unique_id'] = $match_unique_id;
                 }
 
                 $update_status = $AppUsersM->where( "id", $user['id'] )->update( $update_data );
