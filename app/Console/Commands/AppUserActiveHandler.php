@@ -336,7 +336,7 @@ class AppUserActiveHandler extends Command
             static::$Logger->debug( $app_id. ">init_last_id ". $init_last_id );
         }
         
-        $app_inits_m = DB::table( $AppInitDataL->getTable(). " as inits" )->select( "inits.id", "inits.init_id", "inits.create_date", "users.unique_id", "users.create_date as reg_date" )->join( $AppUsersL->getTable(). " as users", "inits.init_id", "=", "users.init_id" );
+        $app_inits_m = DB::table( $AppInitDataL->getTable(). " as inits" )->select( "inits.id", "inits.init_id", "inits.create_date", "users.unique_id", "users.create_date as reg_date", "users.click_id", "users.callback_url" )->join( $AppUsersL->getTable(). " as users", "inits.init_id", "=", "users.init_id" );
         if( $init_last_id ) {
             $app_inits = $app_inits_m/*->where("inits.create_date", "=", date("Y-m-d"))*/->where( "inits.id", '>', $init_last_id )->whereNotNull("users.unique_id")->limit( $init_limit )->get()->toArray();
         }else{
@@ -356,33 +356,18 @@ class AppUserActiveHandler extends Command
         $last_app_init = $app_inits[ \count( $app_inits ) - 1 ];
 
         $init_last_id = $last_app_init->id;
-
-        $Keep2_uids = []; //次留用户点击ID
+        
         foreach ($app_inits as $init_data) {
             $ago_date = date("Y-m-d", \strtotime($init_data->create_date. "-1 day"));
             if( $init_data->reg_date == $ago_date ) {
-                $Keep2_uids[] = $init_data->unique_id;
-            }
-        }
-        
-        static::$Logger->debug( $app_id. ">Keep2_uids", $Keep2_uids );
-        
-        $click_ids = [];
-        $Keep2_uids && $click_ids = DB::table( $AppByteClickDataL->getTable() )->select( DB::raw("MIN( id ) mid") )->whereIn("unique_id", $Keep2_uids)->groupBy("unique_id")->pluck("mid")->toArray();
 
-        static::$Logger->debug( $app_id. ">click_ids", $click_ids );
-        
-        if( $click_ids ) {
-            $click_datas = DB::table( $AppByteClickDataL->getTable() )->select( "callback_url" )->whereIn("id", $click_ids)->pluck("callback_url")->toArray();
+                \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data['callback_url'] ) && AppCallbackL::create( $app_id, $init_data['callback_url'], ['event_type' => 6] );
 
-            foreach ($click_datas as $click_data) {
-                \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $click_data ) && AppCallbackL::create( $app_id, $click_data, ['event_type' => 6] );
-                // \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $click_data ) && static::$Logger->info( $app_id. ">callback_url: ". $click_data );
             }
         }
         
         //清理
-        unset( $app_inits, $Keep2_uids, $click_ids, $click_datas );
+        unset( $app_inits, $init_data );
 
         goto APP_START; //重新开始
 

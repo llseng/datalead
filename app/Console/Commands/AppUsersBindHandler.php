@@ -398,6 +398,8 @@ class AppUsersBindHandler extends Command
                                 $update_data['gid'] = $click_data['campaign_id'];
                                 $update_data['aid'] = $click_data['aid'];
                                 $update_data['cid'] = $click_data['cid'];
+                                $update_data['click_id'] = $click_data['id'];
+                                $update_data['callback_url'] = $click_data['callback_url'];
 
                                 break;
                             }
@@ -418,6 +420,8 @@ class AppUsersBindHandler extends Command
                                 $update_data['gid'] = $click_data['campaign_id'];
                                 $update_data['aid'] = $click_data['aid'];
                                 $update_data['cid'] = $click_data['cid'];
+                                $update_data['click_id'] = $click_data['id'];
+                                $update_data['callback_url'] = $click_data['callback_url'];
 
                                 break;
                             }
@@ -438,6 +442,8 @@ class AppUsersBindHandler extends Command
                                 $update_data['gid'] = $click_data['campaign_id'];
                                 $update_data['aid'] = $click_data['aid'];
                                 $update_data['cid'] = $click_data['cid'];
+                                $update_data['click_id'] = $click_data['id'];
+                                $update_data['callback_url'] = $click_data['callback_url'];
 
                                 break;
                             }
