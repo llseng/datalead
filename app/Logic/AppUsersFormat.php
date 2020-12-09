@@ -42,16 +42,6 @@ class AppUsersFormat
         'other' => 10
     ];
 
-    static public function fromByteClickData( array $data ) {
-        $to_data = [];
-
-        $to_data['unique_id'] = $data['unique_id'];
-
-        $to_data['channel'] = static::$channel_list['byte'];
-
-        return $to_data;
-    }
-
     static public function fromInitData( array $data ) {
         $to_data = [];
 
@@ -71,7 +61,7 @@ class AppUsersFormat
                 break;
         }
 
-        $to_data['channel'] = static::$channel_list['init'];
+        $to_data['channel'] = static::$channel_list['Init'];
 
         return $to_data;
     }
