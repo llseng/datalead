@@ -18,10 +18,10 @@ use App\Logic\AppData\Click\ByteData as ClickByteData;
 use App\Logic\AppData\Click\KuaiShouData as ClickKuaiShouData;
 use App\Logic\AppData\Click\TxadData as ClickTxadData;
 
-use App\Logic\AppData\Click\CallBack\Callback as ClickCallback;
-use App\Logic\AppData\Click\CallBack\ByteStrategy;
-use App\Logic\AppData\Click\CallBack\KuaiShouStrategy;
-use App\Logic\AppData\Click\CallBack\TxadStrategy;
+use App\Logic\AppData\Click\Callback\Callback as ClickCallback;
+use App\Logic\AppData\Click\Callback\ByteStrategy;
+use App\Logic\AppData\Click\Callback\KuaiShouStrategy;
+use App\Logic\AppData\Click\Callback\TxadStrategy;
 
 class TimedScriptAppUserBind extends Command
 {
