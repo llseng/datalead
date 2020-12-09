@@ -63,8 +63,8 @@ class TimedScriptAppUserBind extends Command
         $sleep_s = 1;
         $sleep_max_s = $sleep_s << static::$sleep_max_bit;
         $user_limit = 100; //用户限制
-        $data_limit = $user_limit * 50; //数据限制
-        $time_limit = 360 * 60; //时间限制 6小时
+        $data_limit = $user_limit * 100; //数据限制
+        $time_limit = 60 * 60 * 10; //时间限制 10小时
         
         START: {
             static::$Logger->info( $app_id. ">START" );
@@ -129,6 +129,8 @@ class TimedScriptAppUserBind extends Command
                     $update_data['gid'] = $click_data['gid'];
                     $update_data['aid'] = $click_data['aid'];
                     $update_data['cid'] = $click_data['cid'];
+                    $update_data['click'] = $click_data['id'];
+                    $update_data['callback_url'] = $click_data['callback_url'];
                     break;
                 }
             }
