@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Logic;
 use App\GameApp;
+use App\BaseModel;
 use App\Http\Requests\GameApp as GameAppVali;
 
 use App\Logic\LeadContent as LC;
@@ -13,7 +14,14 @@ use App\Logic\AppData\Click\UrlQuery as UQ;
 
 class GameAppController extends Controller
 {
-    
+
+    private $logicClass = [
+        \App\Logic\AppUsers::class,
+        \App\Logic\AppInitData::class,
+        \App\Logic\AppClickData::class,
+        \App\Logic\AppSortNames::class,
+    ];
+
     /**
      * Create a new controller instance.
      *
@@ -150,6 +158,7 @@ class GameAppController extends Controller
     }
 
     public function delete(Request $request, $id ) {
+        if( !$request->delete ) return static::backError( "删除应用请联系维护人员." );
         $GameApp = GameApp::find( $id );
         if( empty( $GameApp ) ) {
             return static::backError( "错误,请刷新后再试." );
@@ -160,6 +169,8 @@ class GameAppController extends Controller
         if( !$status ) {
             return static::backError( "操作失败,请稍后再试." );
         }
+
+        $this->deleteTables( $id );
 
         static::flushSess( $id );
 
@@ -188,6 +199,9 @@ class GameAppController extends Controller
             $GameApp->download_url = $data['download_url'];
             
             $status = $GameApp->save();
+
+            $status && $this->copyTablesStruct( $data['id'] );
+            
         }
 
         if( !$status ) {
@@ -256,5 +270,37 @@ class GameAppController extends Controller
         ] );
         
         return $LCForm->view( $view_data );
+    }
+
+    private function copyTablesStruct( $app_id ) {
+        $result = [
+            "succ" => 0,
+            "fail" => 0,
+        ];
+        foreach ($this->logicClass as $class) {
+            $logic = new $class( $app_id );
+            $status = $logic->create_table();
+            if( $status ) $result['succ']++;
+            else $result['fail']++;
+        }
+        unset( $logic );
+
+        return $result;
+    }
+
+    private function deleteTables( $app_id ) {
+        $result = [
+            "succ" => 0,
+            "fail" => 0,
+        ];
+        foreach ($this->logicClass as $class) {
+            $logic = new $class( $app_id );
+            $status = $logic->delete_table();
+            if( $status ) $result['succ']++;
+            else $result['fail']++;
+        }
+        unset( $logic );
+
+        return $result;
     }
 }

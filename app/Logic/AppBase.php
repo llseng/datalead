@@ -23,15 +23,9 @@ class AppBase
 
     public function __construct( $app_id ) {
         $this->table = "ga_{$app_id}_{$this->source_table}";
-        if( 
-            !\in_array( $this->table, BaseModel::getCacheTables() ) 
-            && !$this->create_table() 
-            ) {
-            throw new \Exception("Failed to create [$app_id] attached table", 1);
-        }
     }
 
-    protected function create_table() {
+    public function create_table() {
         return BaseModel::copyTableStruct( $this->source_table, $this->table );
     }
 
