@@ -104,10 +104,23 @@ class GameAppController extends Controller
     }
 
     public function create() {
-        $view_data = ['view_title'=>'创建应用'];
-        $view_data['app_data'] = \array_fill_keys( \array_merge( static::$fields, ['gid']), '' );
+
+        $LCForm = new LC\Form( "创建应用", "POST", route('game_dealwith') );
+        $LCForm->pushHideData( "old_id", '' );
+
+        $id_form = new LC\FormInput( "ID", "id" );
+        $name_form = new LC\FormInput( "名称", "name");
+        $desc_form = new LC\FormInput( "简介", "desc" );
+        $download_url_form = new LC\FormInput( "下载地址", "download_url");
+
+        $LCForm->setRows( [
+            $id_form,
+            $name_form,
+            $desc_form,
+            $download_url_form,
+        ] );
         
-        return view('m_game.form', $view_data);
+        return $LCForm->view( );
     }
 
     public function update( $id ) {
@@ -117,9 +130,23 @@ class GameAppController extends Controller
             return static::backError( "错误,请刷新后再试." );
         }
         
-        $view_data[ 'app_data' ] = $GameApp;
+        $LCForm = new LC\Form( "创建应用", "POST", route('game_dealwith') );
+        $LCForm->pushHideData( "old_id", $GameApp->gid );
 
-        return view('m_game.form', $view_data);
+        $id_form = new LC\FormInput( "ID", "id", $GameApp->gid );
+        $id_form->setPrompt( "不可修改" );
+        $name_form = new LC\FormInput( "名称", "name", $GameApp->name );
+        $desc_form = new LC\FormInput( "简介", "desc", $GameApp->desc  );
+        $download_url_form = new LC\FormInput( "下载地址", "download_url", $GameApp->download_url );
+
+        $LCForm->setRows( [
+            $id_form,
+            $name_form,
+            $desc_form,
+            $download_url_form,
+        ] );
+        
+        return $LCForm->view( );
     }
 
     public function delete(Request $request, $id ) {
@@ -148,7 +175,7 @@ class GameAppController extends Controller
                 return static::backError( "错误,请刷新后再试." );
             }
             $status = GameApp::where( 'id', $data['old_id'] )->update([
-                'id' => $data['id'],
+                // 'id' => $data['id'],
                 'name' => $data['name'],
                 'desc' => $data['desc'],
                 'download_url' => $data['download_url']
