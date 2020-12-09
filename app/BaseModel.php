@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use DB;
+use Cache;
 
 class BaseModel extends Model
 {
@@ -54,7 +55,7 @@ class BaseModel extends Model
      * @return array
      */
     static public function getCacheTables() {
-        return \cache()->remember( static::$cache_tables_key, 10080, function() {
+        return Cache::remember( static::$cache_tables_key, 10080, function() {
             return static::showTables();
         } );
     }
@@ -65,7 +66,7 @@ class BaseModel extends Model
      * @return bool
      */
     static public function flushCacheTables() {
-        return \cache()->forget( static::$cache_tables_key );
+        return Cache::forget( static::$cache_tables_key );
     }
 
     /**
