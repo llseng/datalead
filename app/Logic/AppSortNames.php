@@ -8,7 +8,7 @@ use App\GameAppSortNames as TableModel;
 /**
  * 应用分类名表逻辑
  */
-class AppClickData extends AppBase
+class AppSortNames extends AppBase
 {
     protected $source_table = "game_app_sort_names";
     protected $model_class = TableModel::class;
@@ -23,9 +23,9 @@ class AppClickData extends AppBase
         return false;
     }
 
-    public function first( $where ) {
+    public function first( $where, $select = ['id', 'sup_id'] ) {
         try {
-            return DB::table( $this->getTable() )->select('id', 'sup_id')->where( $where )->first();
+            return DB::table( $this->getTable() )->select( $select )->where( $where )->first();
         } catch (\Throwable $th) {
             Log::error( static::class .': '. $th->getMessage() );
         }
