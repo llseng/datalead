@@ -332,46 +332,6 @@
             </div>
             </div>
         </div>
-        <!-- 点击样式 -->
-        <!-- <div class="col-lg-4">
-            <div id="clickTypePie" data-api-url="{{ route('home_chart_byte_click_type', ['app_id' => $app_id]) }}" class="line-chart-example card">
-            <div class="card-close">
-                <div class="dropdown">
-                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
-                </div>
-                </div>
-            </div>
-            <div class="card-header d-flex align-items-center">
-                <h3 class="h4">点击样式</h3>
-            </div>
-            <div class="card-body">
-                <canvas></canvas>
-            </div>
-            </div>
-        </div> -->
-        <!-- 点击投放 -->
-        <!-- <div class="col-lg-4">
-            <div id="clickSitePie" data-api-url="{{ route('home_chart_byte_click_site', ['app_id' => $app_id]) }}" class="line-chart-example card">
-            <div class="card-close">
-                <div class="dropdown">
-                <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
-                    <a href="javascript:void(0);" class="dropdown-item refresh"> <i class="fa fa-refresh"></i>refresh</a>
-                    <a href="javascript:void(0);" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a>
-                </div>
-                </div>
-            </div>
-            <div class="card-header d-flex align-items-center">
-                <h3 class="h4">点击投放</h3>
-            </div>
-            <div class="card-body">
-                <canvas></canvas>
-            </div>
-            </div>
-        </div> -->
     </div>
 </div>
 </section>

@@ -33,8 +33,6 @@ Route::prefix('game')->group( function () {
     Route::get('/delete/{id}', 'GameAppController@delete')->where("id", "\w+")->name('game_delete');
     Route::post('/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
     Route::get('/info/{id}', 'GameAppController@info')->where("id", "\w+")->name('game_info');
-    
-    
     Route::get('/info_v2/{id}', 'GameAppController@info_v2')->where("id", "\w+")->name('game_info_v2');
 } );
 
@@ -52,8 +50,6 @@ Route::prefix('callback')->group( function () {
 } );
 
 Route::prefix('log_stream')->group( function () {
-    Route::get('/byteshow', 'LogStreamController@byteshow')->name('log_stream_byteshow');
-    Route::get('/byteclick', 'LogStreamController@byteclick')->name('log_stream_byteclick');
     Route::get('/click', 'LogStreamController@click')->name('log_stream_click');
     Route::get('/inits', 'LogStreamController@inits')->name('log_stream_inits');
     Route::get('/users', 'LogStreamController@users')->name('log_stream_users');

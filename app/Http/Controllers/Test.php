@@ -10,7 +10,6 @@ use App\Logic;
 use App\BaseModel;
 
 use App\Logic\LeadContent as LC;
-use App\Logic\AppByteClickData as AppByteClickDataL;
 use App\Logic\AppInitData as AppInitDataL;
 use App\Http\Requests\Test as TestVali;
 

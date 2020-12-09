@@ -214,22 +214,7 @@ class GameAppController extends Controller
     }
 
     public function info( $id ) {
-        $GameApp = GameApp::find( $id );
-        if( empty( $GameApp ) ) {
-            return static::backError( "错误,请刷新后再试." );
-        }
-
-        $view_data = ['view_title'=>'应用详情'];
-        $view_data['left_nav_name'] = "game";
-
-        $view_data['app_data'] = $GameApp;
-        //字节点击监测连接
-        $view_data['app_click_link'] = \route( 'byte_click_v2', ['id' => $id] ). '?'. Logic\AppByteClickData::getUrlQuery();
-        //字节展示监测连接
-        $view_data['app_show_link'] = \route( 'byte_show', ['id' => $id] ). '?'. Logic\AppByteShowData::getUrlQuery();
-        $view_data['app_init_link'] = \route( 'app_init', ['id' => $id] );
-        
-        return view('m_game.info', $view_data);
+        return redirect()->route('game_info_v2');
     }
 
     public function info_v2( $id ) {

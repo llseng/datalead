@@ -10,8 +10,6 @@ use Log;
 
 use App\Logic\AppUsers as AppUsersL;
 use App\Logic\AppInitData as AppInitDataL;
-use App\Logic\AppByteShowData as AppByteShowDataL;
-use App\Logic\AppByteClickData as AppByteClickDataL;
 use App\Logic\AppClickData as AppClickDataL;
 
 use App\Logic\AppUsersFormat as AppUsersFormatL;
@@ -29,62 +27,6 @@ class HomeChartController extends Controller
         //接口日志记录
         Log::info( static::class .': requestUri '. \request()->fullUrl(), \request()->all() );
     }
-
-    /**
-     * 字节广告点击数据
-     *
-     * @param HomeChartVali $request
-     * @param string $app_id
-     * @return jsonRes
-     */
-    public function byte_click( HomeChartVali $request, $app_id ) {
-        $today = date("Y-m-d");
-        $date_start = $request->input('date_start', $today);
-        $date_end = $request->input('date_end', $today);
-        $date_start_time = \strtotime( $date_start );
-        $date_end_time = \strtotime( $date_end ) + (86400 - 1);
-        $resDate = [];
-
-        $Logic = new AppByteClickDataL( $app_id );
-        
-        $where = [];
-        $date_key_format = "";
-        $date_key_inctime = 0;
-
-        if( $date_end == $date_start ) {
-            $where[] = ["create_date", "=", $date_end];
-            
-            $result = $Logic->getTableModelObj()->select( DB::raw( "LEFT( create_time, 2 ) as date, COUNT( id ) as num") )->where( $where )->groupBy("date")->pluck( "num", "date" );
-            
-            $date_key_format = "H";
-            $date_key_inctime = 3600;
-        }else{
-            $where[] = ["create_date", ">=", $date_start];
-            $where[] = ["create_date", "<=", $date_end];
-            
-            $result = $Logic->getTableModelObj()->select( DB::raw( "create_date as date, COUNT( id ) as num" ) )->where( $where )->groupBy("date")->pluck( "num", "date" );
-
-            $date_key_format = "Y-m-d";
-            $date_key_inctime = 86400;
-        }
-
-        $res_result = [];
-        $date_time = $date_start_time;
-        while ( $date_time < $date_end_time ) {
-            $date_key = date( $date_key_format, $date_time );
-            $res_result_li = [];
-            $res_result_li['date'] = $date_key;
-            $res_result_li['num'] = isset($result[$date_key])? $result[$date_key]: 0;
-            $res_result[] = $res_result_li;
-
-            $date_time += $date_key_inctime;
-        }
-
-        $resDate["广告点击"] = $res_result;
-
-        return \response()->json( static::jsonRes( 0, null, $resDate, false ) );
-    }
-
     /**
      * 广告点击数据
      *
@@ -430,110 +372,6 @@ class HomeChartController extends Controller
         }
 
         $resDate["渠道"] = $res_result;
-
-        return \response()->json( static::jsonRes( 0, null, $resDate, false ) );
-    }
-
-    /**
-     * 字节跳动点击样式数据
-     *
-     * @param HomeChartVali $request
-     * @param string $app_id
-     * @return jsonRes
-     */
-    public function byte_click_type( HomeChartVali $request, $app_id ) {
-        $today = date("Y-m-d");
-        $date_start = $request->input('date_start', $today);
-        $date_end = $request->input('date_end', $today);
-        $date_start_time = \strtotime( $date_start );
-        $date_end_time = \strtotime( $date_end ) + (86400 - 1);
-        $resDate = [];
-
-        $Logic = new AppByteClickDataL( $app_id );
-        
-        $where = [];
-
-        if( $date_end == $date_start ) {
-            $where[] = ["create_date", "=", $date_end];
-            
-        }else{
-            $where[] = ["create_date", ">=", $date_start];
-            $where[] = ["create_date", "<=", $date_end];
-        }
-        $result = $Logic->getTableModelObj()->select( DB::raw("ctype, COUNT( id ) as num") )->where( $where )->groupBy("ctype")->pluck("num", "ctype");
-        //字节点击样式列表
-        $type_list = AppUsersFormatL::$type_list['byte'];
-        $res_result = [];
-
-        foreach ($result as $key => $val) {
-            $res_li = [];
-            $res_li['name'] = isset( $type_list[ $key ] )? $type_list[ $key ]: $key;
-            $res_li['value'] = $val;
-            $res_result[] = $res_li;
-        }
-        //填充无数据类型
-        foreach ($type_list as $key => $val) {
-            if( !isset( $result[ $key ] ) ) {
-                $res_li = [];
-                $res_li['name'] = $val;
-                $res_li['value'] = 0;
-                $res_result[] = $res_li;
-            }
-        }
-
-        $resDate["点击样式"] = $res_result;
-
-        return \response()->json( static::jsonRes( 0, null, $resDate, false ) );
-    }
-
-    /**
-     * 字节跳动点击投放数据
-     *
-     * @param HomeChartVali $request
-     * @param string $app_id
-     * @return jsonRes
-     */
-    public function byte_click_site( HomeChartVali $request, $app_id ) {
-        $today = date("Y-m-d");
-        $date_start = $request->input('date_start', $today);
-        $date_end = $request->input('date_end', $today);
-        $date_start_time = \strtotime( $date_start );
-        $date_end_time = \strtotime( $date_end ) + (86400 - 1);
-        $resDate = [];
-
-        $Logic = new AppByteClickDataL( $app_id );
-        
-        $where = [];
-
-        if( $date_end == $date_start ) {
-            $where[] = ["create_date", "=", $date_end];
-            
-        }else{
-            $where[] = ["create_date", ">=", $date_start];
-            $where[] = ["create_date", "<=", $date_end];
-        }
-        $result = $Logic->getTableModelObj()->select( DB::raw("csite, COUNT( id ) as num") )->where( $where )->groupBy("csite")->pluck("num", "csite");
-        //字节投放列表
-        $type_list = AppUsersFormatL::$site_list['byte'];
-        $res_result = [];
-
-        foreach ($result as $key => $val) {
-            $res_li = [];
-            $res_li['name'] = isset( $type_list[ $key ] )? $type_list[ $key ]: $key;
-            $res_li['value'] = $val;
-            $res_result[] = $res_li;
-        }
-        //填充无数据类型
-        foreach ($type_list as $key => $val) {
-            if( !isset( $result[ $key ] ) ) {
-                $res_li = [];
-                $res_li['name'] = $val;
-                $res_li['value'] = 0;
-                $res_result[] = $res_li;
-            }
-        }
-
-        $resDate["点击投放"] = $res_result;
 
         return \response()->json( static::jsonRes( 0, null, $resDate, false ) );
     }
