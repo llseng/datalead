@@ -25,6 +25,7 @@ class GameAppClickData extends Model
         'callback_url',
         'other',
         'create_date',
+        'create_time',
     ];
     
     public $timestamps = false;
