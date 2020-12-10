@@ -116,6 +116,10 @@ class TimedScriptAppUserActive extends Command
                     }
 
                     break;
+                
+                default:
+                    static::$Logger->debug( $app_id. ">app_users ". $init_data['unique_id']. " continue" );
+                    continue;
             }
 
             \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data['callback_url'] ) && AppCallbackL::create( $app_id, $init_data['callback_url'], $query );
