@@ -112,14 +112,14 @@ class TimedScriptAppUserActive extends Command
                     $query = $ClickCallback->keep2(); //激活事件回调数据
                     if( empty( $query ) ) {
                         static::$Logger->error( $app_id. ">app_users keep2 ". $init_data['unique_id']. " query empty" );
-                        continue;
                     }
 
                     break;
-                
-                default:
-                    static::$Logger->debug( $app_id. ">app_users ". $init_data['unique_id']. " continue" );
-                    continue;
+            }
+
+            if( empty( $query ) ) {
+                static::$Logger->debug( $app_id. ">app_users ". $init_data['unique_id']. " continue" );
+                continue;
             }
 
             \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data['callback_url'] ) && AppCallbackL::create( $app_id, $init_data['callback_url'], $query );
