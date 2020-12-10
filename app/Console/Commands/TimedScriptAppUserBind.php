@@ -55,6 +55,13 @@ class TimedScriptAppUserBind extends Command
         $AppUsersL = new AppUsersL( $app_id );
         $AppInitDataL = new AppInitDataL( $app_id );
         $AppClickDataL = new AppClickDataL( $app_id );
+
+        $ClickCallback = new ClickCallback( $app_id );
+        $ClickCallbackStrategys = [
+            ClickByteData::PLATFORM_ID => new ByteStrategy(),
+            ClickKuaiShouData::PLATFORM_ID => new KuaiShouStrategy(),
+            ClickTxadData::PLATFORM_ID => new TxadStrategy(),
+        ];
         
         $AppUsersM = $AppUsersL->getTableModelObj();
         $AppInitDataM = $AppInitDataL->getTableModelObj();
@@ -105,13 +112,6 @@ class TimedScriptAppUserBind extends Command
 
         static::$Logger->info( $app_id. ">click_datas", [$click_datas[0]['id'], $click_datas[ \count( $click_datas ) - 1 ]['id']] );
 
-        $ClickCallback = new ClickCallback( $app_id );
-        $ClickCallbackStrategys = [
-            ClickByteData::PLATFORM_ID => new ByteStrategy(),
-            ClickKuaiShouData::PLATFORM_ID => new KuaiShouStrategy(),
-            ClickTxadData::PLATFORM_ID => new TxadStrategy(),
-        ];
-
         foreach ($app_users as $user) {
             $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "mac", "ip", "ua", "os")->where( 'init_id', $user['init_id'] )->first();
             
@@ -161,6 +161,7 @@ class TimedScriptAppUserBind extends Command
 
 
         CLEAN: { //清理
+            $ClickCallback->setData( [] );
             unset( $app_users, $click_data );
 
             goto START; //重新开始
