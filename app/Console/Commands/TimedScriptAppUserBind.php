@@ -122,14 +122,14 @@ class TimedScriptAppUserBind extends Command
 
             foreach ($click_datas as $click_data) {
                 if( static::match_click( $init_data, $click_data ) ) {
-                    $match_status = false;
+                    $match_status = true;
                     $match_click_data = $click_data;
                     $update_data['channel'] = $click_data['platform_id'];
                     $update_data['unique_id'] = $click_data['unique_id'];
                     $update_data['gid'] = $click_data['gid'];
                     $update_data['aid'] = $click_data['aid'];
                     $update_data['cid'] = $click_data['cid'];
-                    $update_data['click'] = $click_data['id'];
+                    $update_data['click_id'] = $click_data['id'];
                     $update_data['callback_url'] = $click_data['callback_url'];
                     break;
                 }
