@@ -52,7 +52,13 @@ class AppClickData extends AppBase
             return true;
         }
 
-        return $this->create( $ClickData->getData() );
+        $data = $ClickData->getData();
+        //更新类型名表
+        $AppSortNames = new AppSortNames( $this->getAppId() );
+        $other = \json_decode( $data['other'], 1 );
+        $AppSortNames->generate( \array_merge( $data, $other ) );
+
+        return $this->create( $data );
     }
 
 }
