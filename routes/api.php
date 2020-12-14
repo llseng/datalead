@@ -52,5 +52,6 @@ Route::namespace('Api')->prefix('homeChart')->group( function () {
 Route::namespace("Api")->prefix('appLog')->group( function () {
     Route::get( "/{app_id}/adinfo", "AppLogController@adinfo_v2" )->where('app_id', "\w+")->name( 'applog_adinfo' );
     Route::get( "/{app_id}/adinfo_v2", "AppLogController@adinfo_v2" )->where('app_id', "\w+")->name( 'applog_adinfo_v2' );
-    Route::get( "/{app_id}/sort_names", "AppLogController@sort_names" )->where('app_id', "\w+")->name( 'sort_names' );
+    Route::get( "/{app_id}/sort_names", "AppLogController@sort_names" )->where('app_id', "\w+")->name( 'applog_sort_names' );
+    Route::match(['get', 'post'], "/{app_id}/search_adinfo", "AppLogController@search_adinfo" )->where('app_id', "\w+")->name( 'applog_search_adinfo' );
 } );
