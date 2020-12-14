@@ -16,12 +16,14 @@ class AppBase
         return \http_build_query( static::$url_query );
     }
 
+    protected $app_id;
     protected $source_table = "app_base";
     protected $table;
     protected $model_class;
     protected $model_object;
 
     public function __construct( $app_id ) {
+        $this->app_id = $app_id;
         $this->table = "ga_{$app_id}_{$this->source_table}";
     }
 
@@ -31,6 +33,10 @@ class AppBase
 
     public function delete_table() {
         return BaseModel::dropTable( $this->table );
+    }
+
+    public function getAppId() {
+        return $this->app_id;
     }
 
     public function getTable() {
