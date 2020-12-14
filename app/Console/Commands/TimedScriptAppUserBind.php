@@ -93,7 +93,7 @@ class TimedScriptAppUserBind extends Command
         $first_time = \strtotime( $first_app_user['create_date']. " ". $first_app_user['create_time'] ) - $time_limit;
         $last_time = \strtotime( $last_app_user['create_date']. " ". $last_app_user['create_time'] );
         //点击数据
-        $click_datas = $AppClickDataM->select("id", "unique_id", "platform_id", "gid", "aid", "cid", "imei", "idfa", "androidid", "oaid", "mac", "ip", "os", "ts", "ua", "callback_url")->whereBetween( "ts", [$first_time * 1000, $last_time * 1000] )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
+        $click_datas = $AppClickDataM->select("id", "unique_id", "platform_id", "account_id", "gid", "aid", "cid", "imei", "idfa", "androidid", "oaid", "mac", "ip", "os", "ts", "ua", "callback_url")->whereBetween( "ts", [$first_time * 1000, $last_time * 1000] )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
 
         if( empty( $click_datas ) ) {
             //没有字节点击数据 用户全部设置为自然人
@@ -126,6 +126,7 @@ class TimedScriptAppUserBind extends Command
                     $match_click_data = $click_data;
                     $update_data['channel'] = $click_data['platform_id'];
                     $update_data['unique_id'] = $click_data['unique_id'];
+                    $update_data['account_id'] = $click_data['account_id'];
                     $update_data['gid'] = $click_data['gid'];
                     $update_data['aid'] = $click_data['aid'];
                     $update_data['cid'] = $click_data['cid'];
