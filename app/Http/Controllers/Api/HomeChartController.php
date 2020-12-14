@@ -24,8 +24,6 @@ class HomeChartController extends Controller
     public function __construct() {
         // $this->middleware('auth');
         $this->middleware('gameappid_check');
-        //接口日志记录
-        Log::info( static::class .': requestUri '. \request()->fullUrl(), \request()->all() );
     }
     /**
      * 广告点击数据

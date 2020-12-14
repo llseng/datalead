@@ -18,8 +18,6 @@ class ListenController extends Controller
 {
     public function __construct() {
         $this->middleware( 'gameappid_check' );
-        //接口日志记录
-        Log::info( static::class .': requestUri '. \request()->fullUrl(), \request()->all() );
     }
 
     public function app_init( Request $request, $app_id ) {
