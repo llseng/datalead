@@ -19,6 +19,7 @@ class AddAdRedundancyInfoToGameAppUsersTable extends Migration
             $table->unsignedBigInteger( 'cid' )->nullable()->after("channel")->comment('创意ID');
             $table->unsignedBigInteger( 'aid' )->nullable()->after("channel")->comment('计划ID');
             $table->unsignedBigInteger( 'gid' )->nullable()->after("channel")->comment('组ID');
+            $table->unsignedBigInteger( 'account_id' )->nullable()->after("channel")->comment('账户ID');
         });
     }
 
@@ -34,6 +35,7 @@ class AddAdRedundancyInfoToGameAppUsersTable extends Migration
             $table->dropColumn( 'aid' );
             $table->dropColumn( 'cid' );
             $table->dropColumn( 'gid' );
+            $table->dropColumn( 'account_id' );
             $table->dropColumn( 'callback_url' );
         });
     }
