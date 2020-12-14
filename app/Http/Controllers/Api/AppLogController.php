@@ -8,14 +8,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Logic\AppUsers as AppUsersL;
+use App\Logic\AppSortNames as AppSortNamesL;
 
 class AppLogController extends Controller
 {
     public function __construct( ) {
         $this->middleware( 'gameappid_check' );
         $this->middleware( 'api_appLog' );
-        //接口日志记录
-        Log::info( static::class .': requestUri '. \request()->fullUrl(), \request()->all() );
     }
 
     public function adinfo( Request $request, $app_id ) {
@@ -56,7 +55,14 @@ class AppLogController extends Controller
             ];
         }
 
-        $result = $AppUsersM->select("init_id", "unique_id", "channel", "gid", "aid", "cid")->where( $date_where )->get()->toArray();
+        $result = $AppUsersM->select("init_id", "unique_id", "channel", "account_id", "gid", "aid", "cid")->where( $date_where )->get()->toArray();
+
+        return \response()->json( static::jsonRes( 0, null, $result, false ) );
+    }
+
+    public function sort_names( Request $request, $app_id ) {
+        $AppSortNamesL = new AppSortNamesL( $app_id );
+        $result = DB::table( $AppSortNamesL->getTable() )->select([ "platform_id", "level", "sort_id", "sort_name" ])->get()->toArray();
 
         return \response()->json( static::jsonRes( 0, null, $result, false ) );
     }
