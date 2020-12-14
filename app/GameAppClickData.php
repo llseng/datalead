@@ -9,6 +9,7 @@ class GameAppClickData extends Model
     protected $fillable = [
         'unique_id',
         'platform_id',
+        'click_id',
         'aid',
         'cid',
         'gid',
