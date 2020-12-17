@@ -70,6 +70,8 @@ class AppSortNames extends AppBase
         if( $aid_data ) {
             $cid_insert_data[ 'sup_id' ] = $aid_data['id'];
             $cid_insert_data[ 'sup_chain' ] = $aid_data['sup_id']. ",". $aid_data['id'];
+            
+            $this->update( $aid_where, [ "sort_name" => $ad_data[ 'aname' ] ] );
         }else{ //上级aid不存在
             $aid_insert_data = $aid_where;
             $aid_insert_data['sort_name'] = $ad_data[ 'aname' ];
@@ -82,6 +84,8 @@ class AppSortNames extends AppBase
             if( $gid_data ) {
                 $aid_insert_data[ 'sup_id' ] = $gid_data['id'];
                 $aid_insert_data[ 'sup_chain' ] = $gid_data['id'];
+            
+                $this->update( $gid_where, [ "sort_name" => $ad_data[ 'gname' ] ] );
             }else{ //上级gid不存在
                 $gid_insert_data = $gid_where;
                 $gid_insert_data['sort_name'] = $ad_data[ 'gname' ];
