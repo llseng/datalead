@@ -33,6 +33,16 @@ class AppSortNames extends AppBase
         return false;
     }
 
+    public function update( $where, $data ) {
+        try {
+            return DB::table( $this->getTable() )->where( $where )->update( $data );
+        } catch (\Throwable $th) {
+            Log::error( static::class .': '. $th->getMessage() );
+        }
+
+        return false;
+    }
+
     public function generate( $ad_data ) {
         
         $platform_where = [
@@ -44,7 +54,10 @@ class AppSortNames extends AppBase
             "sort_id" => $ad_data['cid']
         ]);
         $cid_data = $this->first( $cid_where );
-        if( $cid_data ) return $cid_data['id']; //记录存在直接返回
+        if( $cid_data ) {
+            $this->update( $cid_where, [ "sort_name" => $ad_data[ 'cname' ] ] );
+            return $cid_data['id']; //记录存在直接返回
+        }
 
         $cid_insert_data = $cid_where;
         $cid_insert_data['sort_name'] = $ad_data[ 'cname' ];
