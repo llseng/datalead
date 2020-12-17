@@ -77,7 +77,10 @@ class TimedScriptAppUserBind extends Command
             static::$Logger->info( $app_id. ">START" );
         }
         
-        $app_users = $AppUsersM->where( "channel", 0 )->limit( $user_limit )->get()->toArray();
+        $app_users = $AppUsersM->where( "channel", 0 )
+        ->limit( $user_limit )
+        ->get()
+        ->toArray();
         if( empty( $app_users ) ) {
             static::$Logger->warn( $app_id. ">app_users empty" );
             goto AGAIN; //随眠
@@ -93,14 +96,38 @@ class TimedScriptAppUserBind extends Command
         $first_time = \strtotime( $first_app_user['create_date']. " ". $first_app_user['create_time'] ) - $time_limit;
         $last_time = \strtotime( $last_app_user['create_date']. " ". $last_app_user['create_time'] );
         //点击数据
-        $click_datas = $AppClickDataM->select("id", "unique_id", "platform_id", "account_id", "gid", "aid", "cid", "imei", "idfa", "androidid", "oaid", "mac", "ip", "os", "ts", "ua", "callback_url")->whereBetween( "ts", [$first_time * 1000, $last_time * 1000] )->orderBy('id', 'desc')->limit( $data_limit )->get()->toArray();
+        $click_datas = $AppClickDataM->select( [
+            "id", 
+            "unique_id", 
+            "platform_id", 
+            "account_id", 
+            "gid", 
+            "aid", 
+            "cid", 
+            "imei", 
+            "idfa", 
+            "androidid", 
+            "oaid", 
+            "mac", 
+            "ip", 
+            "os", 
+            "ts", 
+            "ua", 
+            "callback_url"
+        ] )
+        ->whereBetween( "ts", [$first_time * 1000, $last_time * 1000] )
+        ->orderBy('id', 'desc')
+        ->limit( $data_limit )
+        ->get()
+        ->toArray();
 
         if( empty( $click_datas ) ) {
             //没有字节点击数据 用户全部设置为自然人
             static::$Logger->warn( $app_id. ">click_datas empty" );
 
             $user_ids = \array_column( $app_users, "id" );
-            $update_status = $AppUsersM->whereIn( "id", $user_ids )->update( [ "channel"=>100 ] );
+            $update_status = $AppUsersM->whereIn( "id", $user_ids )
+            ->update( [ "channel"=>100 ] );
             if( empty( $update_status ) ) {
                 static::$Logger->error( $app_id. ">app_users update error", $user_ids );
             }
@@ -113,7 +140,18 @@ class TimedScriptAppUserBind extends Command
         static::$Logger->info( $app_id. ">click_datas", [$click_datas[0]['id'], $click_datas[ \count( $click_datas ) - 1 ]['id']] );
 
         foreach ($app_users as $user) {
-            $init_data = $AppInitDataM->select("imei", "idfa", "androidid", "oaid", "mac", "ip", "ua", "os")->where( 'init_id', $user['init_id'] )->first();
+            $init_data = $AppInitDataM->select([
+                "imei", 
+                "idfa", 
+                "androidid", 
+                "oaid", 
+                "mac", 
+                "ip", 
+                "ua", 
+                "os"
+            ])
+            ->where( 'init_id', $user['init_id'] )
+            ->first();
             
             $match_status = false;
             $match_click_data = false;

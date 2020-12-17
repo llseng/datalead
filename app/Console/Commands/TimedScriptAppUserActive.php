@@ -71,13 +71,42 @@ class TimedScriptAppUserActive extends Command
             static::$Logger->debug( $app_id. ">init_last_id ". $init_last_id );
         }
         //七天内注册用户
-        $userSubQuery = DB::table( $AppUsersL->getTable() )->select(['unique_id', 'init_id', 'channel', 'create_date', 'click_id', 'callback_url'])->where( 'create_date', ">=", date("Y-m-d", \strtotime("-7 day") ) );
+        $userSubQuery = DB::table( $AppUsersL->getTable() )
+        ->select( [
+            'unique_id', 
+            'init_id', 
+            'channel', 
+            'create_date', 
+            'click_id', 
+            'callback_url'
+        ] )
+        ->where( 'create_date', ">=", date("Y-m-d", \strtotime("-7 day") ) );
 
-        $app_inits_m = DB::table( $AppInitDataL->getTable(). " as inits" )->select( "inits.id", "inits.init_id", "inits.create_date", "users.unique_id", "users.channel", "users.create_date as reg_date", "users.click_id", "users.callback_url" )->join( DB::raw( "(". $userSubQuery->toSql(). ") as users"), "inits.init_id", "=", "users.init_id" )->mergeBindings( $userSubQuery );
+        $app_inits_m = DB::table( $AppInitDataL->getTable(). " as inits" )
+        ->select( [
+            "inits.id", 
+            "inits.init_id", 
+            "inits.create_date", 
+            "users.unique_id", 
+            "users.channel", 
+            "users.create_date as reg_date", 
+            "users.click_id", 
+            "users.callback_url"
+        ] )
+        ->join( DB::raw( "(". $userSubQuery->toSql(). ") as users"), "inits.init_id", "=", "users.init_id" )
+        ->mergeBindings( $userSubQuery );
         if( $init_last_id ) {
-            $app_inits = $app_inits_m->where( "inits.id", '>', $init_last_id )->whereNotNull("users.unique_id")->limit( $init_limit )->get()->toArray();
+            $app_inits = $app_inits_m->where( "inits.id", '>', $init_last_id )
+            ->whereNotNull("users.unique_id")
+            ->limit( $init_limit )
+            ->get()
+            ->toArray();
         }else{
-            $app_inits = $app_inits_m->whereNotNull("users.unique_id")->orderBy('inits.id', 'desc')->limit( 1 )->get()->toArray();
+            $app_inits = $app_inits_m->whereNotNull("users.unique_id")
+            ->orderBy('inits.id', 'desc')
+            ->limit( 1 )
+            ->get()
+            ->toArray();
         }
 
         if( empty( $app_inits ) ) {
