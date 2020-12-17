@@ -361,7 +361,7 @@ class AppUserActiveHandler extends Command
             $ago_date = date("Y-m-d", \strtotime($init_data->create_date. "-1 day"));
             if( $init_data->reg_date == $ago_date ) {
 
-                \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data['callback_url'] ) && AppCallbackL::create( $app_id, $init_data['callback_url'], ['event_type' => 6] );
+                \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data->callback_url ) && AppCallbackL::create( $app_id, $init_data->callback_url, ['event_type' => 6] );
 
             }
         }
