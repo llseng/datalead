@@ -53,9 +53,11 @@ class AppSortNames extends AppBase
             "level" => 2,
             "sort_id" => $ad_data['cid']
         ]);
-        $cid_data = $this->first( $cid_where );
+        $cid_data = $this->first( $cid_where, ['id', 'sup_id', 'sort_name'] );
         if( $cid_data ) {
-            $this->update( $cid_where, [ "sort_name" => $ad_data[ 'cname' ] ] );
+            if( $cid_data['sort_name'] !== $ad_data['cname'] ){
+                $this->update( $cid_where, [ "sort_name" => $ad_data[ 'cname' ] ] );
+            }
             return $cid_data['id']; //记录存在直接返回
         }
 
@@ -66,12 +68,14 @@ class AppSortNames extends AppBase
             "level" => 1,
             "sort_id" => $ad_data['aid']
         ]);
-        $aid_data = $this->first( $aid_where );
+        $aid_data = $this->first( $aid_where, ['id', 'sup_id', 'sort_name'] );
         if( $aid_data ) {
             $cid_insert_data[ 'sup_id' ] = $aid_data['id'];
             $cid_insert_data[ 'sup_chain' ] = $aid_data['sup_id']. ",". $aid_data['id'];
             
-            $this->update( $aid_where, [ "sort_name" => $ad_data[ 'aname' ] ] );
+            if( $aid_data['sort_name'] !== $ad_data['aname'] ) {
+                $this->update( $aid_where, [ "sort_name" => $ad_data[ 'aname' ] ] );
+            }
         }else{ //上级aid不存在
             $aid_insert_data = $aid_where;
             $aid_insert_data['sort_name'] = $ad_data[ 'aname' ];
@@ -80,12 +84,14 @@ class AppSortNames extends AppBase
                 "level" => 0,
                 "sort_id" => $ad_data['gid']
             ]);
-            $gid_data = $this->first( $gid_where );
+            $gid_data = $this->first( $gid_where, ['id', 'sup_id', 'sort_name'] );
             if( $gid_data ) {
                 $aid_insert_data[ 'sup_id' ] = $gid_data['id'];
                 $aid_insert_data[ 'sup_chain' ] = $gid_data['id'];
             
-                $this->update( $gid_where, [ "sort_name" => $ad_data[ 'gname' ] ] );
+                if( $gid_data['sort_name'] !== $ad_data['gname'] ) {
+                    $this->update( $gid_where, [ "sort_name" => $ad_data[ 'gname' ] ] );
+                }
             }else{ //上级gid不存在
                 $gid_insert_data = $gid_where;
                 $gid_insert_data['sort_name'] = $ad_data[ 'gname' ];
