@@ -50,7 +50,7 @@ class TimedScriptAppUserBind extends Command
     public function app_handle( $app_id )
     {
         DB::reconnect(); //重新连接数据库 子进程会继承父进程数据库连接 导致报错
-        DB::enableQueryLog(); //开启SQL日志
+        // DB::enableQueryLog(); //开启SQL日志
 
         $AppUsersL = new AppUsersL( $app_id );
         $AppInitDataL = new AppInitDataL( $app_id );
