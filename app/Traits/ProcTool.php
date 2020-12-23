@@ -92,4 +92,20 @@ trait ProcTool
         return true;
     }
 
+    /**
+     * 设置进程名
+     *
+     * @param string $title
+     * @return void
+     */
+    static public function setTitle( $title ) {
+        // >=php 5.5
+        if (\function_exists('cli_set_process_title')) {
+            \cli_set_process_title($title);
+        } // Need proctitle when php<=5.5 .
+        elseif (\extension_loaded('proctitle') && \function_exists('setproctitle')) {
+            \setproctitle($title);
+        }
+    }
+
 }
