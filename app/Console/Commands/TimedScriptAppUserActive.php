@@ -134,6 +134,7 @@ class TimedScriptAppUserActive extends Command
             }
 
             $ClickCallback->setStrategy( $ClickCallbackStrategys[ $init_data['channel'] ] );
+            $query = null;
 
             switch ($diffDate->days) {
                 case 1: //次留
