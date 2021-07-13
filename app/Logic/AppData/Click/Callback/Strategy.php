@@ -18,4 +18,6 @@ interface Strategy
     public function register( array $data );
     //次留
     public function keep2( array $data );
+    //关键行为
+    public function cruxAction( array $data );
 }

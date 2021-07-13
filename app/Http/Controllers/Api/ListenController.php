@@ -10,9 +10,11 @@ use Log;
 use App\Logic\AppUsers as AppUsersL;
 use App\Logic\AppInitData as AppInitDataL;
 use App\Logic\AppDataFilter as AppDataFilterL;
+use App\Logic\AppUserAction as AppUserActionL;
 use App\Logic\AppUsersFormat as AppUsersFormatL;
 
 use App\Http\Requests\Api\AppInitData;
+use App\Http\Requests\Api\AppUserAction;
 
 class ListenController extends Controller
 {
@@ -53,6 +55,25 @@ class ListenController extends Controller
         $user;
         $AppUsersL = new AppUsersL( $app_id );
         $create_user_status = $AppUsersL->only_create( AppUsersFormatL::fromInitData( $filter_data ), $user );
+
+        return \response()->json( static::jsonRes( ) );
+    }
+
+    public function app_action( Request $request, $app_id ) {
+        $req_data = $request->all();
+        
+        $valiRes = static::jsonValidate( new AppUserAction, $req_data, $valiStatus );
+        if( !$valiStatus ) {
+            Log::debug( static::class .': valiFail', $valiRes );
+            return \response()->json( $valiRes );
+        }
+
+        $AppUserActionL = new AppUserActionL( $app_id );
+        $create_status = $AppUserActionL->create( $req_data );
+        if(!$create_status) {
+            Log::debug( static::class .': create', $req_data );
+            return \response()->json( static::jsonRes( 500, 'Record Fail' ) );
+        }
 
         return \response()->json( static::jsonRes( ) );
     }

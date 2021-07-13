@@ -29,4 +29,10 @@ class TxadStrategy implements Strategy
         return [
         ];
     }
+
+    //关键行为
+    public function cruxAction( array $data ) {
+        return [
+        ];
+    }
 }

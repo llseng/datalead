@@ -21,7 +21,7 @@ class CreateGameAppSortNamesTable extends Migration
             $table->unsignedBigInteger( 'sort_id' )->comment('类型ID');
             $table->string( 'sort_name', 256 )->nullable()->comment('类型名称');
             $table->string( 'sup_chain', 32 )->nullable()->comment('父级链');
-            $table->timestamp( 'created_at' )->comment('创建时间');;
+            $table->timestamp( 'created_at' )->comment('创建时间');
 
             $table->index(['platform_id', 'level', 'sort_id'], 'p_level_sort');
             $table->index(['sort_id', 'sort_name'], 'sort_id_name');

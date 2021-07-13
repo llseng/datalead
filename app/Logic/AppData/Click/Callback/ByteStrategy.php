@@ -26,4 +26,9 @@ class ByteStrategy implements Strategy
     public function keep2( array $data ) {
         return ['event_type' => 6];
     }
+
+    //关键行为
+    public function cruxAction( array $data ) {
+        return ['event_type' => 25];
+    }
 }

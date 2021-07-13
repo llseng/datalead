@@ -20,6 +20,8 @@ class GameAppController extends Controller
         \App\Logic\AppInitData::class,
         \App\Logic\AppClickData::class,
         \App\Logic\AppSortNames::class,
+        \App\Logic\AppSortNames::class,
+        \App\Logic\AppUserAction::class,
     ];
 
     /**

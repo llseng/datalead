@@ -32,6 +32,7 @@ Route::namespace('Api')->prefix('receiver')->group( function () {
 Route::namespace('Api')->prefix('listen')->group( function () {
     Route::get( "/app_init/{app_id}", "ListenController@app_init" )->where('app_id', "\w+")->name( 'app_init' );
     Route::get( "/{app_id}/app_init", "ListenController@app_init" )->where('app_id', "\w+")->name( 'app_init_v2' );
+    Route::get( "/{app_id}/app_action", "ListenController@app_action" )->where('app_id', "\w+")->name( 'app_action' );
 } );
 
 /**

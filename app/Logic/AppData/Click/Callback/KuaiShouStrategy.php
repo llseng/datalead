@@ -35,4 +35,12 @@ class KuaiShouStrategy implements Strategy
             'event_time' => \round( \microtime(true) * 1000 )
         ];
     }
+
+    //关键行为
+    public function cruxAction( array $data ) {
+        return [
+            'event_type' => 143,
+            'event_time' => \round( \microtime(true) * 1000 )
+        ];
+    }
 }

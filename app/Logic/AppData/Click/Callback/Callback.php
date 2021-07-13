@@ -54,4 +54,8 @@ class Callback
     public function keep2( ) {
         return $this->getStrategy()->Keep2( $this->getData() );
     }
+    //关键行为
+    public function cruxAction( ) {
+        return $this->getStrategy()->cruxAction( $this->getData() );
+    }
 }
