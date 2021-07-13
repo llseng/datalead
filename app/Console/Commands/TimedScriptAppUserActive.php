@@ -97,12 +97,13 @@ class TimedScriptAppUserActive extends Command
         ->mergeBindings( $userSubQuery );
         if( $init_last_id ) {
             $app_inits = $app_inits_m->where( "inits.id", '>', $init_last_id )
-            ->whereNotNull("users.unique_id")
+            // ->whereNotNull("users.unique_id")
             ->limit( $init_limit )
             ->get()
             ->toArray();
         }else{
-            $app_inits = $app_inits_m->whereNotNull("users.unique_id")
+            $app_inits = $app_inits_m
+            // ->whereNotNull("users.unique_id")
             ->orderBy('inits.id', 'desc')
             ->limit( 1 )
             ->get()
@@ -124,6 +125,11 @@ class TimedScriptAppUserActive extends Command
         $init_last_id = $last_app_init['id'];
         
         foreach ($app_inits as $init_data) {
+            if( empty( $init_data['unique_id'] ) ) {
+                static::$Logger->error( $app_id. ">app_users ". $init_data['init_id']. " channel ". $init_data['channel']. " unique_id empty" );
+                continue;
+            }
+
             $reg_date = \date_create( $init_data['reg_date'] );
             $create_date = \date_create( $init_data['create_date'] );
             $diffDate = \date_diff( $reg_date, $create_date );

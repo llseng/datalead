@@ -62,8 +62,8 @@ class TimedScriptAppUserAction extends Command
 
         $action_last_id = 0;
 
-        $sleep_s = 1 << 6;
-        $sleep_max_s = $sleep_s << 12;
+        $sleep_s = 1;
+        $sleep_max_s = $sleep_s << static::$sleep_max_bit;
         $action_limit = 10000; //记录限制
 
         START: {
@@ -94,12 +94,13 @@ class TimedScriptAppUserAction extends Command
         ->mergeBindings( $userSubQuery );
         if( $action_last_id ) {
             $app_actions = $app_action_m->where( "actions.id", '>', $action_last_id )
-            ->whereNotNull("users.unique_id")
+            // ->whereNotNull("users.unique_id")
             ->limit( $action_limit )
             ->get()
             ->toArray();
         }else{
-            $app_actions = $app_action_m->whereNotNull("users.unique_id")
+            $app_actions = $app_action_m
+            // ->whereNotNull("users.unique_id")
             ->orderBy('actions.id', 'desc')
             ->limit( 1 )
             ->get()
@@ -114,11 +115,15 @@ class TimedScriptAppUserAction extends Command
 
         static::$Logger->info( $app_id. ">app_actions", [$app_actions[0]['id'], $app_actions[ \count( $app_actions ) - 1 ]['id']] );
 
-        $sleep_s = 1 << 6; //有数据 随眠时间重置为64
+        $sleep_s = 1; //有数据 随眠时间重置为1
         
         $action_last_id = $app_actions[ \count( $app_actions ) - 1 ]['id'];
         
         foreach ($app_actions as $action_data) {
+            if( empty( $action_data['unique_id'] ) ) {
+                static::$Logger->error( $app_id. ">app_users ". $action_data['init_id']. " channel ". $action_data['channel']. " unique_id empty" );
+                continue;
+            }
 
             if( !isset( $ClickCallbackStrategys[ $action_data['channel'] ] ) ) {
                 static::$Logger->error( $app_id. ">app_action ". $action_data['unique_id']. " channel ". $action_data['channel']. " strategy empty" );
