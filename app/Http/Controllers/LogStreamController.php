@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Logic\AppUsers as AppUsersL;
 use App\Logic\AppInitData as AppInitDataL;
 use App\Logic\AppClickData as AppClickDataL;
+use App\Logic\AppUserAction as AppUserAction;
 
 use App\Logic\AppUsersFormat as AppUsersFormatL;
 
@@ -368,4 +369,60 @@ class LogStreamController extends Controller
         return $LCTable->view( $view_data );
     }
 
+    public function action( ) {
+        $view_data = ['view_title'=>'应用行为'];
+        $view_data['left_nav_name'] = "log_stream";
+        $view_data['left_nav_li_name'] = "log_stream_action";
+
+        $app_id = GameAppController::getSessKey();
+
+        $Logic = new AppUserAction( $app_id );
+        $Model = $Logic->getTableModelObj();
+
+        $init_id = \request()->input( "init_id" );
+        $date = \request()->input( "date" );
+        $type = \request()->input( "type" );
+
+        $where = [];
+        !\is_null( $init_id ) && $where[] = [ "init_id", "=", $init_id ];
+        !\is_null( $date ) && $where[] = [ "create_date", "=", $date ];
+        !\is_null( $type ) && $where[] = [ "type", "=", $type ];
+
+        $columns = ["id", "init_id", "type", "content", "create_date", "create_time"];
+        $list = $Model->select( $columns )->where( $where )->orderBy( 'id', 'desc' )->paginate( 20 );
+        $list->withPath( \url()->full() );
+
+        $LCTable = new LC\Table( );
+        //设置分页数据
+        $LCTable->setPaginator( $list );
+        
+        $init_id_form = new LC\TableFormInput( "启动ID", "init_id", $init_id );
+        $date_form = new LC\TableFormInput( "日期", "date", $date );
+        $date_form->inputType( "date" );
+        $type_form = new LC\TableFormInput( "类型", "type", $type );
+
+        $LCTable->setRows([
+            $init_id_form,
+            $date_form,
+            $type_form
+        ]);
+
+        $id_line = new LC\TableInfo( "#", "id" );
+        $init_id_line = new LC\TableInfo( "启动ID", "init_id" );
+        $type_line = new LC\TableInfo( "类型", "type" );
+        $content_line = new LC\TableInfo( "内容", "content" );
+        $create_date_line = new LC\TableInfo( "日期", "create_date" );
+        $create_time_line = new LC\TableInfo( "时间", "create_time" );
+
+        $LCTable->setLines([
+            $id_line,
+            $init_id_line,
+            $type_line,
+            $content_line,
+            $create_date_line,
+            $create_time_line
+        ]);
+
+        return $LCTable->view( $view_data );
+    }
 }

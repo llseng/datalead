@@ -35,6 +35,9 @@
                 <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_users') active @endif">
                     <a href="{{ route('log_stream_users') }}">应用激活</a>
                 </li>
+                <li class="@if(isset($left_nav_li_name) && $left_nav_li_name == 'log_stream_action') active @endif">
+                    <a href="{{ route('log_stream_action') }}">应用行为</a>
+                </li>
             </ul>
         </li>
     </ul>

@@ -53,6 +53,7 @@ Route::prefix('log_stream')->group( function () {
     Route::get('/click', 'LogStreamController@click')->name('log_stream_click');
     Route::get('/inits', 'LogStreamController@inits')->name('log_stream_inits');
     Route::get('/users', 'LogStreamController@users')->name('log_stream_users');
+    Route::get('/action', 'LogStreamController@action')->name('log_stream_action');
 } );
 
 Route::prefix('test')->group( function(){
