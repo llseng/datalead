@@ -24,14 +24,16 @@ class Huawei extends FormRequest
     public function rules()
     {
         return [
-            'aid' => 'required',
-            'cid' => 'required',
-            'gid' => 'required',
+            'aid' => 'required|numeric',
+            'cid' => 'required|numeric',
+            'gid' => 'required|numeric',
             "oaid" => "required",
             "tracking_enabled" => "required|numeric",
             "event_type" => "required|alpha",
             "trace_time" => "required|numeric",
             "callback" => "required",
+
+            "account_id" => "nullable|numeric",
         ];
     }
 }
