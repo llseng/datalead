@@ -44,3 +44,59 @@ function tagAttrToStr( array $attr ) {
 
     return $str;
 }
+
+
+function http_curl( $method, $url, $query = '', $second = 10, $header = FALSE ) 
+{       
+    $ch = curl_init();
+    $curlVersion = curl_version();
+    $ua = "Datalead/1.0.0 (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version'];
+
+    if( strtolower( $method ) != 'post' )
+    {
+        if( !empty($query) )
+        {
+            $join_str = "?";
+            if( strpos($url, '?') !== FALSE ) $join_str .= '&';
+            $url .= $join_str. $query;
+        }
+
+        curl_setopt($ch,CURLOPT_URL, $url);
+    }else{
+
+        curl_setopt($ch,CURLOPT_URL, $url);
+        //post提交方式
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        if( !empty($query) ) curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+    }
+
+    //设置超时
+    curl_setopt($ch, CURLOPT_TIMEOUT, $second );
+    
+    if( stripos($url,"https://")!==FALSE ) {
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, FALSE);
+    }else{
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,TRUE);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,2);//严格校验
+    }
+
+    curl_setopt($ch,CURLOPT_USERAGENT, $ua); 
+    //设置header
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+    //要求结果为字符串且输出到屏幕上
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+    //运行curl
+    $data = curl_exec($ch);
+    //返回结果
+    if($data){
+        curl_close($ch);
+        return $data;
+    } else { 
+        $error = curl_errno($ch);
+        curl_close($ch);
+        throw new \Exception("curl出错, 错误码:$error");
+    }
+
+}

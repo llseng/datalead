@@ -1,6 +1,7 @@
 <?php
 namespace App\Logic;
 
+use Log;
 use App\GameAppCallback as GACM;
 
 /**
@@ -41,4 +42,16 @@ class AppCallback
         return $status;
     }
 
+    static public function handle( array $callback ) {
+        try {
+            return http_curl( $callback['type'] ? 'post' : 'get', $callback['url'], $callback['query'], 2, $callback['head'] ? \json_decode( $callback['head'], true ) : false );
+        } catch (\Throwable $th) {
+            Log::error( 'callback error', [
+                $th->getMessage(),
+                $th->getFile(),
+                $th->getLine(),
+            ] );
+            return false;
+        }
+    }
 }

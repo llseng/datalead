@@ -135,7 +135,7 @@ class CallbackController extends Controller
             $url .= $GameAppCallback->query;
         }
 
-        $result = @\file_http_request( $url, ['timeout' => 1] );
+        $result = AppCallbackL::handle( $GameAppCallback->toArray() );
         if( $result === false ) {
             $result = 'request_fail';
             static::$Logger->error( $GameAppCallback->id . " req fail" );

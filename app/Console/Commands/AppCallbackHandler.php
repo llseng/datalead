@@ -73,7 +73,7 @@ class AppCallbackHandler extends Command
                         $url .= $val['query'];
                     }
 
-                    $result = @\file_http_request( $url, ['timeout' => 1] );
+                    $result = AppCallback::handle( $val );
                     if( $result === false ) {
                         $result = 'request_fail';
                         static::$Logger->error( $val['id']. " req fail" );
