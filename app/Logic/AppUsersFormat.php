@@ -13,6 +13,7 @@ class AppUsersFormat
         "Byte" => ClickData\ByteData::PLATFORM_ID ,
         "KuaiShou" => ClickData\KuaiShouData::PLATFORM_ID,
         "Txad" => ClickData\TxadData::PLATFORM_ID,
+        "Huawei" => ClickData\Huawei::PLATFORM_ID,
         'Natural' => 100, //游客
     ];
 

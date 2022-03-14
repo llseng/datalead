@@ -17,11 +17,13 @@ use App\Logic\AppClickData as AppClickDataL;
 use App\Logic\AppData\Click\ByteData as ClickByteData;
 use App\Logic\AppData\Click\KuaiShouData as ClickKuaiShouData;
 use App\Logic\AppData\Click\TxadData as ClickTxadData;
+use App\Logic\AppData\Click\Huawei as ClickHuaweiData;
 
 use App\Logic\AppData\Click\Callback\Callback as ClickCallback;
 use App\Logic\AppData\Click\Callback\ByteStrategy;
 use App\Logic\AppData\Click\Callback\KuaiShouStrategy;
 use App\Logic\AppData\Click\Callback\TxadStrategy;
+use App\Logic\AppData\Click\Callback\HuaweiStrategy;
 
 class TimedScriptAppUserBind extends Command
 {
@@ -62,6 +64,7 @@ class TimedScriptAppUserBind extends Command
             ClickByteData::PLATFORM_ID => new ByteStrategy(),
             ClickKuaiShouData::PLATFORM_ID => new KuaiShouStrategy(),
             ClickTxadData::PLATFORM_ID => new TxadStrategy(),
+            ClickHuaweiData::PLATFORM_ID => new HuaweiStrategy(),
         ];
         
         $AppUsersM = $AppUsersL->getTableModelObj();
