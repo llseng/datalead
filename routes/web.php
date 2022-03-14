@@ -34,6 +34,8 @@ Route::prefix('game')->group( function () {
     Route::post('/dealwith', 'GameAppController@dealwith')->name('game_dealwith');
     Route::get('/info/{id}', 'GameAppController@info')->where("id", "\w+")->name('game_info');
     Route::get('/info_v2/{id}', 'GameAppController@info_v2')->where("id", "\w+")->name('game_info_v2');
+    Route::get('/set_config/{id}', 'GameAppController@setConfigs')->where("id", "\w+")->name('game_set_configs');
+    Route::post('/configs_dealwith', 'GameAppController@configsDealwith')->name('game_config_dealwith');
 } );
 
 Route::prefix('user')->group( function () {

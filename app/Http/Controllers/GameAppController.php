@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use DB;
 use App\Logic;
 use App\GameApp;
 use App\BaseModel;
+use App\GameAppConfig;
 use App\Http\Requests\GameApp as GameAppVali;
 
 use App\Logic\LeadContent as LC;
@@ -291,5 +293,64 @@ class GameAppController extends Controller
         unset( $logic );
 
         return $result;
+    }
+
+    public function setConfigs( $id ) {
+        $view_data = ['view_title'=>'设置配置'];
+        $GameApp = GameApp::select( static::$fields )->find( $id );
+        if( empty( $GameApp ) ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        $config_list = GameAppConfig::configsByAppId( $id )->toArray();
+        $configs = \array_column( $config_list, 'data', 'name' );
+        
+        $LCForm = new LC\Form( "配置", "POST", route('game_config_dealwith') );
+        $LCForm->pushHideData( 'app_id', $id );
+
+        $huawei_secret_row = new LC\FormInput( "华为秘钥", "huawei_secret", $configs['huawei_secret'] ?? null );
+        $huawei_secret_row->setintro( "base64编码的加密密钥,由Huawei Ads平台生成" );
+
+        $LCForm->setRows( [
+            $huawei_secret_row,
+        ] );
+        
+        return $LCForm->view( );
+    }
+
+    public function configsDealwith( Request $request ) {
+        $data = $request->all();
+        $status = true;
+
+        $GameApp = GameApp::find( $data['app_id'] );
+        if( ! $GameApp ) {
+            return static::backError( "错误,请刷新后再试." );
+        }
+
+        $config_keys = [
+            'huawei_secret'
+        ];
+
+        foreach ($data as $key => $value) {
+            if( ! \in_array( $key, $config_keys ) ) continue;
+
+            $row = GameAppConfig::where( 'app_id', $data['app_id'] )->where( 'name', $key )->first();
+            if( $row ) {
+                $row->data = $value;
+                $status &= \boolval( $row->save() );
+            }else{
+                $status &= \boolval( GameAppConfig::create( [
+                    'app_id' => $data['app_id'],
+                    'name' => $key,
+                    'data' => $value
+                ] ) );
+            }
+        }
+
+        if( !$status ) {
+            return static::backError( "操作失败,请稍后再试." );
+        }
+
+        return redirect()->route('game');
     }
 }
