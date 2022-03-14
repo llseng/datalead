@@ -24,6 +24,7 @@ Route::namespace('Api')->prefix('receiver')->group( function () {
     Route::get( "/{app_id}/app_click_byte", "ReceiverController@app_click_byte" )->where('app_id', "\w+")->name( 'app_click_byte' );
     Route::get( "/{app_id}/app_click_kuaishou", "ReceiverController@app_click_kuaishou" )->where('app_id', "\w+")->name( 'app_click_kuaishou' );
     Route::get( "/{app_id}/app_click_txad", "ReceiverController@app_click_txad" )->where('app_id', "\w+")->name( 'app_click_txad' );
+    Route::get( "/{app_id}/app_click_huawei", "ReceiverController@app_click_huawei" )->where( 'app_id', "\w+")->name("app_click_huawei");
 } );
 
 /**

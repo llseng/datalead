@@ -243,6 +243,7 @@ class GameAppController extends Controller
         $byte_click_link_form = new LC\FormTextarea( "字节广告点击监听连接", "", \route( 'app_click_byte', ['id' => $id] ). "?". UQ\ByteUrlQuery::toString() );
         $kuaishou_click_link_form = new LC\FormTextarea( "快手广告点击监听连接", "", \route( 'app_click_kuaishou', ['id' => $id] ). "?". UQ\KuaiShouUrlQuery::toString() );
         $txad_click_link_form = new LC\FormTextarea( "腾讯广告点击监听连接", "", \route( 'app_click_txad', ['id' => $id] ) );
+        $huawei_click_link_form = new LC\FormTextarea( "华为广告点击监听连接", "", \route( 'app_click_huawei', ['id' => $id] ). "?". UQ\HuaweiUrlQuery::toString() );
 
         $LCForm->setRows( [
             $id_form,

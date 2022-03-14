@@ -17,9 +17,12 @@ use App\Logic\AppClickData as AppClickDataL;
 use App\Logic\AppData\Click\ByteData as AppClickByteData;
 use App\Logic\AppData\Click\KuaiShouData as AppClickKuaiShouData;
 use App\Logic\AppData\Click\TxadData as AppClickTxadData;
+use App\Logic\AppData\Click\HuaweiData as AppClickHuaweiData;
+
 use App\Http\Requests\Api\AppClick\Byte as AppClickByteVali;
 use App\Http\Requests\Api\AppClick\KuaiShou as AppClickKuaiShouVali;
 use App\Http\Requests\Api\AppClick\Txad as AppClickTxadVali;
+use App\Http\Requests\Api\AppClick\Huawei as AppClickHuaweiVali;
 
 class ReceiverController extends Controller
 {
@@ -95,6 +98,31 @@ class ReceiverController extends Controller
         }
         //点击数据对象
         $AppClickData = new AppClickTxadData( $req_data );
+        Log::debug( __FUNCTION__. ': unique_id '. $AppClickData->getUniqueId() );
+
+        $AppClickDataL = new AppClickDataL( $app_id );
+        $create_status = $AppClickDataL->createByClickData( $AppClickData );
+
+        return \response()->json( ['ret' => 0, 'msg' => ''] );
+    }
+
+    /**
+     * 华为广告点击监测
+     *
+     * @param Request $request
+     * @param string $app_id
+     * @return json
+     */
+    public function app_click_huawei( Request $request, $app_id ) {
+        $req_data = $request->all();
+        $vali = new AppClickHuaweiVali; //表单验证
+        $valiRes = static::jsonValidateFilter( $vali, $req_data, $valiStatus, ['oaid'] );
+        if( !$valiStatus ) {
+            Log::debug( static::class .': valiFail', $valiRes );
+            return \response()->json( $valiRes );
+        }
+        //点击数据对象
+        $AppClickData = new AppClickHuaweiData( $req_data );
         Log::debug( __FUNCTION__. ': unique_id '. $AppClickData->getUniqueId() );
 
         $AppClickDataL = new AppClickDataL( $app_id );

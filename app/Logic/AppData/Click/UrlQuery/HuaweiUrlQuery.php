@@ -20,5 +20,9 @@ class HuaweiUrlQuery extends UrlQuery
         "event_type" => "{event_type}",
         "trace_time" => "{trace_time}",
         "transunique_id" => "{transunique_id}",
+        
+        "aname" => "{content_name}",
+        "cname" => "{adgroup_name}",
+        "gname" => "{campaign_name}",
     ];
 }
