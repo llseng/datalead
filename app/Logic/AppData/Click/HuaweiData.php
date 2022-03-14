@@ -68,6 +68,9 @@ class HuaweiData extends Data
     //补充数据
     public function getOther() {
         $data = [
+            'aname' => $this->aname,
+            'cname' => $this->cname,
+            'gname' => $this->gname,
             'callback' => $this->callback,
             'tracking' => $this->tracking,
             'event_type' => $this->event_type,
