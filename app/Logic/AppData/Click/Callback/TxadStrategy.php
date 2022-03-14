@@ -6,6 +6,7 @@
  * @Last Modified time: 2020-11-19 18:30:01
  */
 namespace App\Logic\AppData\Click\Callback;
+use App\Logic\AppCallback as AppCallbackL;
 
 /**
  * undocumented class
