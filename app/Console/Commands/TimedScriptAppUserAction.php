@@ -131,6 +131,7 @@ class TimedScriptAppUserAction extends Command
             }
 
             $ClickCallback->setStrategy( $ClickCallbackStrategys[ $action_data['channel'] ] );
+            $ClickCallback->setData( $action_data );
             $query = null;
 
             switch ($action_data['type']) {
@@ -146,8 +147,6 @@ class TimedScriptAppUserAction extends Command
                 static::$Logger->debug( $app_id. ">app_action ". $action_data['unique_id']. " continue" );
                 continue;
             }
-
-            \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $action_data['callback_url'] ) && AppCallbackL::create( $app_id, $action_data['callback_url'], $query );
 
         }
 

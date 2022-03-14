@@ -194,8 +194,6 @@ class TimedScriptAppUserBind extends Command
                     static::$Logger->error( $app_id. ">app_users ". $user['id']. " query empty" );
                     continue;
                 }
-
-                AppCallbackL::create( $app_id, $match_click_data['callback_url'], $query );
             }
         }
 

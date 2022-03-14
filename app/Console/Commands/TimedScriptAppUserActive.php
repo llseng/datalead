@@ -140,6 +140,7 @@ class TimedScriptAppUserActive extends Command
             }
 
             $ClickCallback->setStrategy( $ClickCallbackStrategys[ $init_data['channel'] ] );
+            $ClickCallback->setData( $init_data );
             $query = null;
 
             switch ($diffDate->days) {
@@ -157,8 +158,6 @@ class TimedScriptAppUserActive extends Command
                 static::$Logger->debug( $app_id. ">app_users ". $init_data['unique_id']. " continue" );
                 continue;
             }
-
-            \preg_match( "/^http[s]?:\/\/\w+(\.\w+)+.+/", $init_data['callback_url'] ) && AppCallbackL::create( $app_id, $init_data['callback_url'], $query );
 
         }
 
