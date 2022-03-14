@@ -128,7 +128,7 @@ class ReceiverController extends Controller
         $AppClickDataL = new AppClickDataL( $app_id );
         $create_status = $AppClickDataL->createByClickData( $AppClickData );
 
-        return \response()->json( ['ret' => 0, 'msg' => ''] );
+        return \response()->json( static::jsonRes( ) );
     }
 
 }

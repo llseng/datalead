@@ -13,6 +13,7 @@ use App\Http\Requests\GameApp as GameAppVali;
 
 use App\Logic\LeadContent as LC;
 use App\Logic\AppData\Click\UrlQuery as UQ;
+use App\Logic\AppConfig as AppConfigLogic;
 
 class GameAppController extends Controller
 {
@@ -350,7 +351,8 @@ class GameAppController extends Controller
         if( !$status ) {
             return static::backError( "操作失败,请稍后再试." );
         }
-
+        // 刷新缓存
+        AppConfigLogic::FreshConfigs( $data['app_id'] );
         return redirect()->route('game');
     }
 }
