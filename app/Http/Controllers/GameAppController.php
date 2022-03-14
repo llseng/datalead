@@ -255,6 +255,7 @@ class GameAppController extends Controller
             $byte_click_link_form,
             $kuaishou_click_link_form,
             $txad_click_link_form,
+            $huawei_click_link_form,
         ] );
         
         return $LCForm->view( $view_data );

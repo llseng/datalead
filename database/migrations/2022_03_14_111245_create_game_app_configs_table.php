@@ -22,7 +22,7 @@ class CreateGameAppConfigsTable extends Migration
             $table->string( 'intro' )->nullable()->comment( '简介' );
             $table->timestamps();
 
-            $table->index( ['app_id', 'name'], 'idx_app_conf_key' );
+            $table->unique( ['app_id', 'name'], 'uk_app_conf_key' );
         });
     }
 

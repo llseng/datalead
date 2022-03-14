@@ -25,4 +25,8 @@ class HuaweiUrlQuery extends UrlQuery
         "cname" => "{adgroup_name}",
         "gname" => "{campaign_name}",
     ];
+
+    static public function toString() {
+        return \urldecode( parent::toString() );
+    }
 }
