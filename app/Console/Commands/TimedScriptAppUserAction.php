@@ -90,6 +90,7 @@ class TimedScriptAppUserAction extends Command
             "actions.type", 
             "actions.content", 
             "users.unique_id", 
+            "users.click_id", 
             "users.channel", 
             "users.callback_url"
         ] )
