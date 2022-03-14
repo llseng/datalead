@@ -47,7 +47,7 @@ class ListenController extends Controller
 
         $init_id = AppInitDataL::InitId( $filter_data );
         $filter_data['init_id'] = $init_id;
-        Log::debug( static::class .': init_id ' .$init_id );
+        Log::debug( static::class .': '. $app_id. ': init_id ' .$init_id );
 
         $AppInitDataL = new AppInitDataL( $app_id );
         $init_data_create_status = $AppInitDataL->create( $filter_data );
